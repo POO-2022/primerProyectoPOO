@@ -1,0 +1,12 @@
+{
+    "java.project.referencedLibraries": {
+        "include": [
+            "lib/**/*.jar"
+        ],
+        "exclude": [
+            "d:\\TEC UNIVERSIDAD\\Documentos\\Tercer Semestre\\POO\\Proyectos 1\\primerProyectoPOO\\Gestor de Solicitudes de Crédito\\lib\\javax.mail.jar",
+            "lib/pdfbox-app-3.0.0-alpha2.jar"
+        ]
+    },
+    "java.dependency.syncWithFolderExplorer": true
+}
