@@ -1,12 +1,15 @@
 package interfaz;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class ventana extends JFrame {
   private JButton registrarSolicitante;
@@ -26,7 +29,7 @@ public class ventana extends JFrame {
 
   public ventana() {
     setBounds(350, 0, 700, 850);
-    setTitle("Menu Principal");
+    setTitle("Gestion de Creditos");
     initComponents();
     setDefaultCloseOperation(EXIT_ON_CLOSE);
   }
@@ -35,7 +38,7 @@ public class ventana extends JFrame {
     panel = new JPanel();
     panel.setLayout(null);
     this.add(panel);
-    panel.setBackground(new Color(102, 255, 102));
+    panel.setBackground(new Color(102, 205, 170));
 
     registrarSolicitante = new JButton("registrar solicitante");
     registrarSolicitudCredito = new JButton("registrar solicitud credito");
@@ -51,63 +54,89 @@ public class ventana extends JFrame {
     crearPDF = new JButton("crear pdf");
     salir = new JButton("Salir");
 
-    registrarSolicitante.setBounds(50, 50, 250, 50);
-    registrarSolicitudCredito.setBounds(50, 150, 250, 50);
-    calcularCreditoHipotecarioEnColon.setBounds(50, 250, 250, 50);
-    calcularCreditoHipotecarioDolar.setBounds(50, 350, 250, 50);
-    calculoCreditoFiduciarioColon.setBounds(50, 450, 250, 50);
-    calculoCreditoFiduciarioDolar.setBounds(50, 550, 250, 50);
-    calculoCreditoPrendarioColor.setBounds(350, 50, 250, 50);
-    calculoCreditoPrendarioDolar.setBounds(350, 150, 250, 50);
-    calculoCreditoPersonalDolar.setBounds(350, 250, 250, 50);
-    calculoCreditoPersonalColor.setBounds(350, 350, 250, 50);
-    enviarCorreo.setBounds(350, 450, 250, 50);
-    crearPDF.setBounds(350, 550, 250, 50);
+    registrarSolicitante.setBounds(50, 50, 270, 50);
+    registrarSolicitudCredito.setBounds(50, 150, 270, 50);
+    calcularCreditoHipotecarioEnColon.setBounds(50, 250, 270, 50);
+    calcularCreditoHipotecarioDolar.setBounds(50, 350, 270, 50);
+    calculoCreditoFiduciarioColon.setBounds(50, 450, 270, 50);
+    calculoCreditoFiduciarioDolar.setBounds(50, 550, 270, 50);
+    calculoCreditoPrendarioColor.setBounds(350, 50, 270, 50);
+    calculoCreditoPrendarioDolar.setBounds(350, 150, 270, 50);
+    calculoCreditoPersonalDolar.setBounds(350, 250, 270, 50);
+    calculoCreditoPersonalColor.setBounds(350, 350, 270, 50);
+    enviarCorreo.setBounds(350, 450, 270, 50);
+    crearPDF.setBounds(350, 550, 270, 50);
     salir.setBounds(280, 650, 100, 50);
 
-    registrarSolicitante.setBackground(Color.white);
-    registrarSolicitante.setForeground(Color.black);
+    registrarSolicitante.setFont(new Font("Times New Roman", 3, 14));
+    registrarSolicitante.setForeground(new Color(0, 0, 0));
+    registrarSolicitante.setBackground(new Color(135, 206, 250));
     panel.add(registrarSolicitante);
-    registrarSolicitudCredito.setBackground(Color.white);
-    registrarSolicitudCredito.setForeground(Color.black);
+
+    registrarSolicitudCredito.setFont(new Font("Times New Roman", 3, 14));
+    registrarSolicitudCredito.setForeground(new Color(0, 0, 0));
+    registrarSolicitudCredito.setBackground(new Color(135, 206, 250));
     panel.add(registrarSolicitudCredito);
-    calcularCreditoHipotecarioEnColon.setBackground(Color.white);
-    calcularCreditoHipotecarioEnColon.setForeground(Color.black);
+
+    calcularCreditoHipotecarioEnColon.setFont(new Font("Times New Roman", 3, 14));
+    calcularCreditoHipotecarioEnColon.setForeground(new Color(0, 0, 0));
+    calcularCreditoHipotecarioEnColon.setBackground(new Color(135, 206, 250));
     panel.add(calcularCreditoHipotecarioEnColon);
-    calcularCreditoHipotecarioDolar.setBackground(Color.white);
-    calcularCreditoHipotecarioDolar.setForeground(Color.black);
+
+    calcularCreditoHipotecarioDolar.setFont(new Font("Times New Roman", 3, 14));
+    calcularCreditoHipotecarioDolar.setForeground(new Color(0, 0, 0));
+    calcularCreditoHipotecarioDolar.setBackground(new Color(135, 206, 250));
     panel.add(calcularCreditoHipotecarioDolar);
-    calculoCreditoFiduciarioColon.setBackground(Color.white);
-    calculoCreditoFiduciarioColon.setForeground(Color.black);
-    panel.add(calculoCreditoFiduciarioColon);
-    calculoCreditoFiduciarioDolar.setBackground(Color.white);
-    calculoCreditoFiduciarioDolar.setForeground(Color.black);
+
+    calculoCreditoFiduciarioDolar.setFont(new Font("Times New Roman", 3, 14));
+    calculoCreditoFiduciarioDolar.setForeground(new Color(0, 0, 0));
+    calculoCreditoFiduciarioDolar.setBackground(new Color(135, 206, 250));
     panel.add(calculoCreditoFiduciarioDolar);
-    calculoCreditoPrendarioColor.setBackground(Color.white);
-    calculoCreditoPrendarioColor.setForeground(Color.black);
+
+    calculoCreditoFiduciarioColon.setFont(new Font("Times New Roman", 3, 14));
+    calculoCreditoFiduciarioColon.setForeground(new Color(0, 0, 0));
+    calculoCreditoFiduciarioColon.setBackground(new Color(135, 206, 250));
+    panel.add(calculoCreditoFiduciarioColon);
+
+    calculoCreditoPrendarioColor.setFont(new Font("Times New Roman", 3, 14));
+    calculoCreditoPrendarioColor.setForeground(new Color(0, 0, 0));
+    calculoCreditoPrendarioColor.setBackground(new Color(135, 206, 250));
     panel.add(calculoCreditoPrendarioColor);
-    calculoCreditoPrendarioDolar.setBackground(Color.white);
-    calculoCreditoPrendarioDolar.setForeground(Color.black);
+
+    calculoCreditoPrendarioDolar.setFont(new Font("Times New Roman", 3, 14));
+    calculoCreditoPrendarioDolar.setForeground(new Color(0, 0, 0));
+    calculoCreditoPrendarioDolar.setBackground(new Color(135, 206, 250));
     panel.add(calculoCreditoPrendarioDolar);
-    calculoCreditoPersonalDolar.setBackground(Color.white);
-    calculoCreditoPersonalDolar.setForeground(Color.black);
-    panel.add(calculoCreditoPersonalDolar);
-    calculoCreditoPersonalColor.setBackground(Color.white);
-    calculoCreditoPersonalColor.setForeground(Color.black);
+
+    calculoCreditoPersonalColor.setFont(new Font("Times New Roman", 3, 14));
+    calculoCreditoPersonalColor.setForeground(new Color(0, 0, 0));
+    calculoCreditoPersonalColor.setBackground(new Color(135, 206, 250));
     panel.add(calculoCreditoPersonalColor);
-    enviarCorreo.setBackground(Color.white);
-    enviarCorreo.setForeground(Color.black);
+
+    calculoCreditoPersonalDolar.setFont(new Font("Times New Roman", 3, 14));
+    calculoCreditoPersonalDolar.setForeground(new Color(0, 0, 0));
+    calculoCreditoPersonalDolar.setBackground(new Color(135, 206, 250));
+    panel.add(calculoCreditoPersonalDolar);
+
+    enviarCorreo.setFont(new Font("Times New Roman", 3, 16));
+    enviarCorreo.setForeground(new Color(0, 0, 0));
+    enviarCorreo.setBackground(new Color(135, 206, 250));
     panel.add(enviarCorreo);
-    crearPDF.setBackground(Color.white);
-    crearPDF.setForeground(Color.black);
+
+    crearPDF.setFont(new Font("Times New Roman", 3, 16));
+    crearPDF.setForeground(new Color(0, 0, 0));
+    crearPDF.setBackground(new Color(135, 206, 250));
     panel.add(crearPDF);
-    salir.setBackground(Color.white);
-    salir.setForeground(Color.black);
+
+    salir.setFont(new Font("Times New Roman", 3, 16));
+    salir.setForeground(new Color(0, 0, 0));
+    salir.setBackground(new Color(135, 206, 250));
     panel.add(salir);
 
     registrarSolicitante.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent evt) {
-
+        menuRegistrarSolicitante();
+        panel.setVisible(false);
       }
     });
     registrarSolicitudCredito.addActionListener(new ActionListener() {
@@ -170,10 +199,197 @@ public class ventana extends JFrame {
         System.exit(0);
       }
     });
+
   }
 
-  public void mostrarMenu() {
-    setVisible(true);
+  private void menuRegistrarSolicitante() {
+    JPanel panel2 = new JPanel();
+    JButton registrarSolicitante = new JButton("Registrar Solicitante");
+    JButton regresar = new JButton("Regresar");
+    JLabel primerNombre = new JLabel("1° Nombre");
+    JLabel segundoNombre = new JLabel("2° Nombre");
+    JLabel primerApellido = new JLabel("1° Apellido");
+    JLabel segundoApellido = new JLabel("2° Apellido");
+    JLabel cedula = new JLabel("Cedula");
+    JLabel telefono = new JLabel("Telefono");
+    JLabel correo = new JLabel("Correo");
+    JLabel direccion = new JLabel("Direccion");
+    JLabel provincia = new JLabel("Provincia");
+    JLabel canton = new JLabel("Canton");
+    JLabel distrito = new JLabel("Distrito");
+    JLabel senas = new JLabel("Señas");
+    JLabel salarioBruto = new JLabel("Salario Bruto");
+    JLabel salarioLiquido = new JLabel("Salario Liquido");
+    JTextField primerNombreText = new JTextField();
+    JTextField segundoNombreText = new JTextField();
+    JTextField primerApellidoText = new JTextField();
+    JTextField segundoApellidoText = new JTextField();
+    JTextField cedulaText = new JTextField();
+    JTextField telefonoText = new JTextField();
+    JTextField correoText = new JTextField();
+    JTextField provinciaText = new JTextField();
+    JTextField cantonText = new JTextField();
+    JTextField distritoText = new JTextField();
+    JTextField senasText = new JTextField();
+    JTextField salarioBrutoText = new JTextField();
+    JTextField salarioLiquidoText = new JTextField();
+
+    panel2.setLayout(null);
+    this.add(panel2);
+    panel2.setBounds(0, 0, 800, 600);
+    panel2.setBackground(new Color(102, 205, 170));
+
+    primerNombre.setBounds(50, 50, 100, 20);
+    primerNombre.setBackground(new Color(0, 153, 153));
+    primerNombre.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(primerNombre);
+
+    segundoNombre.setBounds(50, 100, 100, 20);
+    segundoNombre.setBackground(new Color(0, 153, 153));
+    segundoNombre.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(segundoNombre);
+
+    primerApellido.setBounds(50, 150, 100, 20);
+    primerApellido.setBackground(new Color(0, 153, 153));
+    primerApellido.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(primerApellido);
+
+    segundoApellido.setBounds(50, 200, 100, 20);
+    segundoApellido.setBackground(new Color(0, 153, 153));
+    segundoApellido.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(segundoApellido);
+
+    cedula.setBounds(50, 250, 100, 20);
+    cedula.setBackground(new Color(0, 153, 153));
+    cedula.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(cedula);
+
+    telefono.setBounds(50, 300, 100, 20);
+    telefono.setBackground(new Color(0, 153, 153));
+    telefono.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(telefono);
+
+    correo.setBounds(50, 350, 100, 20);
+    correo.setBackground(new Color(0, 153, 153));
+    correo.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(correo);
+
+    direccion.setBounds(50, 400, 100, 20);
+    direccion.setBackground(new Color(0, 153, 153));
+    direccion.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(direccion);
+
+    provincia.setBounds(50, 450, 100, 20);
+    provincia.setBackground(new Color(0, 153, 153));
+    provincia.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(provincia);
+
+    canton.setBounds(50, 500, 100, 20);
+    canton.setBackground(new Color(0, 153, 153));
+    canton.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(canton);
+
+    distrito.setBounds(50, 550, 100, 20);
+    distrito.setBackground(new Color(0, 153, 153));
+    distrito.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(distrito);
+
+    senas.setBounds(50, 600, 100, 20);
+    senas.setBackground(new Color(0, 153, 153));
+    senas.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(senas);
+
+    salarioBruto.setBounds(310, 50, 100, 20);
+    salarioBruto.setBackground(new Color(0, 153, 153));
+    salarioBruto.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(salarioBruto);
+
+    salarioLiquido.setBounds(310, 100, 100, 20);
+    salarioLiquido.setBackground(new Color(0, 153, 153));
+    salarioLiquido.setFont(new Font("Times new Roman", Font.BOLD, 14));
+    panel2.add(salarioLiquido);
+
+    primerNombreText.setBounds(200, 50, 100, 20);
+    panel2.add(primerNombreText);
+
+    segundoNombreText.setBounds(200, 100, 100, 20);
+    panel2.add(segundoNombreText);
+
+    primerApellidoText.setBounds(200, 150, 100, 20);
+    panel2.add(primerApellidoText);
+
+    segundoApellidoText.setBounds(200, 200, 100, 20);
+    panel2.add(segundoApellidoText);
+
+    cedulaText.setBounds(200, 250, 100, 20);
+    panel2.add(cedulaText);
+
+    telefonoText.setBounds(200, 300, 100, 20);
+    panel2.add(telefonoText);
+
+    correoText.setBounds(200, 350, 250, 20);
+    panel2.add(correoText);
+
+    provinciaText.setBounds(200, 450, 100, 20);
+    panel2.add(provinciaText);
+
+    cantonText.setBounds(200, 500, 100, 20);
+    panel2.add(cantonText);
+
+    distritoText.setBounds(200, 550, 100, 20);
+    panel2.add(distritoText);
+
+    senasText.setBounds(200, 600, 250, 20);
+    panel2.add(senasText);
+
+    salarioBrutoText.setBounds(500, 50, 100, 20);
+    panel2.add(salarioBrutoText);
+
+    salarioLiquidoText.setBounds(500, 100, 100, 20);
+    panel2.add(salarioLiquidoText);
+
+    regresar.setBounds(50, 650, 150, 40);
+    regresar.setBackground(new Color(135, 206, 250));
+    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    regresar.setForeground(new Color(0, 0, 0));
+    panel2.add(regresar);
+    regresar.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        panel2.setVisible(false);
+        panel.setVisible(true);
+      }
+    });
+
+    registrarSolicitante.setBounds(300, 650, 190, 40);
+    registrarSolicitante.setBackground(new Color(135, 206, 250));
+    registrarSolicitante.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    registrarSolicitante.setForeground(new Color(0, 0, 0));
+    panel2.add(registrarSolicitante);
+    registrarSolicitante.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        String pPrimerNombre = primerNombreText.getText();
+        String pSegundoNombre = segundoNombreText.getText();
+        String pPrimerApellido = primerApellidoText.getText();
+        String pSegundoApellido = segundoApellidoText.getText();
+        String pCedula = cedulaText.getText();
+        String pTelefono = telefonoText.getText();
+        String pCorreo = correoText.getText();
+        String pProvincia = provinciaText.getText();
+        String pCanton = cantonText.getText();
+        String pDistrito = distritoText.getText();
+        String pSenas = senasText.getText();
+        String pSalarioBruto = salarioBrutoText.getText();
+        String pSalarioLiquido = salarioLiquidoText.getText();
+        if (!pPrimerNombre.equals("") && !pSegundoNombre.equals("") && !pPrimerApellido.equals("")
+            && !pSegundoApellido.equals("") && !pCedula.equals("") && !pTelefono.equals("") && !pCorreo.equals("")
+            && !pProvincia.equals("") && !pCanton.equals("") && !pDistrito.equals("") && !pSenas.equals("")
+            && !pSalarioBruto.equals("") && !pSalarioLiquido.equals("")) {
+        } else {
+          JOptionPane.showMessageDialog(null, "Por favor llene todos los campos");
+        }
+      }
+    });
+
   }
 
 }
