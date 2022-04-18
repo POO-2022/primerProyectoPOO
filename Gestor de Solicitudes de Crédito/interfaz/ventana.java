@@ -38,67 +38,69 @@ public class ventana extends JFrame {
     panel.setBackground(new Color(102, 255, 102));
 
     registrarSolicitante = new JButton("registrar solicitante");
-    registrarSolicitante.setBounds(50, 50, 200, 50);
+    registrarSolicitudCredito = new JButton("registrar solicitud credito");
+    calcularCreditoHipotecarioEnColon = new JButton("calcular credito hipotecario en colon");
+    calcularCreditoHipotecarioDolar = new JButton("calcular credito hipotecario en dolar");
+    calculoCreditoFiduciarioDolar = new JButton("calcular credito fiduciario en dolar");
+    calculoCreditoFiduciarioColon = new JButton("calcular credito fiduciario en colon");
+    calculoCreditoPrendarioColor = new JButton("calcular credito prendario en color");
+    calculoCreditoPrendarioDolar = new JButton("calcular credito prendario en dolar");
+    calculoCreditoPersonalColor = new JButton("calcular credito personal en color");
+    calculoCreditoPersonalDolar = new JButton("calcular credito personal en dolar");
+    enviarCorreo = new JButton("enviar correo");
+    crearPDF = new JButton("crear pdf");
+    salir = new JButton("Salir");
+
+    registrarSolicitante.setBounds(50, 50, 250, 50);
+    registrarSolicitudCredito.setBounds(50, 150, 250, 50);
+    calcularCreditoHipotecarioEnColon.setBounds(50, 250, 250, 50);
+    calcularCreditoHipotecarioDolar.setBounds(50, 350, 250, 50);
+    calculoCreditoFiduciarioColon.setBounds(50, 450, 250, 50);
+    calculoCreditoFiduciarioDolar.setBounds(50, 550, 250, 50);
+    calculoCreditoPrendarioColor.setBounds(350, 50, 250, 50);
+    calculoCreditoPrendarioDolar.setBounds(350, 150, 250, 50);
+    calculoCreditoPersonalDolar.setBounds(350, 250, 250, 50);
+    calculoCreditoPersonalColor.setBounds(350, 350, 250, 50);
+    enviarCorreo.setBounds(350, 450, 250, 50);
+    crearPDF.setBounds(350, 550, 250, 50);
+    salir.setBounds(280, 650, 100, 50);
+
     registrarSolicitante.setBackground(Color.white);
     registrarSolicitante.setForeground(Color.black);
     panel.add(registrarSolicitante);
-    registrarSolicitudCredito = new JButton("registrar solicitud credito");
-    registrarSolicitudCredito.setBounds(50, 150, 200, 50);
     registrarSolicitudCredito.setBackground(Color.white);
     registrarSolicitudCredito.setForeground(Color.black);
     panel.add(registrarSolicitudCredito);
-    calcularCreditoHipotecarioEnColon = new JButton("calcular credito hipotecario en colon");
-    calcularCreditoHipotecarioEnColon.setBounds(50, 250, 200, 50);
     calcularCreditoHipotecarioEnColon.setBackground(Color.white);
     calcularCreditoHipotecarioEnColon.setForeground(Color.black);
     panel.add(calcularCreditoHipotecarioEnColon);
-    calcularCreditoHipotecarioDolar = new JButton("calcular credito hipotecario en dolar");
-    calcularCreditoHipotecarioDolar.setBounds(50, 350, 200, 50);
     calcularCreditoHipotecarioDolar.setBackground(Color.white);
     calcularCreditoHipotecarioDolar.setForeground(Color.black);
     panel.add(calcularCreditoHipotecarioDolar);
-    calculoCreditoFiduciarioColon = new JButton("calcular credito fiduciario en colon");
-    calculoCreditoFiduciarioColon.setBounds(50, 450, 200, 50);
     calculoCreditoFiduciarioColon.setBackground(Color.white);
     calculoCreditoFiduciarioColon.setForeground(Color.black);
     panel.add(calculoCreditoFiduciarioColon);
-    calculoCreditoFiduciarioDolar = new JButton("calcular credito fiduciario en dolar");
-    calculoCreditoFiduciarioDolar.setBounds(50, 550, 200, 50);
     calculoCreditoFiduciarioDolar.setBackground(Color.white);
     calculoCreditoFiduciarioDolar.setForeground(Color.black);
     panel.add(calculoCreditoFiduciarioDolar);
-    calculoCreditoPrendarioColor = new JButton("calcular credito prendario en color");
-    calculoCreditoPrendarioColor.setBounds(50, 650, 200, 50);
     calculoCreditoPrendarioColor.setBackground(Color.white);
     calculoCreditoPrendarioColor.setForeground(Color.black);
     panel.add(calculoCreditoPrendarioColor);
-    calculoCreditoPrendarioDolar = new JButton("calcular credito prendario en dolar");
-    calculoCreditoPrendarioDolar.setBounds(300, 50, 200, 50);
     calculoCreditoPrendarioDolar.setBackground(Color.white);
     calculoCreditoPrendarioDolar.setForeground(Color.black);
     panel.add(calculoCreditoPrendarioDolar);
-    calculoCreditoPersonalDolar = new JButton("calcular credito personal en dolar");
-    calculoCreditoPersonalDolar.setBounds(300, 150, 200, 50);
     calculoCreditoPersonalDolar.setBackground(Color.white);
     calculoCreditoPersonalDolar.setForeground(Color.black);
     panel.add(calculoCreditoPersonalDolar);
-    calculoCreditoPersonalColor = new JButton("");
-    calculoCreditoPersonalColor.setBounds(300, 250, 200, 50);
     calculoCreditoPersonalColor.setBackground(Color.white);
     calculoCreditoPersonalColor.setForeground(Color.black);
     panel.add(calculoCreditoPersonalColor);
-    enviarCorreo = new JButton("");
-    enviarCorreo.setBounds(300, 350, 200, 50);
     enviarCorreo.setBackground(Color.white);
     enviarCorreo.setForeground(Color.black);
     panel.add(enviarCorreo);
-    crearPDF = new JButton("");
-    crearPDF.setBounds(300, 450, 200, 50);
     crearPDF.setBackground(Color.white);
     crearPDF.setForeground(Color.black);
     panel.add(crearPDF);
-    salir = new JButton("Salir");
-    salir.setBounds(300, 650, 200, 50);
     salir.setBackground(Color.white);
     salir.setForeground(Color.black);
     panel.add(salir);
@@ -109,7 +111,7 @@ public class ventana extends JFrame {
       }
     });
     registrarSolicitudCredito.addActionListener(new ActionListener() {
-      public void actszionPerformed(ActionEvent evt) {
+      public void actionPerformed(ActionEvent evt) {
 
       }
     });
@@ -175,4 +177,3 @@ public class ventana extends JFrame {
   }
 
 }
-
