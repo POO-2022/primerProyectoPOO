@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -141,7 +145,8 @@ public class ventana extends JFrame {
     });
     registrarSolicitudCredito.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent evt) {
-
+        menuRegistrarSolicitudCredito();
+        panel.setVisible(false);
       }
     });
     calcularCreditoHipotecarioEnColon.addActionListener(new ActionListener() {
@@ -392,4 +397,133 @@ public class ventana extends JFrame {
 
   }
 
+  private void menuRegistrarSolicitudCredito() {
+    JPanel panel2 = new JPanel();
+    JButton registraSolicitudCredito = new JButton("Registrar Solicitud de Credito");
+    JButton regresar = new JButton("Regresar");
+    JLabel etiquetaTipoCredito = new JLabel("Tipo de Credito");
+    JLabel etiquetaMonto = new JLabel("Monto");
+    JLabel etiquetaMoneda = new JLabel("Moneda");
+    JLabel etiquetaFechaSolicitud = new JLabel("Fecha de Solicitud");
+    JLabel etiquetaNumeroSolicitud = new JLabel("Numero de Solicitud");
+    JComboBox<String> tipoCreditoBox = new JComboBox<String>();
+    JComboBox<String> tipoMonedaBox = new JComboBox<String>();
+    JTextField montoTexT = new JTextField();
+    JTextField numeroSolicitudText = new JTextField();
+    JTextField fechaSolicitudText = new JTextField();
+
+    tipoCreditoBox.addItem("Credito Personal");
+    tipoCreditoBox.addItem("Credito Fiduciario");
+    tipoCreditoBox.addItem("Credito Hipotecario");
+    tipoCreditoBox.addItem("Credito Prendario");
+    tipoMonedaBox.addItem("Colon");
+    tipoMonedaBox.addItem("Dolar");
+
+    panel2.setLayout(null);
+    this.add(panel2);
+    panel2.setBounds(0, 0, 700, 700);
+    panel2.setBackground(new Color(102, 205, 170));
+
+    etiquetaTipoCredito.setBounds(50, 50, 200, 30);
+    etiquetaTipoCredito.setBackground(new Color(0, 153, 153));
+    etiquetaTipoCredito.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(etiquetaTipoCredito);
+
+    etiquetaMonto.setBounds(50, 100, 100, 30);
+    etiquetaMonto.setBackground(new Color(0, 153, 153));
+    etiquetaMonto.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(etiquetaMonto);
+
+    etiquetaMoneda.setBounds(50, 150, 100, 30);
+    etiquetaMoneda.setBackground(new Color(0, 153, 153));
+    etiquetaMoneda.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(etiquetaMoneda);
+
+    etiquetaFechaSolicitud.setBounds(50, 200, 200, 30);
+    etiquetaFechaSolicitud.setBackground(new Color(0, 153, 153));
+    etiquetaFechaSolicitud.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(etiquetaFechaSolicitud);
+
+    etiquetaNumeroSolicitud.setBounds(50, 250, 200, 30);
+    etiquetaNumeroSolicitud.setBackground(new Color(0, 153, 153));
+    etiquetaNumeroSolicitud.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(etiquetaNumeroSolicitud);
+
+    tipoCreditoBox.setBounds(250, 50, 200, 30);
+    tipoCreditoBox.setBackground(new Color(255, 255, 255));
+    tipoCreditoBox.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(tipoCreditoBox);
+
+    montoTexT.setBounds(250, 100, 200, 30);
+    montoTexT.setBackground(new Color(255, 255, 255));
+    montoTexT.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(montoTexT);
+
+    tipoMonedaBox.setBounds(250, 150, 200, 30);
+    tipoMonedaBox.setBackground(new Color(255, 255, 255));
+    tipoMonedaBox.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(tipoMonedaBox);
+
+    fechaSolicitudText.setBounds(250, 200, 200, 30);
+    fechaSolicitudText.setBackground(new Color(255, 255, 255));
+    fechaSolicitudText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    fechaSolicitudText.setText(getFechaActual());
+    panel2.add(fechaSolicitudText);
+
+    numeroSolicitudText.setBounds(250, 250, 200, 30);
+    numeroSolicitudText.setBackground(new Color(255, 255, 255));
+    numeroSolicitudText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(numeroSolicitudText);
+
+    regresar.setBounds(50, 650, 150, 40);
+    regresar.setBackground(new Color(135, 206, 250));
+    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    regresar.setForeground(new Color(0, 0, 0));
+    panel2.add(regresar);
+    regresar.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        panel2.setVisible(false);
+        panel.setVisible(true);
+      }
+    });
+
+    registraSolicitudCredito.setBounds(300, 650, 280, 40);
+    registraSolicitudCredito.setBackground(new Color(135, 206, 250));
+    registraSolicitudCredito.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    registraSolicitudCredito.setForeground(new Color(0, 0, 0));
+    panel2.add(registraSolicitudCredito);
+    registraSolicitudCredito.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        String tipoCredito = tipoCreditoBox.getSelectedItem().toString();
+        String monto = montoTexT.getText();
+        String moneda = tipoMonedaBox.getSelectedItem().toString();
+        String fechaSolicitud = fechaSolicitudText.getText();
+        String numeroSolicitud = numeroSolicitudText.getText();
+        if (!tipoCredito.equals("") && !monto.equals("") && !moneda.equals("") && !fechaSolicitud.equals("")
+            && !numeroSolicitud.equals("")) {
+          if (tipoCredito.equals("Credito Personal")) {
+
+          }
+          if (tipoCredito.equals("Credito Fiduciario")) {
+
+          }
+          if (tipoCredito.equals("Credito Hipotecario")) {
+
+          }
+          if (tipoCredito.equals("Credito Prendario")) {
+
+          }
+
+        } else {
+          JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
+        }
+      }
+    });
+  }
+
+  private String getFechaActual() {
+    Date fecha = new Date();
+    SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+    return formato.format(fecha);
+  }
 }
