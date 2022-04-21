@@ -200,12 +200,14 @@ public class ventana extends JFrame {
     });
     enviarCorreo.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent evt) {
-
+        menuEnviarCorreo();
+        panel.setVisible(false);
       }
     });
     crearPDF.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent evt) {
-
+        menuCrearPDF();
+        panel.setVisible(false);
       }
     });
     salir.addActionListener(new ActionListener() {
@@ -1481,6 +1483,92 @@ public class ventana extends JFrame {
         panel.setVisible(true);
       }
     });
+  }
+
+  private void menuEnviarCorreo() {
+    JPanel panel2 = new JPanel();
+    JLabel label = new JLabel("Enviar correo");
+    JLabel label2 = new JLabel("Para: ");
+    JLabel label3 = new JLabel("Asunto: ");
+    JLabel label4 = new JLabel("Mensaje: ");
+    JTextField textField = new JTextField();
+    JTextField textField2 = new JTextField();
+    JTextArea textArea = new JTextArea();
+    JButton enviar = new JButton("Enviar");
+    JButton regresar = new JButton("Regresar");
+
+    panel2.setLayout(null);
+    panel2.setBackground(new Color(0, 153, 153));
+    panel2.setBounds(0, 0, 800, 700);
+    this.add(panel2);
+    setBounds(350, 0, 800, 850);
+
+    label.setBounds(50, 50, 500, 20);
+    label.setBackground(new Color(0, 153, 153));
+    label.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    panel2.add(label);
+
+    label2.setBounds(50, 100, 200, 20);
+    label2.setBackground(new Color(0, 153, 153));
+    label2.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    panel2.add(label2);
+
+    label3.setBounds(50, 150, 200, 20);
+    label3.setBackground(new Color(0, 153, 153));
+    label3.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    panel2.add(label3);
+
+    label4.setBounds(50, 200, 200, 20);
+    label4.setBackground(new Color(0, 153, 153));
+    label4.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    panel2.add(label4);
+
+    textField.setBounds(50, 130, 200, 20);
+    textField.setBackground(new Color(255, 255, 255));
+    textField.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    panel2.add(textField);
+
+    textField2.setBounds(50, 170, 200, 20);
+    textField2.setBackground(new Color(255, 255, 255));
+    textField2.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    panel2.add(textField2);
+
+    textArea.setBounds(50, 220, 700, 300);
+    textArea.setBackground(new Color(255, 255, 255));
+    textArea.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(textArea);
+
+    enviar.setBounds(50, 620, 200, 30);
+    enviar.setBackground(new Color(135, 206, 250));
+    enviar.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    enviar.setForeground(new Color(0, 0, 0));
+    panel2.add(enviar);
+
+    regresar.setBounds(50, 720, 150, 40);
+    regresar.setBackground(new Color(135, 206, 250));
+    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    regresar.setForeground(new Color(0, 0, 0));
+    panel2.add(regresar);
+
+    enviar.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        String datos = "";
+        textArea.setText(datos);
+      }
+    });
+
+    regresar.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        setBounds(350, 0, 700, 850);
+        panel.setVisible(true);
+        panel2.setVisible(false);
+      }
+    });
+
+  }
+
+  private void menuCrearPDF() {
+
   }
 
 }
