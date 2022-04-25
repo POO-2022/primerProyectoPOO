@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=CuotaMensual
+comment0.text=\r\n\ class\ CuotaMensual\r\n\ \r\n\ @author\ Andy\ Porras\r\n\ @version\ 1.0\r\n
+comment1.params=pPrincipal\ pInteresAcumulado
+comment1.target=CuotaMensual(double,\ double)
+comment2.params=
+comment2.target=double\ getPrincipal()
+comment3.params=
+comment3.target=double\ getInteresAcumulado()
+comment4.params=
+comment4.target=java.lang.String\ toString()
+numComments=5

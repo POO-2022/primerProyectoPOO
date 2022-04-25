@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=Direccion
+comment0.text=\r\n\ class\ Direccion\r\n\ \r\n\ @author\ Andy\ Porras\r\n
+comment1.params=pProvincia\ pCanton\ pDistrito\ pSenas
+comment1.target=Direccion(java.lang.String,\ java.lang.String,\ java.lang.String,\ java.lang.String)
+comment2.params=
+comment2.target=java.lang.String\ getProvincia()
+comment3.params=
+comment3.target=java.lang.String\ getCanton()
+comment4.params=
+comment4.target=java.lang.String\ getDistrito()
+comment5.params=
+comment5.target=java.lang.String\ getSenas()
+comment6.params=
+comment6.target=java.lang.String\ toString()
+numComments=7

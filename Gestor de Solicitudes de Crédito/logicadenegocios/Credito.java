@@ -7,8 +7,7 @@ import java.time.LocalDate;
  * @author Derrick Acosta
  * @version 19/04/2022
  */
-public class Credito
-{
+public class Credito{
   //atributos de la clase
   private Deudor cliente;
   private double montoSolicitado;
