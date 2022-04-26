@@ -20,7 +20,7 @@ public class CreditoFiduciario extends Credito{
     super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pFechaSolicitud, pNumSolicitud, pTasaInteres, pTasaBasicaPasiva, pComision, pAmortizacion, pTipoCostosLegales, pCuotaMensual, pMontoFinal);
     setGastoFormalizacion();
     //super.setAmortizacion()
-    fiadores = new ArrayList<Fiador>()
+    fiadores = new ArrayList<Fiador>();
   }
   
   public double getGastoFormalizacion() {
