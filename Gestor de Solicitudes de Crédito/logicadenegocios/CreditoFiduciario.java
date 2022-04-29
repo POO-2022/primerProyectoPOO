@@ -6,32 +6,35 @@ import java.util.ArrayList;
 /**
  * Subclase derivada de la superclase Credito
  * Representa la abstraccion de un credito fiduciario
+ * 
  * @author KEVIN SALAZAR
  * @version 1.0
  */
-public class CreditoFiduciario extends Credito{
+public class CreditoFiduciario extends Credito {
   private ArrayList<Fiador> fiadores;
   private double gastoFormalizacion;
   private static final double COSTO_FORMALIZACION = 0.03;
-  
-  public CreditoFiduciario(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses,TMoneda pMoneda, 
-  LocalDate pFechaSolicitud, String pNumSolicitud, double pTasaInteres, double pTasaBasicaPasiva, double pComision,
-  SistemaAmortizacion pAmortizacion,TCostosLegales pTipoCostosLegales,CuotaMensual pCuotaMensual, double pMontoFinal){
-    super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pFechaSolicitud, pNumSolicitud, pTasaInteres, pTasaBasicaPasiva, pComision, pAmortizacion, pTipoCostosLegales, pCuotaMensual, pMontoFinal);
-    setGastoFormalizacion();
-    //super.setAmortizacion()
+
+  public CreditoFiduciario(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
+      LocalDate pFechaSolicitud, String pNumSolicitud, double pTasaInteres, double pTasaBasicaPasiva,
+      double pComision, TCostosLegales pTipoCostosLegales,
+      CuotaMensual pCuotaMensual, double pMontoFinal, Fiador pFiador) {
+    super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pFechaSolicitud, pNumSolicitud, pTasaInteres,
+        pTasaBasicaPasiva, pComision, pTipoCostosLegales, pCuotaMensual, pMontoFinal);
     fiadores = new ArrayList<Fiador>();
+    fiadores.add(pFiador);
+    setGastoFormalizacion();
   }
-  
+
   public double getGastoFormalizacion() {
     return gastoFormalizacion;
   }
 
   public void setGastoFormalizacion() {
-    this.gastoFormalizacion = super.getMontoSolicitado()*COSTO_FORMALIZACION;
+    this.gastoFormalizacion = super.getMontoSolicitado() * COSTO_FORMALIZACION;
   }
-  
-  public double calcularMontoFinalASolicitar(){
+
+  public double calcularMontoFinalASolicitar() {
     return 0;
   }
 

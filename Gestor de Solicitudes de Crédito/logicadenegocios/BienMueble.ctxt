@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=BienMueble
+comment0.text=\r\n\ \r\n\ @author\ Derrick\ Acosta\r\n\ @version\ 1.0\r\n
+comment1.params=pNombre\ pDeudor\ pValor
+comment1.target=BienMueble(java.lang.String,\ Deudor,\ double)
+comment1.text=\r\n\ Constructor\ de\ la\ clase\ BienMueble\r\n\ \r\n\ @param\ pValor\ indica\ el\ valor\r\n
+comment2.params=
+comment2.target=double\ getValor()
+comment3.params=pValor
+comment3.target=void\ setValor(double)
+comment4.params=
+comment4.target=java.lang.String\ toString()
+numComments=5

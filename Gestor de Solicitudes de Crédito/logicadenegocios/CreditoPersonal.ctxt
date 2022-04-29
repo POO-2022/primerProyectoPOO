@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.target=CreditoPersonal
+comment0.text=\r\n\ Subclase\ derivada\ de\ la\ superclase\ Credito\r\n\ Representa\ la\ abstraccion\ de\ un\ cr\u00EF\u00BF\u00BDdito\ personal\r\n\ @author\ KEVIN\ SALAZAR\r\n\ @version\ 1.0\r\n
+comment1.params=pCliente\ pMontoSolicitado\ pPlazoEnMeses\ pMoneda\ pFechaSolicitud\ pNumSolicitud\ pTasaInteres\ pTasaBasicaPasiva\ pComision\ pAmortizacion\ pTipoCostosLegales\ pCuotaMensual\ pMontoFinal\ pMotivoUso
+comment1.target=CreditoPersonal(Deudor,\ double,\ int,\ TMoneda,\ java.time.LocalDate,\ java.lang.String,\ double,\ double,\ double,\ SistemaAmortizacion,\ TCostosLegales,\ CuotaMensual,\ double,\ java.lang.String)
+comment1.text=\r\n\ Constructor\ heredado\ de\ la\ clase\ CreditoPersonal\r\n\ @param\ pMotivoUso\ el\ motivo\ por\ el\ cual\ se\ solicita\ el\ cr\u00C3\u00A9dito\r\n\ @param\ gastoFormalizacion\ representa\ los\ gastos\ para\ la\ formalizacion\ del\ cr\u00C3\u00A9dito\r\n\ @param\ COSTO_FORMALIZACION\ representa\ el\ porcentaje\ que\ se\ asigna\ por\ concepto\ de\ gastos\ de\ la\ formalizacion\r\n
+comment2.params=
+comment2.target=java.lang.String\ getMotivoUso()
+comment3.params=motivoUso
+comment3.target=void\ setMotivoUso(java.lang.String)
+comment4.params=
+comment4.target=double\ getGastoFormalizacion()
+comment5.params=gastoFormalizacion
+comment5.target=void\ setGastoFormalizacion(double)
+comment6.params=
+comment6.target=double\ calcularMontoFinalASolicitar()
+comment6.text=@Override\r\n\ Sobreescritura\ del\ metodo\ toString\ de\ la\ superClase\ Credito\r\n\ @return\ cadena\ de\ caracteres\ con\ el\ estado\ del\ objeto\r\n
+numComments=7

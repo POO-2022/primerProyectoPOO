@@ -206,8 +206,8 @@ public class ventana extends JFrame {
     });
     crearPDF.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent evt) {
-        menuCrearPDF();
-        panel.setVisible(false);
+        // menuCrearPDF();
+        // panel.setVisible(false);
       }
     });
     salir.addActionListener(new ActionListener() {

@@ -3,14 +3,13 @@ package logicadenegocios;
 import java.time.LocalDate;
 
 /**
- * Clase Credito 
+ * Clase Credito
  * 
  * @author Derrick Acosta
  * @version 19/04/2022
  */
-public abstract class Credito
-{
-  //atributos de la clase
+public abstract class Credito {
+  // atributos de la clase
   private Deudor cliente;
   private double montoSolicitado;
   private int plazoEnMeses;
@@ -25,188 +24,189 @@ public abstract class Credito
   private CuotaMensual cuotaMensual;
   private double montoFinal;
   private static int sNumSolicitud = 0;
+
   /**
    * Constructor de la clase Credito
-   * @param pCliente: es nombre del cliente
-   * @param pMontoSolicitado: el monto de la cuota solicitado
-   * @param pPlazoEnMeses: cantidad del plazo en meses
-   * @param pMoneda: tipo de moneda
-   * @param pFechaSolicitud: la fecha de la solicitud
-   * @param pNumSolicitud: el numero de la solicitud
-   * @param pTasaInteres: la tasa de intereses
-   * @param pTasaBasicaPasiva: la tasa basica pasiva
-   * @param pComision: la comision del credito
-   * @param pAmortizacion: la amortizacion del credito
+   * 
+   * @param pCliente:           es nombre del cliente
+   * @param pMontoSolicitado:   el monto de la cuota solicitado
+   * @param pPlazoEnMeses:      cantidad del plazo en meses
+   * @param pMoneda:            tipo de moneda
+   * @param pFechaSolicitud:    la fecha de la solicitud
+   * @param pNumSolicitud:      el numero de la solicitud
+   * @param pTasaInteres:       la tasa de intereses
+   * @param pTasaBasicaPasiva:  la tasa basica pasiva
+   * @param pComision:          la comision del credito
+   * @param pAmortizacion:      la amortizacion del credito
    * @param pTipoCostosLegales: el tipo de costps legales
-   * @param pCuotaMensual: la cuota mensual
-   * @param pMontoFinal: el monto final
-   * @param pSNumSolicitud: el numero de solicitud indicado por el sistema
+   * @param pCuotaMensual:      la cuota mensual
+   * @param pMontoFinal:        el monto final
+   * @param pSNumSolicitud:     el numero de solicitud indicado por el sistema
    */
-  public Credito(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses,TMoneda pMoneda, 
-          LocalDate pFechaSolicitud, String pNumSolicitud, double pTasaInteres, double pTasaBasicaPasiva, 
-          double pComision, TCostosLegales pTipoCostosLegales,
-          CuotaMensual pCuotaMensual, double pMontoFinal){
+  public Credito(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
+      LocalDate pFechaSolicitud, String pNumSolicitud, double pTasaInteres, double pTasaBasicaPasiva,
+      double pComision, TCostosLegales pTipoCostosLegales,
+      CuotaMensual pCuotaMensual, double pMontoFinal) {
     sNumSolicitud++;
-    cliente=pCliente;
-    montoSolicitado=pMontoSolicitado;
-    plazoEnMeses=pPlazoEnMeses;
-    moneda=pMoneda;
-    fechaSolicitud=pFechaSolicitud;
-    numSolicitud=generarNumSolicitud();
-    tasaIntereses=pTasaInteres;
-    tasaBasicaPasiva=pTasaBasicaPasiva;
-    comision=pComision;
-    amortizacion=null;
-    tipoCostosLegales=pTipoCostosLegales;
-    cuotaMensual=pCuotaMensual;
-    montoFinal=pMontoFinal;
+    cliente = pCliente;
+    montoSolicitado = pMontoSolicitado;
+    plazoEnMeses = pPlazoEnMeses;
+    moneda = pMoneda;
+    fechaSolicitud = pFechaSolicitud;
+    numSolicitud = generarNumSolicitud();
+    tasaIntereses = pTasaInteres;
+    tasaBasicaPasiva = pTasaBasicaPasiva;
+    comision = pComision;
+    amortizacion = null;
+    tipoCostosLegales = pTipoCostosLegales;
+    cuotaMensual = pCuotaMensual;
+    montoFinal = pMontoFinal;
   }
 
-    public Deudor getCliente() {
-        return cliente;
-    }
+  public Deudor getCliente() {
+    return cliente;
+  }
 
-    public void setCliente(Deudor cliente) {
-        this.cliente = cliente;
-    }
+  public void setCliente(Deudor cliente) {
+    this.cliente = cliente;
+  }
 
-    public double getMontoSolicitado() {
-        return montoSolicitado;
-    }
+  public double getMontoSolicitado() {
+    return montoSolicitado;
+  }
 
-    public void setMontoSolicitado(double montoSolicitado) {
-        this.montoSolicitado = montoSolicitado;
-    }
+  public void setMontoSolicitado(double montoSolicitado) {
+    this.montoSolicitado = montoSolicitado;
+  }
 
-    public int getPlazoEnMeses() {
-        return plazoEnMeses;
-    }
+  public int getPlazoEnMeses() {
+    return plazoEnMeses;
+  }
 
-    public void setPlazoEnMeses(int plazoEnMeses) {
-        this.plazoEnMeses = plazoEnMeses;
-    }
+  public void setPlazoEnMeses(int plazoEnMeses) {
+    this.plazoEnMeses = plazoEnMeses;
+  }
 
-    public TMoneda getMoneda() {
-        return moneda;
-    }
+  public TMoneda getMoneda() {
+    return moneda;
+  }
 
-    public void setMoneda(TMoneda moneda) {
-        this.moneda = moneda;
-    }
+  public void setMoneda(TMoneda moneda) {
+    this.moneda = moneda;
+  }
 
-    public LocalDate getFechaSolicitud() {
-        return fechaSolicitud;
-    }
+  public LocalDate getFechaSolicitud() {
+    return fechaSolicitud;
+  }
 
-    public void setFechaSolicitud(LocalDate fechaSolicitud) {
-        this.fechaSolicitud = fechaSolicitud;
-    }
+  public void setFechaSolicitud(LocalDate fechaSolicitud) {
+    this.fechaSolicitud = fechaSolicitud;
+  }
 
-    public String getNumSolicitud() {
-        return numSolicitud;
-    }
+  public String getNumSolicitud() {
+    return numSolicitud;
+  }
 
-    public void setNumSolicitud(String numSolicitud) {
-        this.numSolicitud = numSolicitud;
-    }
+  public void setNumSolicitud(String numSolicitud) {
+    this.numSolicitud = numSolicitud;
+  }
 
-    public double getTasaIntereses() {
-        return tasaIntereses;
-    }
+  public double getTasaIntereses() {
+    return tasaIntereses;
+  }
 
-    public void setTasaIntereses(double tasaIntereses) {
-        this.tasaIntereses = tasaIntereses;
-    }
+  public void setTasaIntereses(double tasaIntereses) {
+    this.tasaIntereses = tasaIntereses;
+  }
 
-    public double getTasaBasicaPasiva() {
-        return tasaBasicaPasiva;
-    }
+  public double getTasaBasicaPasiva() {
+    return tasaBasicaPasiva;
+  }
 
-    public void setTasaBasicaPasiva(double tasaBasicaPasiva) {
-        this.tasaBasicaPasiva = tasaBasicaPasiva;
-    }
+  public void setTasaBasicaPasiva(double tasaBasicaPasiva) {
+    this.tasaBasicaPasiva = tasaBasicaPasiva;
+  }
 
-    public double getComision() {
-        return comision;
-    }
+  public double getComision() {
+    return comision;
+  }
 
-    public void setComision(double comision) {
-        this.comision = comision;
-    }
+  public void setComision(double comision) {
+    this.comision = comision;
+  }
 
-    public SistemaAmortizacion getAmortizacion() {
-        return amortizacion;
-    }
+  public SistemaAmortizacion getAmortizacion() {
+    return amortizacion;
+  }
 
-    public void setAmortizacion(SistemaAmortizacion amortizacion) {
-        this.amortizacion = amortizacion;
-    }
+  public void setAmortizacion(SistemaAmortizacion amortizacion) {
+    this.amortizacion = amortizacion;
+  }
 
-    public TCostosLegales getTipoCostosLegales() {
-        return tipoCostosLegales;
-    }
+  public TCostosLegales getTipoCostosLegales() {
+    return tipoCostosLegales;
+  }
 
-    public void setTipoCostosLegales(TCostosLegales tipoCostosLegales) {
-        this.tipoCostosLegales = tipoCostosLegales;
-    }
+  public void setTipoCostosLegales(TCostosLegales tipoCostosLegales) {
+    this.tipoCostosLegales = tipoCostosLegales;
+  }
 
-    public CuotaMensual getCuotaMensual() {
-        return cuotaMensual;
-    }
+  public CuotaMensual getCuotaMensual() {
+    return cuotaMensual;
+  }
 
-    public void setCuotaMensual(CuotaMensual cuotaMensual) {
-        this.cuotaMensual = cuotaMensual;
-    }
+  public void setCuotaMensual(CuotaMensual cuotaMensual) {
+    this.cuotaMensual = cuotaMensual;
+  }
 
-    public double getMontoFinal() {
-        return montoFinal;
-    }
+  public double getMontoFinal() {
+    return montoFinal;
+  }
 
-    public void setMontoFinal(double montoFinal) {
-        this.montoFinal = montoFinal;
-    }
+  public void setMontoFinal(double montoFinal) {
+    this.montoFinal = montoFinal;
+  }
 
-    public static int getsNumSolicitud() {
-        return sNumSolicitud;
-    }
+  public static int getsNumSolicitud() {
+    return sNumSolicitud;
+  }
 
-    public static void setsNumSolicitud(int sNumSolicitud) {
-        Credito.sNumSolicitud = sNumSolicitud;
-    }
-  
-  
-  
+  public static void setsNumSolicitud(int sNumSolicitud) {
+    Credito.sNumSolicitud = sNumSolicitud;
+  }
+
   /**
-   * Genera el numero de solicitud de crédito
+   * Genera el numero de solicitud de crï¿½dito
+   * 
    * @return cadena de caracteres con el codigo
-   */  
-  private String generarNumSolicitud(){
+   */
+  private String generarNumSolicitud() {
     String numeroSolic = "CRE";
-    if(sNumSolicitud>=1000){
+    if (sNumSolicitud >= 1000) {
       numeroSolic += sNumSolicitud;
       return numeroSolic;
     }
-    if(sNumSolicitud>=100){
+    if (sNumSolicitud >= 100) {
       numeroSolic += "0" + sNumSolicitud;
-      return numeroSolic;  
+      return numeroSolic;
     }
-    if(sNumSolicitud>=10){
+    if (sNumSolicitud >= 10) {
       numeroSolic += "00" + sNumSolicitud;
-      return numeroSolic;  
-    }
-    else{
+      return numeroSolic;
+    } else {
       numeroSolic += "000" + sNumSolicitud;
-      return numeroSolic;  
-    }  
+      return numeroSolic;
+    }
   }
-  
+
   /**
-   * Metodo para calcular la tasa pasiva 
+   * Metodo para calcular la tasa pasiva
    * 
    */
-  public void calcularTasaPasiva(){
-    
+  public void calcularTasaPasiva() {
+
   }
+
   /**
    * Metodo abstracto para calcular el monto final que va solicitar
    */
@@ -214,12 +214,13 @@ public abstract class Credito
 
   /**
    * Genera el estado del objeto en una cadena de caracteres
+   * 
    * @return cadena de caracteres
    */
   public String toString() {
-    String msg= "";
-    msg += "N° Solicitud: " + numSolicitud + "\n";
-    msg += "Cliente: " + cliente + "\n"; 
+    String msg = "";
+    msg += "Nï¿½ Solicitud: " + numSolicitud + "\n";
+    msg += "Cliente: " + cliente + "\n";
     msg += "Monto solicitado: " + montoSolicitado + "\n";
     msg += "Plazo (en meses): " + plazoEnMeses + "\n";
     msg += "Divisa: " + moneda + "\n";
@@ -231,9 +232,8 @@ public abstract class Credito
     msg += "Tipo de costos legales: " + tipoCostosLegales + "\n";
     msg += "Cuota Mensual: " + cuotaMensual + "\n";
     msg += "Monto Final: " + montoFinal + "\n";
-    
-    return msg;  
+
+    return msg;
   }
-  
-  
+
 }

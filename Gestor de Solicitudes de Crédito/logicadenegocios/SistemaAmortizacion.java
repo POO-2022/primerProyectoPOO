@@ -58,6 +58,7 @@ public class SistemaAmortizacion {
     plazoEnAnos = prestamoOtorgado / (tasaInteresAnual / 100);
   }
 
+  // no implementada correctamente
   public void calcularAmortizacion() {
 
   }

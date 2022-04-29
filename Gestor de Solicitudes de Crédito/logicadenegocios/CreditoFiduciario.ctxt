@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=CreditoFiduciario
+comment0.text=\r\n\ Subclase\ derivada\ de\ la\ superclase\ Credito\r\n\ Representa\ la\ abstraccion\ de\ un\ credito\ fiduciario\r\n\ @author\ KEVIN\ SALAZAR\r\n\ @version\ 1.0\r\n
+comment1.params=pCliente\ pMontoSolicitado\ pPlazoEnMeses\ pMoneda\ pFechaSolicitud\ pNumSolicitud\ pTasaInteres\ pTasaBasicaPasiva\ pComision\ pAmortizacion\ pTipoCostosLegales\ pCuotaMensual\ pMontoFinal
+comment1.target=CreditoFiduciario(Deudor,\ double,\ int,\ TMoneda,\ java.time.LocalDate,\ java.lang.String,\ double,\ double,\ double,\ SistemaAmortizacion,\ TCostosLegales,\ CuotaMensual,\ double)
+comment2.params=
+comment2.target=double\ getGastoFormalizacion()
+comment3.params=
+comment3.target=void\ setGastoFormalizacion()
+comment4.params=
+comment4.target=double\ calcularMontoFinalASolicitar()
+comment5.params=
+comment5.target=java.util.ArrayList\ getFiadores()
+comment6.params=pFiador
+comment6.target=void\ agregarFiador(Fiador)
+numComments=7

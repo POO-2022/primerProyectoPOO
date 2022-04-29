@@ -1,0 +1,23 @@
+#BlueJ class context
+comment0.target=BienInmueble
+comment0.text=\r\n\ ClaseInmueble\r\n\ \r\n\ @author\ Derrick\ Acosta\r\n\ @version\ 1.0\r\n
+comment1.params=pNombre\ pDeudor\ pDireccion\ pAreaTerreno\ pNumPlano\ pMontoAvaluo
+comment1.target=BienInmueble(java.lang.String,\ Deudor,\ Direccion,\ double,\ int,\ double)
+comment1.text=\r\n\ Constructor\ de\ la\ clase\ BienInmueble\r\n\ \r\n\ @param\ pDireccion\ \ \ direccion\ del\ bien\r\n\ @param\ pAreaTerreno\ el\ area\ del\ terreno\r\n\ @param\ pNumPlano\ \ \ \ el\ numero\ de\ plano\r\n\ @param\ pMontoAvaluo\ el\ monto\ de\ avaluo\r\n
+comment2.params=
+comment2.target=Direccion\ getDireccion()
+comment3.params=Direccion
+comment3.target=void\ setDireccion(Direccion)
+comment4.params=
+comment4.target=double\ getAreaTerreno()
+comment5.params=areaTerreno
+comment5.target=void\ setAreaTerreno(double)
+comment6.params=
+comment6.target=int\ getNumPlano()
+comment7.params=pNumPlano
+comment7.target=void\ setNumPlano(int)
+comment8.params=
+comment8.target=double\ getMontoAvaluo()
+comment9.params=montoAvaluo
+comment9.target=void\ setMontoAvaluo(double)
+numComments=10

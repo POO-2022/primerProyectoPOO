@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=CreditoPrendario
+comment0.text=\r\n\ Subclase\ derivada\ de\ la\ superclase\ Credito\r\n\ Representa\ la\ abstraccion\ de\ un\ credito\ prendario\r\n\ @author\ KEVIN\ SALAZAR\r\n\ @version\ 1.0\r\n
+comment1.params=pCliente\ pMontoSolicitado\ pPlazoEnMeses\ pMoneda\ pFechaSolicitud\ pNumSolicitud\ pTasaInteres\ pTasaBasicaPasiva\ pComision\ pAmortizacion\ pTipoCostosLegales\ pCuotaMensual\ pMontoFinal\ pPrenda
+comment1.target=CreditoPrendario(Deudor,\ double,\ int,\ TMoneda,\ java.time.LocalDate,\ java.lang.String,\ double,\ double,\ double,\ SistemaAmortizacion,\ TCostosLegales,\ CuotaMensual,\ double,\ BienMueble)
+comment2.params=
+comment2.target=BienMueble\ getPrenda()
+comment3.params=pPrenda
+comment3.target=void\ setPrenda(BienMueble)
+comment4.params=
+comment4.target=double\ getGastoFormalizacion()
+comment5.params=
+comment5.target=void\ setGastoFormalizacion()
+comment6.params=
+comment6.target=double\ calcularMontoFinalASolicitar()
+numComments=7
