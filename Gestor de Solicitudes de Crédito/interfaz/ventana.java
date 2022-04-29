@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -15,6 +16,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import logicadenegocios.Deudor;
+import logicadenegocios.Direccion;
 
 public class ventana extends JFrame {
   private JButton registrarSolicitante;
@@ -31,6 +35,7 @@ public class ventana extends JFrame {
   private JButton crearPDF;
   private JButton salir;
   private JPanel panel;
+  private ArrayList<Deudor> solicitantes;
 
   public ventana() {
     setBounds(350, 0, 700, 850);
@@ -400,6 +405,17 @@ public class ventana extends JFrame {
             && !pSegundoApellido.equals("") && !pCedula.equals("") && !pTelefono.equals("") && !pCorreo.equals("")
             && !pProvincia.equals("") && !pCanton.equals("") && !pDistrito.equals("") && !pSenas.equals("")
             && !pSalarioBruto.equals("") && !pSalarioLiquido.equals("")) {
+          if (pCedula.length() == 10) {
+            int cedulaInt = Integer.parseInt(pCedula);
+            double pSalarioBrutoI = Double.parseDouble(pSalarioBruto);
+            double pSalarioLiquidoI = Double.parseDouble(pSalarioLiquido);
+            Direccion direccion = new Direccion(pProvincia, pCanton, pDistrito, pSenas);
+            Deudor solicitante = new Deudor(pPrimerNombre, pSegundoNombre, pPrimerApellido, pSegundoApellido, cedulaInt,
+                direccion, pTelefono, pCorreo, pSalarioBrutoI, pSalarioLiquidoI);
+            solicitantes.add(solicitante);
+          } else {
+            JOptionPane.showMessageDialog(null, "La cedula debe tener 10 digitos");
+          }
         } else {
           JOptionPane.showMessageDialog(null, "Por favor llene todos los campos");
         }

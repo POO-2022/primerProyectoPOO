@@ -1,4 +1,5 @@
 package logicadenegocios;
+
 import java.util.ArrayList;
 
 /**
@@ -16,35 +17,46 @@ public class Deudor {
   private String telefono;
   private double salarioBruto;
   private double salarioLiquido;
+  private String correoElectronico;
+  private Direccion direccion;
   private ArrayList<Fiador> fiadores;
 
   /**
    * Constructor principal de la clase
    * 
    * Conjunto de parametros:
+   * Indican el nombre completo del deudor
+   * 
    * @param pPrimerNombre
-   * @param pSegundoNombre 
+   * @param pSegundoNombre
    * @param pPrimerApellido
    * @param pSegundoApellido
-   * Indican el nombre completo del deudor
-   * @param pCedula: indica la cedula del deudor
-   * @param pTelefono: indica el numero de telefono del deudor
-   * @param pSalarioBruto: salario bruto (sin deducciones) del deudor
-   * @param pSalarioLiquido: salario liquido (con deducciones) del deudor
-   * @param fiadores: son los fiadores del deudor
+   * 
+   * @param pCedula:            indica la cedula del deudor
+   * @param pDireccion:         indica la direccion del deudor
+   * @param pTelefono:          indica el numero de telefono del deudor
+   * @param pCorreoElectronico: indica el correo electronico del deudor
+   * @param pSalarioBruto:      salario bruto (sin deducciones) del deudor
+   * @param pSalarioLiquido:    salario liquido (con deducciones) del deudor
+   * @param fiadores:           son los fiadores del deudor
    */
-  public Deudor(String pPrimerNombre, String pSegundoNombre, String pPrimerApellido, 
-  String pSegundoApellido, int pCedula, String pTelefono, double pSalarioBruto, double pSalarioLiquido){
+  public Deudor(String pPrimerNombre, String pSegundoNombre, String pPrimerApellido,
+      String pSegundoApellido, int pCedula, Direccion pDireccion, String pTelefono, String pCorreoElectronico,
+      double pSalarioBruto,
+      double pSalarioLiquido) {
     this.primerNombre = pPrimerNombre;
     this.segundoNombre = pSegundoNombre;
     this.primerApellido = pPrimerApellido;
     this.segundoApellido = pSegundoApellido;
     this.cedula = pCedula;
+    direccion = pDireccion;
     this.telefono = pTelefono;
+    correoElectronico = pCorreoElectronico;
     this.salarioBruto = pSalarioBruto;
     this.salarioLiquido = pSalarioLiquido;
     this.fiadores = new ArrayList<Fiador>();
-    }
+  }
+
   // m?todos accesores
   public String getPrimerNombre() {
     return primerNombre;
@@ -86,12 +98,20 @@ public class Deudor {
     this.cedula = pCedula;
   }
 
+  public Direccion getDireccion() {
+    return direccion;
+  }
+
   public String getTelefono() {
     return telefono;
   }
 
   public void setTelefono(String pTelefono) {
     this.telefono = pTelefono;
+  }
+
+  public String getCorreoElectronico() {
+    return correoElectronico;
   }
 
   public double getSalarioBruto() {
@@ -113,28 +133,29 @@ public class Deudor {
   public ArrayList<Fiador> getFiadores() {
     return fiadores;
   }
-  
+
   public String getFiadoresV2() {
-    String losFiadores = "";  
-    for(Fiador actual: fiadores){
+    String losFiadores = "";
+    for (Fiador actual : fiadores) {
       losFiadores += actual;
     }
     return losFiadores;
   }
-  
+
   /**
    * Genera el estado del objeto en una cadena de caracteres
+   * 
    * @return cadena de caracteres
    */
   public String toString() {
-    String msg= "Fiador: \n";
+    String msg = "Fiador: \n";
     msg += "C?dula: " + cedula + "\n";
-    msg += "Nombre: " + primerNombre + " " + segundoNombre + " " + primerApellido + " " + segundoApellido + "\n"; 
+    msg += "Nombre: " + primerNombre + " " + segundoNombre + " " + primerApellido + " " + segundoApellido + "\n";
     msg += "Telefono: " + telefono + "\n";
     msg += "Salario Bruto: " + salarioBruto + "\n";
     msg += "Salario l?quido: " + salarioLiquido + "\n";
     msg += "Fiador(es): \n" + getFiadoresV2() + "\n";
-   
-    return msg;  
-  }  
+
+    return msg;
+  }
 }
