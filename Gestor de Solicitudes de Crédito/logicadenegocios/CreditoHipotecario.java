@@ -17,11 +17,11 @@ public class CreditoHipotecario extends Credito {
   private static final double COSTO_FORMALIZACION = 0.0075;
 
   public CreditoHipotecario(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
-      LocalDate pFechaSolicitud, String pNumSolicitud, double pTasaInteres, double pTasaBasicaPasiva,
+      double pTasaInteres, double pTasaBasicaPasiva,
       double pComision, TCostosLegales pTipoCostosLegales,
-      CuotaMensual pCuotaMensual, double pMontoFinal, BienInmueble pBienInmbueble) {
-    super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pFechaSolicitud, pNumSolicitud, pTasaInteres,
-        pTasaBasicaPasiva, pComision, pTipoCostosLegales, pCuotaMensual, pMontoFinal);
+      CuotaMensual pCuotaMensual, BienInmueble pBienInmbueble) {
+    super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pTasaInteres,
+        pTasaBasicaPasiva, pComision, pTipoCostosLegales, pCuotaMensual);
     hipoteca = pBienInmbueble;
     aplicarHonorario();
     setGastoFormalizacion();

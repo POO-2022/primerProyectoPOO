@@ -1,6 +1,5 @@
 package logicadenegocios;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -16,11 +15,11 @@ public class CreditoFiduciario extends Credito {
   private static final double COSTO_FORMALIZACION = 0.03;
 
   public CreditoFiduciario(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
-      LocalDate pFechaSolicitud, String pNumSolicitud, double pTasaInteres, double pTasaBasicaPasiva,
+      double pTasaInteres, double pTasaBasicaPasiva,
       double pComision, TCostosLegales pTipoCostosLegales,
-      CuotaMensual pCuotaMensual, double pMontoFinal, Fiador pFiador) {
-    super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pFechaSolicitud, pNumSolicitud, pTasaInteres,
-        pTasaBasicaPasiva, pComision, pTipoCostosLegales, pCuotaMensual, pMontoFinal);
+      CuotaMensual pCuotaMensual, Fiador pFiador) {
+    super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pTasaInteres,
+        pTasaBasicaPasiva, pComision, pTipoCostosLegales, pCuotaMensual);
     fiadores = new ArrayList<Fiador>();
     fiadores.add(pFiador);
     setGastoFormalizacion();

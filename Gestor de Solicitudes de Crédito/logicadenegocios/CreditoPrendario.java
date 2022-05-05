@@ -1,7 +1,5 @@
 package logicadenegocios;
 
-import java.time.LocalDate;
-
 /**
  * Subclase derivada de la superclase Credito
  * Representa la abstraccion de un credito prendario
@@ -15,12 +13,12 @@ public class CreditoPrendario extends Credito {
   private static final double COSTO_FORMALIZACION = 0.03;
 
   public CreditoPrendario(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
-      LocalDate pFechaSolicitud, String pNumSolicitud, double pTasaInteres, double pTasaBasicaPasiva,
+      double pTasaInteres, double pTasaBasicaPasiva,
       double pComision, TCostosLegales pTipoCostosLegales,
-      CuotaMensual pCuotaMensual, double pMontoFinal, BienMueble pPrenda) {
-    super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pFechaSolicitud, pNumSolicitud, pTasaInteres,
+      CuotaMensual pCuotaMensual, BienMueble pPrenda) {
+    super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pTasaInteres,
         pTasaBasicaPasiva,
-        pComision, pTipoCostosLegales, pCuotaMensual, pMontoFinal);
+        pComision, pTipoCostosLegales, pCuotaMensual);
     setGastoFormalizacion();
     setPrenda(pPrenda);
     // super.setAmortizacion()

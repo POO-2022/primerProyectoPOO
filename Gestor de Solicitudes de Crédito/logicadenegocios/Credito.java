@@ -44,15 +44,15 @@ public abstract class Credito {
    * @param pSNumSolicitud:     el numero de solicitud indicado por el sistema
    */
   public Credito(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
-      LocalDate pFechaSolicitud, String pNumSolicitud, double pTasaInteres, double pTasaBasicaPasiva,
+      double pTasaInteres, double pTasaBasicaPasiva,
       double pComision, TCostosLegales pTipoCostosLegales,
-      CuotaMensual pCuotaMensual, double pMontoFinal) {
+      CuotaMensual pCuotaMensual) {
     sNumSolicitud++;
     cliente = pCliente;
     montoSolicitado = pMontoSolicitado;
     plazoEnMeses = pPlazoEnMeses;
     moneda = pMoneda;
-    fechaSolicitud = pFechaSolicitud;
+    fechaSolicitud = calcularFechaSolicitud();
     numSolicitud = generarNumSolicitud();
     tasaIntereses = pTasaInteres;
     tasaBasicaPasiva = pTasaBasicaPasiva;
@@ -60,8 +60,14 @@ public abstract class Credito {
     amortizacion = null;
     tipoCostosLegales = pTipoCostosLegales;
     cuotaMensual = pCuotaMensual;
-    montoFinal = pMontoFinal;
+    montoFinal = 0;
+
   }
+
+  public LocalDate calcularFechaSolicitud() {
+    return LocalDate.now();
+  }
+
 
   public Deudor getCliente() {
     return cliente;

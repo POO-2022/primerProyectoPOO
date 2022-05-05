@@ -1,7 +1,5 @@
 package logicadenegocios;
 
-import java.time.LocalDate;
-
 /**
  * Subclase derivada de la superclase Credito
  * Representa la abstraccion de un cr�dito personal
@@ -25,11 +23,11 @@ public class CreditoPersonal extends Credito {
    *                            concepto de gastos de la formalizacion
    */
   public CreditoPersonal(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
-      LocalDate pFechaSolicitud, String pNumSolicitud, double pTasaInteres, double pTasaBasicaPasiva,
+      double pTasaInteres, double pTasaBasicaPasiva,
       double pComision, TCostosLegales pTipoCostosLegales,
-      CuotaMensual pCuotaMensual, double pMontoFinal, String pMotivoUso) {
-    super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pFechaSolicitud, pNumSolicitud, pTasaInteres,
-        pTasaBasicaPasiva, pComision, pTipoCostosLegales, pCuotaMensual, pMontoFinal);
+      CuotaMensual pCuotaMensual, String pMotivoUso) {
+    super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pTasaInteres,
+        pTasaBasicaPasiva, pComision, pTipoCostosLegales, pCuotaMensual);
     motivoUso = pMotivoUso;
     gastoFormalizacion = pMontoSolicitado * COSTO_FORMALIZACION;
     // super.setAmortizacion()
