@@ -10,7 +10,7 @@ public class CuotaMensual {
   double principal;
   double interesAcumulado;
 
-  CuotaMensual(double pPrincipal, double pInteresAcumulado) {
+  public CuotaMensual(double pPrincipal, double pInteresAcumulado) {
     this.principal = pPrincipal;
     this.interesAcumulado = pInteresAcumulado;
   }

@@ -1,7 +1,5 @@
 package logicadenegocios;
 
-import java.time.LocalDate;
-
 /**
  * Subclase derivada de la superclase Credito
  * Representa la abstraccion de un credito hipotecario

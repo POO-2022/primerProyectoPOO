@@ -17,8 +17,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import logicadenegocios.Credito;
+import logicadenegocios.CreditoPersonal;
 import logicadenegocios.Deudor;
 import logicadenegocios.Direccion;
+import logicadenegocios.TMoneda;
 
 public class ventana extends JFrame {
   private JButton registrarSolicitante;
@@ -36,8 +39,12 @@ public class ventana extends JFrame {
   private JButton salir;
   private JPanel panel;
   private ArrayList<Deudor> solicitantes;
+  private ArrayList<Credito> creditos;
+  private static int numeroCredito = 0;
 
   public ventana() {
+    solicitantes = new ArrayList<Deudor>();
+    creditos = new ArrayList<Credito>();
     setBounds(350, 0, 700, 850);
     setTitle("Gestion de Creditos");
     initComponents();
@@ -406,13 +413,16 @@ public class ventana extends JFrame {
             && !pProvincia.equals("") && !pCanton.equals("") && !pDistrito.equals("") && !pSenas.equals("")
             && !pSalarioBruto.equals("") && !pSalarioLiquido.equals("")) {
           if (pCedula.length() == 10) {
-            int cedulaInt = Integer.parseInt(pCedula);
             double pSalarioBrutoI = Double.parseDouble(pSalarioBruto);
             double pSalarioLiquidoI = Double.parseDouble(pSalarioLiquido);
             Direccion direccion = new Direccion(pProvincia, pCanton, pDistrito, pSenas);
-            Deudor solicitante = new Deudor(pPrimerNombre, pSegundoNombre, pPrimerApellido, pSegundoApellido, cedulaInt,
+            Deudor solicitante = new Deudor(pPrimerNombre, pSegundoNombre, pPrimerApellido, pSegundoApellido, pCedula,
                 direccion, pTelefono, pCorreo, pSalarioBrutoI, pSalarioLiquidoI);
             solicitantes.add(solicitante);
+            // aqui va el codigo para guardar en la base de datos
+            JOptionPane.showMessageDialog(null, "Solicitante registrado");
+            panel2.setVisible(false);
+            panel.setVisible(true);
           } else {
             JOptionPane.showMessageDialog(null, "La cedula debe tener 10 digitos");
           }
@@ -501,6 +511,7 @@ public class ventana extends JFrame {
     numeroSolicitudText.setBackground(new Color(255, 255, 255));
     numeroSolicitudText.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(numeroSolicitudText);
+    numeroSolicitudText.setText("CD" + numeroCredito);
 
     regresar.setBounds(50, 650, 150, 40);
     regresar.setBackground(new Color(135, 206, 250));
@@ -528,17 +539,34 @@ public class ventana extends JFrame {
         String numeroSolicitud = numeroSolicitudText.getText();
         if (!tipoCredito.equals("") && !monto.equals("") && !moneda.equals("") && !fechaSolicitud.equals("")
             && !numeroSolicitud.equals("")) {
-          if (tipoCredito.equals("Credito Personal")) {
+          if ("Colon".equals(moneda)) {
+            if (tipoCredito.equals("Credito Personal")) {
+              // CreditoPersonal creditoPersonal = new CreditoPersonal(monto, TMoneda.COLONES,
+              // fechaSolicitud, numeroSolicitud);
+            }
+            if (tipoCredito.equals("Credito Fiduciario")) {
 
-          }
-          if (tipoCredito.equals("Credito Fiduciario")) {
+            }
+            if (tipoCredito.equals("Credito Hipotecario")) {
 
-          }
-          if (tipoCredito.equals("Credito Hipotecario")) {
+            }
+            if (tipoCredito.equals("Credito Prendario")) {
 
-          }
-          if (tipoCredito.equals("Credito Prendario")) {
+            }
+          } else {
+            if (tipoCredito.equals("Credito Personal")) {
+              // C reditoPersonal creditoPersonal = new CreditoPersonal(monto,TMoneda.DOLARES
+              /// fechaSolicitud, numeroSolicitud);
+            }
+            if (tipoCredito.equals("Credito Fiduciario")) {
 
+            }
+            if (tipoCredito.equals("Credito Hipotecario")) {
+
+            }
+            if (tipoCredito.equals("Credito Prendario")) {
+
+            }
           }
 
         } else {

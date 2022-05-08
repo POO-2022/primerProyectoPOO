@@ -13,7 +13,7 @@ public class Deudor {
   private String segundoNombre;
   private String primerApellido;
   private String segundoApellido;
-  private int cedula;
+  private String cedula;
   private String telefono;
   private double salarioBruto;
   private double salarioLiquido;
@@ -41,7 +41,7 @@ public class Deudor {
    * @param fiadores:           son los fiadores del deudor
    */
   public Deudor(String pPrimerNombre, String pSegundoNombre, String pPrimerApellido,
-      String pSegundoApellido, int pCedula, Direccion pDireccion, String pTelefono, String pCorreoElectronico,
+      String pSegundoApellido, String pCedula, Direccion pDireccion, String pTelefono, String pCorreoElectronico,
       double pSalarioBruto,
       double pSalarioLiquido) {
     this.primerNombre = pPrimerNombre;
@@ -90,11 +90,11 @@ public class Deudor {
     this.segundoApellido = pSegundoApellido;
   }
 
-  public int getCedula() {
+  public String getCedula() {
     return cedula;
   }
 
-  public void setCedula(int pCedula) {
+  public void setCedula(String pCedula) {
     this.cedula = pCedula;
   }
 

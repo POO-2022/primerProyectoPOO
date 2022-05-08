@@ -1,5 +1,7 @@
 package logicadenegocios;
 
+import java.util.ArrayList;
+
 /**
  * class SistemaFrances
  * 
@@ -7,33 +9,55 @@ package logicadenegocios;
  * @version 28/04/2022
  */
 public class SistemaFrances extends SistemaAmortizacion {
-  private double cuotasInteres;
-  private double montoCuotas;
-  private double amortizacion;
+  private ArrayList<Double> cuotasInteres;
+  private ArrayList<Double> montoCuotas;
+  private ArrayList<Double> amortizacion;
 
-  public SistemaFrances(double pPrestamoOtorgado, double pPlazoEnAnos, double pTasaInteresAnual, double pCuotasInteres,
-      double pMontoCuotas, double pAmortazacion) {
+  public SistemaFrances(double pPrestamoOtorgado, double pPlazoEnAnos, double pTasaInteresAnual) {
     super(pPrestamoOtorgado, pPlazoEnAnos, pTasaInteresAnual);
-    this.cuotasInteres = pCuotasInteres;
-    this.montoCuotas = pMontoCuotas;
-    this.amortizacion = pAmortazacion;
+    cuotasInteres = new ArrayList<Double>();
+    montoCuotas = new ArrayList<Double>();
+    amortizacion = new ArrayList<Double>();
   }
 
-  public double getCuotasInteres() {
+  public ArrayList<Double> getCuotasInteres() {
     return cuotasInteres;
   }
 
-  public double getMontoCuotas() {
+  public ArrayList<Double> getMontoCuotas() {
     return montoCuotas;
   }
 
-  public double getAmortazacion() {
+  public ArrayList<Double> getAmortizacion() {
     return amortizacion;
   }
 
-  // no implementada correctamente
-  public void calcularAmortizacion() {
-    amortizacion = prestamoOtorgado / plazoEnAnos;
+  // Ck cuota
+  // Vk cuota de amortizacion
+  // Sk cuota de interes
+  // V monto del prestamo
+  // n plazo en años
+  // i tasa de interes anual
+  public void calcularCuotas() {// C
+    for (int i = 0; i < super.getPlazoEnAnos(); i++) {
+      double valor = (super.getPrestamoOtorgado() * super.getTasaInteresAnual())
+          / (1 - (Math.pow(1 + super.getTasaInteresAnual(), -super.getPlazoEnAnos())));
+      montoCuotas.add(valor);
+    }
   }
 
+  public void calcularCuotasInteres() {// S
+    for (int i = 0; i < super.getPlazoEnAnos(); i++) {
+      double valor = montoCuotas.get(i)
+          * (1 - 1 / (Math.pow(1 + super.getTasaInteresAnual(), super.getPlazoEnAnos() + 1 - i)));
+      cuotasInteres.add(valor);
+    }
+  }
+
+  public void calcularAmortizacion() {// V
+    for (int i = 0; i < super.getPlazoEnAnos(); i++) {
+      double valor = montoCuotas.get(i) / ((Math.pow(1 + super.getTasaInteresAnual(), super.getPlazoEnAnos() + 1 - i)));
+      amortizacion.add(valor);
+    }
+  }
 }

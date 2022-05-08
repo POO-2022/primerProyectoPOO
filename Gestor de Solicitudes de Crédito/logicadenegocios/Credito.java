@@ -32,16 +32,13 @@ public abstract class Credito {
    * @param pMontoSolicitado:   el monto de la cuota solicitado
    * @param pPlazoEnMeses:      cantidad del plazo en meses
    * @param pMoneda:            tipo de moneda
-   * @param pFechaSolicitud:    la fecha de la solicitud
    * @param pNumSolicitud:      el numero de la solicitud
    * @param pTasaInteres:       la tasa de intereses
    * @param pTasaBasicaPasiva:  la tasa basica pasiva
    * @param pComision:          la comision del credito
    * @param pAmortizacion:      la amortizacion del credito
-   * @param pTipoCostosLegales: el tipo de costps legales
+   * @param pTipoCostosLegales: el tipo de costos legales
    * @param pCuotaMensual:      la cuota mensual
-   * @param pMontoFinal:        el monto final
-   * @param pSNumSolicitud:     el numero de solicitud indicado por el sistema
    */
   public Credito(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
       double pTasaInteres, double pTasaBasicaPasiva,
