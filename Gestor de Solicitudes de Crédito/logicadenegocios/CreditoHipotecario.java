@@ -13,6 +13,7 @@ public class CreditoHipotecario extends Credito {
   private double gastoFormalizacion;
   private static final double AVALUO = 0.0065;
   private static final double COSTO_FORMALIZACION = 0.0075;
+  private SistemaFrances amortizacion;
 
   public CreditoHipotecario(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
       double pTasaInteres, double pTasaBasicaPasiva,
@@ -23,6 +24,7 @@ public class CreditoHipotecario extends Credito {
     hipoteca = pBienInmbueble;
     aplicarHonorario();
     setGastoFormalizacion();
+    amortizacion = new SistemaFrances(pMontoSolicitado, pPlazoEnMeses, pTasaInteres);
     // super.setAmortizacion()
   }
 
@@ -84,6 +86,11 @@ public class CreditoHipotecario extends Credito {
   }
 
   public double calcularMontoFinalASolicitar() {
-    return 0;
+    double result = 0;
+    amortizacion.calcularCuotas();
+    for (double cuota : amortizacion.getMontoCuotas()) {
+      result += cuota;
+    }
+    return result;
   }
 }

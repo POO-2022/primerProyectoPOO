@@ -13,7 +13,7 @@ public class SistemaFrances extends SistemaAmortizacion {
   private ArrayList<Double> montoCuotas;
   private ArrayList<Double> amortizacion;
 
-  public SistemaFrances(double pPrestamoOtorgado, double pPlazoEnAnos, double pTasaInteresAnual) {
+  public SistemaFrances(double pPrestamoOtorgado, int pPlazoEnAnos, double pTasaInteresAnual) {
     super(pPrestamoOtorgado, pPlazoEnAnos, pTasaInteresAnual);
     cuotasInteres = new ArrayList<Double>();
     montoCuotas = new ArrayList<Double>();

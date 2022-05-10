@@ -12,6 +12,7 @@ public class CreditoPersonal extends Credito {
   private String motivoUso;
   private double gastoFormalizacion;
   private static final double COSTO_FORMALIZACION = 0.03;
+  private SistemaAleman amortizacion;
 
   /**
    * Constructor heredado de la clase CreditoPersonal
@@ -30,6 +31,7 @@ public class CreditoPersonal extends Credito {
         pTasaBasicaPasiva, pComision, pTipoCostosLegales, pCuotaMensual);
     motivoUso = pMotivoUso;
     gastoFormalizacion = pMontoSolicitado * COSTO_FORMALIZACION;
+    amortizacion = new SistemaAleman(pMontoSolicitado, pPlazoEnMeses, pTasaInteres);
     // super.setAmortizacion()
   }
 
@@ -56,6 +58,10 @@ public class CreditoPersonal extends Credito {
    */
 
   public double calcularMontoFinalASolicitar() {
-    return 0;
+    double result = 0;
+    for (Double cuotas : amortizacion.getAmortizacion()) {
+      result += cuotas;
+    }
+    return result;
   }
 }

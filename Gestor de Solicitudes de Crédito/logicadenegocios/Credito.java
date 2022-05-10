@@ -19,7 +19,6 @@ public abstract class Credito {
   private double tasaIntereses;
   private double tasaBasicaPasiva;
   private double comision;
-  private SistemaAmortizacion amortizacion;
   private TCostosLegales tipoCostosLegales;
   private CuotaMensual cuotaMensual;
   private double montoFinal;
@@ -54,9 +53,27 @@ public abstract class Credito {
     tasaIntereses = pTasaInteres;
     tasaBasicaPasiva = pTasaBasicaPasiva;
     comision = pComision;
-    amortizacion = null;
     tipoCostosLegales = pTipoCostosLegales;
     cuotaMensual = pCuotaMensual;
+    montoFinal = 0;
+
+  }
+
+  public Credito(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
+      double pTasaInteres, double pTasaBasicaPasiva,
+      double pComision, TCostosLegales pTipoCostosLegales) {
+    sNumSolicitud++;
+    cliente = pCliente;
+    montoSolicitado = pMontoSolicitado;
+    plazoEnMeses = pPlazoEnMeses;
+    moneda = pMoneda;
+    fechaSolicitud = calcularFechaSolicitud();
+    numSolicitud = generarNumSolicitud();
+    tasaIntereses = pTasaInteres;
+    tasaBasicaPasiva = pTasaBasicaPasiva;
+    comision = pComision;
+    tipoCostosLegales = pTipoCostosLegales;
+    cuotaMensual = null;
     montoFinal = 0;
 
   }
@@ -64,7 +81,6 @@ public abstract class Credito {
   public LocalDate calcularFechaSolicitud() {
     return LocalDate.now();
   }
-
 
   public Deudor getCliente() {
     return cliente;
@@ -136,14 +152,6 @@ public abstract class Credito {
 
   public void setComision(double comision) {
     this.comision = comision;
-  }
-
-  public SistemaAmortizacion getAmortizacion() {
-    return amortizacion;
-  }
-
-  public void setAmortizacion(SistemaAmortizacion amortizacion) {
-    this.amortizacion = amortizacion;
   }
 
   public TCostosLegales getTipoCostosLegales() {
@@ -231,7 +239,6 @@ public abstract class Credito {
     msg += "Tasa de Intereses: " + tasaIntereses + "\n";
     msg += "Tasa Basica Pasiva: " + tasaBasicaPasiva + "\n";
     msg += "Comision: " + comision + "\n";
-    msg += "Amortizacion: " + amortizacion + "\n";
     msg += "Tipo de costos legales: " + tipoCostosLegales + "\n";
     msg += "Cuota Mensual: " + cuotaMensual + "\n";
     msg += "Monto Final: " + montoFinal + "\n";

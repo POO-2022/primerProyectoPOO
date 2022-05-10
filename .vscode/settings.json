@@ -1,0 +1,7 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "Gestor de Solicitudes de Crédito/lib/javax.mail.jar",
+        "Gestor de Solicitudes de Crédito/lib/json-20140107.jar"
+    ]
+}

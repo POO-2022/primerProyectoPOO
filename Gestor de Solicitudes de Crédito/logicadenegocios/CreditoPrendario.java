@@ -1,5 +1,7 @@
 package logicadenegocios;
 
+import java.util.ArrayList;
+
 /**
  * Subclase derivada de la superclase Credito
  * Representa la abstraccion de un credito prendario
@@ -11,6 +13,7 @@ public class CreditoPrendario extends Credito {
   private BienMueble prenda;
   private double gastoFormalizacion;
   private static final double COSTO_FORMALIZACION = 0.03;
+  private SistemaAmericano amortizacion;
 
   public CreditoPrendario(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
       double pTasaInteres, double pTasaBasicaPasiva,
@@ -21,6 +24,7 @@ public class CreditoPrendario extends Credito {
         pComision, pTipoCostosLegales, pCuotaMensual);
     setGastoFormalizacion();
     setPrenda(pPrenda);
+    amortizacion = new SistemaAmericano(pMontoSolicitado, pPlazoEnMeses, pTasaInteres);
     // super.setAmortizacion()
   }
 
@@ -41,6 +45,10 @@ public class CreditoPrendario extends Credito {
   }
 
   public double calcularMontoFinalASolicitar() {
-    return 0;
+    double result = 0;
+    for (Double cuotas : amortizacion.getAmortizacion()) {
+      result += cuotas;
+    }
+    return result;
   }
 }

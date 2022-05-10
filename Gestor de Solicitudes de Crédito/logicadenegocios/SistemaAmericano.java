@@ -11,9 +11,8 @@ import java.util.ArrayList;
 public class SistemaAmericano extends SistemaAmortizacion {
   private ArrayList<Double> cuotasInteres;
 
-  public SistemaAmericano(double pPrestamoOtorgado, double pPlazoEnAnos, double pTasaInteresAnual,
-      double pCuotasInteres) {
-    super(pPrestamoOtorgado, pPlazoEnAnos, pTasaInteresAnual);
+  public SistemaAmericano(double pPrestamoOtorgado, int pPlazoEnMeses, double pTasaInteresAnual) {
+    super(pPrestamoOtorgado, pPlazoEnMeses, pTasaInteresAnual);
     cuotasInteres = new ArrayList<Double>();
   }
 

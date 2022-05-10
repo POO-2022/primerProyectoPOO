@@ -1,0 +1,14 @@
+{
+    "CRE0002": {
+        "monto": 212000.5,
+        "plazo": 12,
+        "fecha de la solicitud": "2022-05-05",
+        "moneda": "DOLARES"
+    },
+    "CRE0001": {
+        "monto": 2120000.5,
+        "plazo": 12,
+        "fecha de la solicitud": "2022-05-05",
+        "moneda": "COLONES"
+    }
+}

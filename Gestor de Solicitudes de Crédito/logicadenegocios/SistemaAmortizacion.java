@@ -8,7 +8,7 @@ package logicadenegocios;
  */
 public class SistemaAmortizacion {
   double prestamoOtorgado;
-  double plazoEnAnos;
+  int plazoEnAnos;
   double tasaInteresAnual;
 
   /**
@@ -21,7 +21,7 @@ public class SistemaAmortizacion {
    * @param pTasaInteresAnual
    *                          tasa de interes anual
    */
-  public SistemaAmortizacion(double pPrestamoOtorgado, double pPlazoEnAnos, double pTasaInteresAnual) {
+  public SistemaAmortizacion(double pPrestamoOtorgado, int pPlazoEnAnos, double pTasaInteresAnual) {
     this.prestamoOtorgado = pPrestamoOtorgado;
     this.plazoEnAnos = pPlazoEnAnos;
     this.tasaInteresAnual = pTasaInteresAnual;
@@ -52,10 +52,6 @@ public class SistemaAmortizacion {
    */
   public double getTasaInteresAnual() {
     return tasaInteresAnual;
-  }
-
-  public void calcularPlazoEnAnios() {
-    plazoEnAnos = prestamoOtorgado / (tasaInteresAnual / 100);
   }
 
   // no implementada correctamente

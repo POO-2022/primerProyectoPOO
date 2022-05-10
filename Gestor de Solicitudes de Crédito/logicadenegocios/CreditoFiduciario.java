@@ -13,6 +13,7 @@ public class CreditoFiduciario extends Credito {
   private ArrayList<Fiador> fiadores;
   private double gastoFormalizacion;
   private static final double COSTO_FORMALIZACION = 0.03;
+  private SistemaFrances amortizacion;
 
   public CreditoFiduciario(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
       double pTasaInteres, double pTasaBasicaPasiva,
@@ -23,6 +24,7 @@ public class CreditoFiduciario extends Credito {
     fiadores = new ArrayList<Fiador>();
     fiadores.add(pFiador);
     setGastoFormalizacion();
+    amortizacion = new SistemaFrances(pMontoSolicitado, pPlazoEnMeses, pTasaInteres);
   }
 
   public double getGastoFormalizacion() {
@@ -34,7 +36,11 @@ public class CreditoFiduciario extends Credito {
   }
 
   public double calcularMontoFinalASolicitar() {
-    return 0;
+    double result = 0;
+    for (Double cuotas : amortizacion.getAmortizacion()) {
+      result += cuotas;
+    }
+    return result;
   }
 
   public ArrayList<Fiador> getFiadores() {
