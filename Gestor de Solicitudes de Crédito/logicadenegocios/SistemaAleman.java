@@ -51,6 +51,14 @@ public class SistemaAleman extends SistemaAmortizacion {
     }
   }
 
+  public double calcularMontoFinalASolicitar() {
+    double result = 0;
+    for (Double cuotas : montoCuotas) {
+      result += cuotas;
+    }
+    return result;
+  }
+
   public ArrayList<Double> getCuotasInteres() {
     return cuotasInteres;
   }

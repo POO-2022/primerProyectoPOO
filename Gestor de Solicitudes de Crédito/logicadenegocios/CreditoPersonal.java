@@ -35,6 +35,10 @@ public class CreditoPersonal extends Credito {
     // super.setAmortizacion()
   }
 
+  public SistemaAleman getAmortizacion() {
+    return amortizacion;
+  }
+
   public String getMotivoUso() {
     return motivoUso;
   }

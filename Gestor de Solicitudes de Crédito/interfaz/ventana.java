@@ -8,17 +8,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.mail.MessagingException;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import java.awt.*;
+import javax.mail.MessagingException;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import logicadenegocios.Credito;
 import logicadenegocios.CreditoPersonal;
 import logicadenegocios.CuotaMensual;
 import logicadenegocios.Deudor;
@@ -45,18 +48,19 @@ public class ventana extends JFrame {
   private JPanel panel;
   private ArrayList<Deudor> solicitantes;
   private ArrayList<CreditoPersonal> creditosPersonales;
-  private ArrayList<Credito> creditos;
-  private static int numeroCredito = 0;
   private JsonManager jsonManager;
   private Email email;
 
   public ventana() {
     solicitantes = new ArrayList<Deudor>();
     creditosPersonales = new ArrayList<CreditoPersonal>();
-    creditos = new ArrayList<Credito>();
     jsonManager = new JsonManager();
     email = new Email();
+    CuotaMensual cuotaMensual = null;
     subirSolicitantes();
+    CreditoPersonal creditoPersonal = new CreditoPersonal(solicitantes.get(0), 350000, 5, TMoneda.COLONES, 0.05,
+        0.05, 0.05, TCostosLegales.TRASPASO, cuotaMensual, "compra de prenda");
+    creditosPersonales.add(creditoPersonal);
     setBounds(350, 0, 700, 850);
     setTitle("Gestion de Creditos");
     initComponents();
@@ -100,7 +104,7 @@ public class ventana extends JFrame {
         datos = datos.substring(datos.indexOf("}") + 1);
       }
     }
-    System.out.println(solicitantes.size());
+    // System.out.println(solicitantes.size());
   }
 
   private void initComponents() {
@@ -827,950 +831,1167 @@ public class ventana extends JFrame {
   }
 
   private void menuCacularCreditoHipotecarioEnColon() {
-    JPanel panel2 = new JPanel();
-    JButton regresar = new JButton("Regresar");
-    JLabel labelCredito = new JLabel("Calculo del Credito Hipotecario en colones  con tasa indexada");
-    JTextArea textArea = new JTextArea();
-    JLabel labelMonto = new JLabel(" Monto inicial ");
-    JLabel labelMonto2 = new JLabel(" a solicitar ");
-    JLabel labelCosto = new JLabel(" Costo de avalúo ");
-    JLabel labelCosto2 = new JLabel(" para creditos");
-    JLabel labelCosto3 = new JLabel("hipotecarios ");
-    JLabel labelFormalizacion = new JLabel("Formalización");
-    JLabel labelHonorarios = new JLabel("Honorarios legales con");
-    JLabel labelHonorarios2 = new JLabel("respecto al monto incial a");
-    JLabel labelHonorarios3 = new JLabel("solicitar ");
-    JLabel labelMontoFinal = new JLabel("Monto final a solicitar");
-    JButton calcular = new JButton("Calcular");
-    JComboBox<String> creditoHipotecario = new JComboBox<String>();
 
+    // JFrame frame = new JFrame("Calcular credito personal en dolares");
+    JPanel panel2 = new JPanel();
+    JLabel codigo = new JLabel("numero de solicitud");
+    JLabel titulo = new JLabel("Calcular credito hipotecario en colones");
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    codigo.setBackground(new Color(0, 153, 153));
+    JComboBox<String> creditoPersonal = new JComboBox<String>();
+
+    // frame.setSize(500, 500);
+    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // frame.setVisible(true);
+    creditoPersonal.addItem("Seleccione");
+
+    // frame.add(panel2);
     panel2.setLayout(null);
     panel2.setBackground(new Color(0, 153, 153));
-    panel2.setBounds(0, 0, 800, 700);
+    panel2.setBounds(0, 0, 500, 500);
     this.add(panel2);
-    setBounds(350, 0, 800, 850);
 
-    labelCredito.setBounds(50, 50, 500, 20);
-    labelCredito.setBackground(new Color(0, 153, 153));
-    labelCredito.setFont(new Font("Times new Roman", Font.BOLD, 20));
-    panel2.add(labelCredito);
+    setBounds(350, 0, 780, 850);
 
-    creditoHipotecario.setBounds(50, 100, 200, 30);
-    creditoHipotecario.setBackground(new Color(255, 255, 255));
-    creditoHipotecario.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(creditoHipotecario);
+    titulo.setBounds(100, 10, 500, 40);
+    titulo.setBackground(new Color(0, 153, 153));
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    panel2.add(titulo);
 
-    labelMonto.setBounds(50, 150, 200, 20);
-    labelMonto.setBackground(new Color(0, 153, 153));
-    labelMonto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto);
+    codigo.setBounds(50, 100, 200, 40);
+    codigo.setBackground(new Color(0, 153, 153));
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(codigo);
 
-    labelMonto2.setBounds(50, 180, 200, 20);
-    labelMonto2.setBackground(new Color(0, 153, 153));
-    labelMonto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto2);
+    creditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    creditoPersonal.setBackground(new Color(255, 255, 255));
+    creditoPersonal.setBounds(50, 150, 200, 30);
+    panel2.add(creditoPersonal);
 
-    labelCosto.setBounds(200, 150, 200, 20);
-    labelCosto.setBackground(new Color(0, 153, 153));
-    labelCosto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto);
+    for (CreditoPersonal credito : creditosPersonales) {
+      String numero = credito.getNumSolicitud();
+      creditoPersonal.addItem(numero);
+    }
 
-    labelCosto2.setBounds(200, 180, 200, 20);
-    labelCosto2.setBackground(new Color(0, 153, 153));
-    labelCosto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto2);
+    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
+    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
 
-    labelCosto3.setBounds(200, 210, 200, 20);
-    labelCosto3.setBackground(new Color(0, 153, 153));
-    labelCosto3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto3);
+    // creamos el arreglo de objetos que contendra el
+    // contenido de las columnas
+    Object[] data = new Object[5]; // = new Object[5];
 
-    labelFormalizacion.setBounds(350, 150, 200, 20);
-    labelFormalizacion.setBackground(new Color(0, 153, 153));
-    labelFormalizacion.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelFormalizacion);
+    // creamos el modelo de Tabla
+    DefaultTableModel dtm = new DefaultTableModel();
 
-    labelHonorarios.setBounds(450, 150, 200, 20);
-    labelHonorarios.setBackground(new Color(0, 153, 153));
-    labelHonorarios.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios);
+    // se crea la Tabla con el modelo DefaultTableModel
+    final JTable table = new JTable(dtm);
 
-    labelHonorarios2.setBounds(450, 180, 200, 20);
-    labelHonorarios2.setBackground(new Color(0, 153, 153));
-    labelHonorarios2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios2);
+    // insertamos las columnas
+    dtm.addColumn("No. de cuota ");
+    dtm.addColumn("Monto Cuota ");
+    dtm.addColumn("Interes ");
+    dtm.addColumn("Amortizacion ");
+    dtm.addColumn("Deuda ");
 
-    labelHonorarios3.setBounds(450, 210, 200, 20);
-    labelHonorarios3.setBackground(new Color(0, 153, 153));
-    labelHonorarios3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios3);
+    // insertamos el contenido de las columnas
+    for (int row = 0; row < 20; row++) {
+      for (int column = 0; column < 5; column++) {
+        data[column] = "Celda " + row + "," + column;
+      }
+      dtm.addRow(data);
+    }
 
-    labelMontoFinal.setBounds(600, 150, 200, 20);
-    labelMontoFinal.setBackground(new Color(0, 153, 153));
-    labelMontoFinal.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMontoFinal);
+    // se define el tama�o
+    table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
-    textArea.setBounds(50, 250, 700, 300);
-    textArea.setBackground(new Color(255, 255, 255));
-    textArea.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    // Creamos un JscrollPane y le agregamos la JTable
+    JScrollPane scrollPane = new JScrollPane(table);
+    scrollPane.setBounds(50, 250, 700, 300);
+    scrollPane.setBackground(new Color(255, 255, 255));
+    scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(scrollPane);
 
-    panel2.add(textArea);
+    // Agregamos el JScrollPane al contenedor
+    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
+    // manejamos la salida
+
+    // frame.addWindowListener(new WindowAdapter() {
+    // public void windowClosing(WindowEvent e) {
+    // System.exit(0);
+    // }
+    // });
+    JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
     calcular.setFont(new Font("Times new Roman", Font.BOLD, 16));
     calcular.setForeground(new Color(0, 0, 0));
     panel2.add(calcular);
-
-    regresar.setBounds(50, 720, 150, 40);
-    regresar.setBackground(new Color(135, 206, 250));
-    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
-    regresar.setForeground(new Color(0, 0, 0));
-    panel2.add(regresar);
-
+    // frame.getContentPane().add(calcular);
     calcular.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String datos = "";
-        textArea.setText(datos);
+        String solicitud = creditoPersonal.getSelectedItem().toString();
+        if (solicitud.equals("Seleccione")) {
+          JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
+        } else {
+          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
+          credito.getAmortizacion().calcularCuotas();
+          credito.getAmortizacion().calcularCuotasInteres();
+          credito.getAmortizacion().calcularAmortizacion();
+          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+          double monto = credito.getMontoFinal();
+          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+            Object[] data = new Object[5];
+            data[0] = i + 1;
+            data[1] = cuotas.get(i);
+            data[2] = intereses.get(i);
+            data[3] = amortizacion.get(i);
+            data[4] = monto;
+            monto = monto - amortizacion.get(i);
+            dtm.addRow(data);
+          }
+        }
       }
     });
+    JButton button = new JButton("Salir");
+    button.setBounds(50, 680, 200, 30);
+    button.setBackground(new Color(135, 206, 250));
+    button.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    button.setForeground(new Color(0, 0, 0));
+    panel2.add(button);
+    button.addActionListener(new ActionListener() {
 
-    regresar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        // frame.setVisible(false);
         setBounds(350, 0, 700, 850);
         panel2.setVisible(false);
         panel.setVisible(true);
       }
+
     });
+    // frame.getContentPane().add(button, BorderLayout.SOUTH);
 
   }
 
   // debo editar las etiquetas para que sean mas faciles de leer
   private void menuCacularCreditoHipotecarioEnDolar() {
-    JPanel panel2 = new JPanel();
-    JButton regresar = new JButton("Regresar");
-    JLabel labelCredito = new JLabel("Calculo del Credito Hipotecario en dolares con tasa indexada");
-    JTextArea textArea = new JTextArea();
-    JLabel labelMonto = new JLabel(" Monto inicial ");
-    JLabel labelMonto2 = new JLabel(" a solicitar ");
-    JLabel labelCosto = new JLabel(" Costo de avalúo ");
-    JLabel labelCosto2 = new JLabel(" para creditos");
-    JLabel labelCosto3 = new JLabel("hipotecarios ");
-    JLabel labelFormalizacion = new JLabel("Formalización");
-    JLabel labelHonorarios = new JLabel("Honorarios legales con");
-    JLabel labelHonorarios2 = new JLabel("respecto al monto incial a");
-    JLabel labelHonorarios3 = new JLabel("solicitar ");
-    JLabel labelMontoFinal = new JLabel("Monto final a solicitar");
-    JButton calcular = new JButton("Calcular");
-    JComboBox<String> creditoHipotecario = new JComboBox<String>();
 
+    // JFrame frame = new JFrame("Calcular credito personal en dolares");
+    JPanel panel2 = new JPanel();
+    JLabel codigo = new JLabel("numero de solicitud");
+    JLabel titulo = new JLabel("Calcular credito hipotecario en dolares");
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    codigo.setBackground(new Color(0, 153, 153));
+    JComboBox<String> creditoPersonal = new JComboBox<String>();
+
+    // frame.setSize(500, 500);
+    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // frame.setVisible(true);
+    creditoPersonal.addItem("Seleccione");
+
+    // frame.add(panel2);
     panel2.setLayout(null);
     panel2.setBackground(new Color(0, 153, 153));
-    panel2.setBounds(0, 0, 800, 700);
+    panel2.setBounds(0, 0, 500, 500);
     this.add(panel2);
-    setBounds(350, 0, 800, 850);
 
-    labelCredito.setBounds(50, 50, 500, 20);
-    labelCredito.setBackground(new Color(0, 153, 153));
-    labelCredito.setFont(new Font("Times new Roman", Font.BOLD, 20));
-    panel2.add(labelCredito);
+    setBounds(350, 0, 780, 850);
 
-    creditoHipotecario.setBounds(50, 100, 200, 30);
-    creditoHipotecario.setBackground(new Color(255, 255, 255));
-    creditoHipotecario.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(creditoHipotecario);
+    titulo.setBounds(100, 10, 500, 40);
+    titulo.setBackground(new Color(0, 153, 153));
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    panel2.add(titulo);
 
-    labelMonto.setBounds(50, 150, 200, 20);
-    labelMonto.setBackground(new Color(0, 153, 153));
-    labelMonto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto);
+    codigo.setBounds(50, 100, 200, 40);
+    codigo.setBackground(new Color(0, 153, 153));
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(codigo);
 
-    labelMonto2.setBounds(50, 180, 200, 20);
-    labelMonto2.setBackground(new Color(0, 153, 153));
-    labelMonto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto2);
+    creditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    creditoPersonal.setBackground(new Color(255, 255, 255));
+    creditoPersonal.setBounds(50, 150, 200, 30);
+    panel2.add(creditoPersonal);
 
-    labelCosto.setBounds(200, 150, 200, 20);
-    labelCosto.setBackground(new Color(0, 153, 153));
-    labelCosto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto);
+    for (CreditoPersonal credito : creditosPersonales) {
+      String numero = credito.getNumSolicitud();
+      creditoPersonal.addItem(numero);
+    }
 
-    labelCosto2.setBounds(200, 180, 200, 20);
-    labelCosto2.setBackground(new Color(0, 153, 153));
-    labelCosto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto2);
+    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
+    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
 
-    labelCosto3.setBounds(200, 210, 200, 20);
-    labelCosto3.setBackground(new Color(0, 153, 153));
-    labelCosto3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto3);
+    // creamos el arreglo de objetos que contendra el
+    // contenido de las columnas
+    Object[] data = new Object[5]; // = new Object[5];
 
-    labelFormalizacion.setBounds(350, 150, 200, 20);
-    labelFormalizacion.setBackground(new Color(0, 153, 153));
-    labelFormalizacion.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelFormalizacion);
+    // creamos el modelo de Tabla
+    DefaultTableModel dtm = new DefaultTableModel();
 
-    labelHonorarios.setBounds(450, 150, 200, 20);
-    labelHonorarios.setBackground(new Color(0, 153, 153));
-    labelHonorarios.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios);
+    // se crea la Tabla con el modelo DefaultTableModel
+    final JTable table = new JTable(dtm);
 
-    labelHonorarios2.setBounds(450, 180, 200, 20);
-    labelHonorarios2.setBackground(new Color(0, 153, 153));
-    labelHonorarios2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios2);
+    // insertamos las columnas
+    dtm.addColumn("No. de cuota ");
+    dtm.addColumn("Monto Cuota ");
+    dtm.addColumn("Interes ");
+    dtm.addColumn("Amortizacion ");
+    dtm.addColumn("Deuda ");
 
-    labelHonorarios3.setBounds(450, 210, 200, 20);
-    labelHonorarios3.setBackground(new Color(0, 153, 153));
-    labelHonorarios3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios3);
+    // insertamos el contenido de las columnas
+    for (int row = 0; row < 20; row++) {
+      for (int column = 0; column < 5; column++) {
+        data[column] = "Celda " + row + "," + column;
+      }
+      dtm.addRow(data);
+    }
 
-    labelMontoFinal.setBounds(600, 150, 200, 20);
-    labelMontoFinal.setBackground(new Color(0, 153, 153));
-    labelMontoFinal.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMontoFinal);
+    // se define el tama�o
+    table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
-    textArea.setBounds(50, 250, 700, 300);
-    textArea.setBackground(new Color(255, 255, 255));
-    textArea.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    // Creamos un JscrollPane y le agregamos la JTable
+    JScrollPane scrollPane = new JScrollPane(table);
+    scrollPane.setBounds(50, 250, 700, 300);
+    scrollPane.setBackground(new Color(255, 255, 255));
+    scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(scrollPane);
 
-    panel2.add(textArea);
+    // Agregamos el JScrollPane al contenedor
+    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
+    // manejamos la salida
+
+    // frame.addWindowListener(new WindowAdapter() {
+    // public void windowClosing(WindowEvent e) {
+    // System.exit(0);
+    // }
+    // });
+    JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
     calcular.setFont(new Font("Times new Roman", Font.BOLD, 16));
     calcular.setForeground(new Color(0, 0, 0));
     panel2.add(calcular);
-
-    regresar.setBounds(50, 720, 150, 40);
-    regresar.setBackground(new Color(135, 206, 250));
-    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
-    regresar.setForeground(new Color(0, 0, 0));
-    panel2.add(regresar);
-
+    // frame.getContentPane().add(calcular);
     calcular.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String datos = "";
-        textArea.setText(datos);
+        String solicitud = creditoPersonal.getSelectedItem().toString();
+        if (solicitud.equals("Seleccione")) {
+          JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
+        } else {
+          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
+          credito.getAmortizacion().calcularCuotas();
+          credito.getAmortizacion().calcularCuotasInteres();
+          credito.getAmortizacion().calcularAmortizacion();
+          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+          double monto = credito.getMontoFinal();
+          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+            Object[] data = new Object[5];
+            data[0] = i + 1;
+            data[1] = cuotas.get(i);
+            data[2] = intereses.get(i);
+            data[3] = amortizacion.get(i);
+            data[4] = monto;
+            monto = monto - amortizacion.get(i);
+            dtm.addRow(data);
+          }
+        }
       }
     });
+    JButton button = new JButton("Salir");
+    button.setBounds(50, 680, 200, 30);
+    button.setBackground(new Color(135, 206, 250));
+    button.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    button.setForeground(new Color(0, 0, 0));
+    panel2.add(button);
+    button.addActionListener(new ActionListener() {
 
-    regresar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        // frame.setVisible(false);
         setBounds(350, 0, 700, 850);
         panel2.setVisible(false);
         panel.setVisible(true);
       }
+
     });
+    // frame.getContentPane().add(button, BorderLayout.SOUTH);
   }
 
   // debo editar las etiqueta
   private void menuCacularCreditoFiduciarioEnColon() {
-    JPanel panel2 = new JPanel();
-    JButton regresar = new JButton("Regresar");
-    JLabel labelCredito = new JLabel("Calculo del Credito Fiduciario en Colón con tasa fija");
-    JTextArea textArea = new JTextArea();
-    JLabel labelMonto = new JLabel(" Monto inicial ");
-    JLabel labelMonto2 = new JLabel(" a solicitar ");
-    JLabel labelCosto = new JLabel(" Costo de avalúo ");
-    JLabel labelCosto2 = new JLabel(" para creditos");
-    JLabel labelCosto3 = new JLabel("hipotecarios ");
-    JLabel labelFormalizacion = new JLabel("Formalización");
-    JLabel labelHonorarios = new JLabel("Honorarios legales con");
-    JLabel labelHonorarios2 = new JLabel("respecto al monto incial a");
-    JLabel labelHonorarios3 = new JLabel("solicitar ");
-    JLabel labelMontoFinal = new JLabel("Monto final a solicitar");
-    JButton calcular = new JButton("Calcular");
-    JComboBox<String> creditoHipotecario = new JComboBox<String>();
 
+    // JFrame frame = new JFrame("Calcular credito personal en dolares");
+    JPanel panel2 = new JPanel();
+    JLabel codigo = new JLabel("numero de solicitud");
+    JLabel titulo = new JLabel("Calcular credito fiduciario en colones");
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    codigo.setBackground(new Color(0, 153, 153));
+    JComboBox<String> creditoPersonal = new JComboBox<String>();
+
+    // frame.setSize(500, 500);
+    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // frame.setVisible(true);
+    creditoPersonal.addItem("Seleccione");
+
+    // frame.add(panel2);
     panel2.setLayout(null);
     panel2.setBackground(new Color(0, 153, 153));
-    panel2.setBounds(0, 0, 800, 700);
+    panel2.setBounds(0, 0, 500, 500);
     this.add(panel2);
-    setBounds(350, 0, 800, 850);
 
-    labelCredito.setBounds(50, 50, 500, 20);
-    labelCredito.setBackground(new Color(0, 153, 153));
-    labelCredito.setFont(new Font("Times new Roman", Font.BOLD, 20));
-    panel2.add(labelCredito);
+    setBounds(350, 0, 780, 850);
 
-    creditoHipotecario.setBounds(50, 100, 200, 30);
-    creditoHipotecario.setBackground(new Color(255, 255, 255));
-    creditoHipotecario.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(creditoHipotecario);
+    titulo.setBounds(100, 10, 500, 40);
+    titulo.setBackground(new Color(0, 153, 153));
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    panel2.add(titulo);
 
-    labelMonto.setBounds(50, 150, 200, 20);
-    labelMonto.setBackground(new Color(0, 153, 153));
-    labelMonto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto);
+    codigo.setBounds(50, 100, 200, 40);
+    codigo.setBackground(new Color(0, 153, 153));
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(codigo);
 
-    labelMonto2.setBounds(50, 180, 200, 20);
-    labelMonto2.setBackground(new Color(0, 153, 153));
-    labelMonto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto2);
+    creditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    creditoPersonal.setBackground(new Color(255, 255, 255));
+    creditoPersonal.setBounds(50, 150, 200, 30);
+    panel2.add(creditoPersonal);
 
-    labelCosto.setBounds(200, 150, 200, 20);
-    labelCosto.setBackground(new Color(0, 153, 153));
-    labelCosto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto);
+    for (CreditoPersonal credito : creditosPersonales) {
+      String numero = credito.getNumSolicitud();
+      creditoPersonal.addItem(numero);
+    }
 
-    labelCosto2.setBounds(200, 180, 200, 20);
-    labelCosto2.setBackground(new Color(0, 153, 153));
-    labelCosto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto2);
+    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
+    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
 
-    labelCosto3.setBounds(200, 210, 200, 20);
-    labelCosto3.setBackground(new Color(0, 153, 153));
-    labelCosto3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto3);
+    // creamos el arreglo de objetos que contendra el
+    // contenido de las columnas
+    Object[] data = new Object[5]; // = new Object[5];
 
-    labelFormalizacion.setBounds(350, 150, 200, 20);
-    labelFormalizacion.setBackground(new Color(0, 153, 153));
-    labelFormalizacion.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelFormalizacion);
+    // creamos el modelo de Tabla
+    DefaultTableModel dtm = new DefaultTableModel();
 
-    labelHonorarios.setBounds(450, 150, 200, 20);
-    labelHonorarios.setBackground(new Color(0, 153, 153));
-    labelHonorarios.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios);
+    // se crea la Tabla con el modelo DefaultTableModel
+    final JTable table = new JTable(dtm);
 
-    labelHonorarios2.setBounds(450, 180, 200, 20);
-    labelHonorarios2.setBackground(new Color(0, 153, 153));
-    labelHonorarios2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios2);
+    // insertamos las columnas
+    dtm.addColumn("No. de cuota ");
+    dtm.addColumn("Monto Cuota ");
+    dtm.addColumn("Interes ");
+    dtm.addColumn("Amortizacion ");
+    dtm.addColumn("Deuda ");
 
-    labelHonorarios3.setBounds(450, 210, 200, 20);
-    labelHonorarios3.setBackground(new Color(0, 153, 153));
-    labelHonorarios3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios3);
+    // insertamos el contenido de las columnas
+    for (int row = 0; row < 20; row++) {
+      for (int column = 0; column < 5; column++) {
+        data[column] = "Celda " + row + "," + column;
+      }
+      dtm.addRow(data);
+    }
 
-    labelMontoFinal.setBounds(600, 150, 200, 20);
-    labelMontoFinal.setBackground(new Color(0, 153, 153));
-    labelMontoFinal.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMontoFinal);
+    // se define el tama�o
+    table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
-    textArea.setBounds(50, 250, 700, 300);
-    textArea.setBackground(new Color(255, 255, 255));
-    textArea.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    // Creamos un JscrollPane y le agregamos la JTable
+    JScrollPane scrollPane = new JScrollPane(table);
+    scrollPane.setBounds(50, 250, 700, 300);
+    scrollPane.setBackground(new Color(255, 255, 255));
+    scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(scrollPane);
 
-    panel2.add(textArea);
+    // Agregamos el JScrollPane al contenedor
+    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
+    // manejamos la salida
+
+    // frame.addWindowListener(new WindowAdapter() {
+    // public void windowClosing(WindowEvent e) {
+    // System.exit(0);
+    // }
+    // });
+    JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
     calcular.setFont(new Font("Times new Roman", Font.BOLD, 16));
     calcular.setForeground(new Color(0, 0, 0));
     panel2.add(calcular);
-
-    regresar.setBounds(50, 720, 150, 40);
-    regresar.setBackground(new Color(135, 206, 250));
-    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
-    regresar.setForeground(new Color(0, 0, 0));
-    panel2.add(regresar);
-
+    // frame.getContentPane().add(calcular);
     calcular.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String datos = "";
-        textArea.setText(datos);
+        String solicitud = creditoPersonal.getSelectedItem().toString();
+        if (solicitud.equals("Seleccione")) {
+          JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
+        } else {
+          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
+          credito.getAmortizacion().calcularCuotas();
+          credito.getAmortizacion().calcularCuotasInteres();
+          credito.getAmortizacion().calcularAmortizacion();
+          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+          double monto = credito.getMontoFinal();
+          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+            Object[] data = new Object[5];
+            data[0] = i + 1;
+            data[1] = cuotas.get(i);
+            data[2] = intereses.get(i);
+            data[3] = amortizacion.get(i);
+            data[4] = monto;
+            monto = monto - amortizacion.get(i);
+            dtm.addRow(data);
+          }
+        }
       }
     });
+    JButton button = new JButton("Salir");
+    button.setBounds(50, 680, 200, 30);
+    button.setBackground(new Color(135, 206, 250));
+    button.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    button.setForeground(new Color(0, 0, 0));
+    panel2.add(button);
+    button.addActionListener(new ActionListener() {
 
-    regresar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        // frame.setVisible(false);
         setBounds(350, 0, 700, 850);
         panel2.setVisible(false);
         panel.setVisible(true);
       }
+
     });
+    // frame.getContentPane().add(button, BorderLayout.SOUTH);
   }
 
   private void menuCalcularCreditoFiduciarioEnDolar() {
-    JPanel panel2 = new JPanel();
-    JButton regresar = new JButton("Regresar");
-    JLabel labelCredito = new JLabel("Calculo del Credito Fiduciario en dolar con tasa fija");
-    JTextArea textArea = new JTextArea();
-    JLabel labelMonto = new JLabel(" Monto inicial ");
-    JLabel labelMonto2 = new JLabel(" a solicitar ");
-    JLabel labelCosto = new JLabel(" Costo de avalúo ");
-    JLabel labelCosto2 = new JLabel(" para creditos");
-    JLabel labelCosto3 = new JLabel("hipotecarios ");
-    JLabel labelFormalizacion = new JLabel("Formalización");
-    JLabel labelHonorarios = new JLabel("Honorarios legales con");
-    JLabel labelHonorarios2 = new JLabel("respecto al monto incial a");
-    JLabel labelHonorarios3 = new JLabel("solicitar ");
-    JLabel labelMontoFinal = new JLabel("Monto final a solicitar");
-    JButton calcular = new JButton("Calcular");
-    JComboBox<String> creditoHipotecario = new JComboBox<String>();
 
+    // JFrame frame = new JFrame("Calcular credito personal en dolares");
+    JPanel panel2 = new JPanel();
+    JLabel codigo = new JLabel("numero de solicitud");
+    JLabel titulo = new JLabel("Calcular credito fiduciario en dolares");
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    codigo.setBackground(new Color(0, 153, 153));
+    JComboBox<String> creditoPersonal = new JComboBox<String>();
+
+    // frame.setSize(500, 500);
+    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // frame.setVisible(true);
+    creditoPersonal.addItem("Seleccione");
+
+    // frame.add(panel2);
     panel2.setLayout(null);
     panel2.setBackground(new Color(0, 153, 153));
-    panel2.setBounds(0, 0, 800, 700);
+    panel2.setBounds(0, 0, 500, 500);
     this.add(panel2);
-    setBounds(350, 0, 800, 850);
 
-    labelCredito.setBounds(50, 50, 500, 20);
-    labelCredito.setBackground(new Color(0, 153, 153));
-    labelCredito.setFont(new Font("Times new Roman", Font.BOLD, 20));
-    panel2.add(labelCredito);
+    setBounds(350, 0, 780, 850);
 
-    creditoHipotecario.setBounds(50, 100, 200, 30);
-    creditoHipotecario.setBackground(new Color(255, 255, 255));
-    creditoHipotecario.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(creditoHipotecario);
+    titulo.setBounds(100, 10, 500, 40);
+    titulo.setBackground(new Color(0, 153, 153));
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    panel2.add(titulo);
 
-    labelMonto.setBounds(50, 150, 200, 20);
-    labelMonto.setBackground(new Color(0, 153, 153));
-    labelMonto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto);
+    codigo.setBounds(50, 100, 200, 40);
+    codigo.setBackground(new Color(0, 153, 153));
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(codigo);
 
-    labelMonto2.setBounds(50, 180, 200, 20);
-    labelMonto2.setBackground(new Color(0, 153, 153));
-    labelMonto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto2);
+    creditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    creditoPersonal.setBackground(new Color(255, 255, 255));
+    creditoPersonal.setBounds(50, 150, 200, 30);
+    panel2.add(creditoPersonal);
 
-    labelCosto.setBounds(200, 150, 200, 20);
-    labelCosto.setBackground(new Color(0, 153, 153));
-    labelCosto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto);
+    for (CreditoPersonal credito : creditosPersonales) {
+      String numero = credito.getNumSolicitud();
+      creditoPersonal.addItem(numero);
+    }
 
-    labelCosto2.setBounds(200, 180, 200, 20);
-    labelCosto2.setBackground(new Color(0, 153, 153));
-    labelCosto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto2);
+    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
+    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
 
-    labelCosto3.setBounds(200, 210, 200, 20);
-    labelCosto3.setBackground(new Color(0, 153, 153));
-    labelCosto3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto3);
+    // creamos el arreglo de objetos que contendra el
+    // contenido de las columnas
+    Object[] data = new Object[5]; // = new Object[5];
 
-    labelFormalizacion.setBounds(350, 150, 200, 20);
-    labelFormalizacion.setBackground(new Color(0, 153, 153));
-    labelFormalizacion.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelFormalizacion);
+    // creamos el modelo de Tabla
+    DefaultTableModel dtm = new DefaultTableModel();
 
-    labelHonorarios.setBounds(450, 150, 200, 20);
-    labelHonorarios.setBackground(new Color(0, 153, 153));
-    labelHonorarios.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios);
+    // se crea la Tabla con el modelo DefaultTableModel
+    final JTable table = new JTable(dtm);
 
-    labelHonorarios2.setBounds(450, 180, 200, 20);
-    labelHonorarios2.setBackground(new Color(0, 153, 153));
-    labelHonorarios2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios2);
+    // insertamos las columnas
+    dtm.addColumn("No. de cuota ");
+    dtm.addColumn("Monto Cuota ");
+    dtm.addColumn("Interes ");
+    dtm.addColumn("Amortizacion ");
+    dtm.addColumn("Deuda ");
 
-    labelHonorarios3.setBounds(450, 210, 200, 20);
-    labelHonorarios3.setBackground(new Color(0, 153, 153));
-    labelHonorarios3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios3);
+    // insertamos el contenido de las columnas
+    for (int row = 0; row < 20; row++) {
+      for (int column = 0; column < 5; column++) {
+        data[column] = "Celda " + row + "," + column;
+      }
+      dtm.addRow(data);
+    }
 
-    labelMontoFinal.setBounds(600, 150, 200, 20);
-    labelMontoFinal.setBackground(new Color(0, 153, 153));
-    labelMontoFinal.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMontoFinal);
+    // se define el tama�o
+    table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
-    textArea.setBounds(50, 250, 700, 300);
-    textArea.setBackground(new Color(255, 255, 255));
-    textArea.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    // Creamos un JscrollPane y le agregamos la JTable
+    JScrollPane scrollPane = new JScrollPane(table);
+    scrollPane.setBounds(50, 250, 700, 300);
+    scrollPane.setBackground(new Color(255, 255, 255));
+    scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(scrollPane);
 
-    panel2.add(textArea);
+    // Agregamos el JScrollPane al contenedor
+    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
+    // manejamos la salida
+
+    // frame.addWindowListener(new WindowAdapter() {
+    // public void windowClosing(WindowEvent e) {
+    // System.exit(0);
+    // }
+    // });
+    JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
     calcular.setFont(new Font("Times new Roman", Font.BOLD, 16));
     calcular.setForeground(new Color(0, 0, 0));
     panel2.add(calcular);
-
-    regresar.setBounds(50, 720, 150, 40);
-    regresar.setBackground(new Color(135, 206, 250));
-    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
-    regresar.setForeground(new Color(0, 0, 0));
-    panel2.add(regresar);
-
+    // frame.getContentPane().add(calcular);
     calcular.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String datos = "";
-        textArea.setText(datos);
+        String solicitud = creditoPersonal.getSelectedItem().toString();
+        if (solicitud.equals("Seleccione")) {
+          JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
+        } else {
+          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
+          credito.getAmortizacion().calcularCuotas();
+          credito.getAmortizacion().calcularCuotasInteres();
+          credito.getAmortizacion().calcularAmortizacion();
+          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+          double monto = credito.getMontoFinal();
+          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+            Object[] data = new Object[5];
+            data[0] = i + 1;
+            data[1] = cuotas.get(i);
+            data[2] = intereses.get(i);
+            data[3] = amortizacion.get(i);
+            data[4] = monto;
+            monto = monto - amortizacion.get(i);
+            dtm.addRow(data);
+          }
+        }
       }
     });
+    JButton button = new JButton("Salir");
+    button.setBounds(50, 680, 200, 30);
+    button.setBackground(new Color(135, 206, 250));
+    button.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    button.setForeground(new Color(0, 0, 0));
+    panel2.add(button);
+    button.addActionListener(new ActionListener() {
 
-    regresar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        // frame.setVisible(false);
         setBounds(350, 0, 700, 850);
         panel2.setVisible(false);
         panel.setVisible(true);
       }
+
     });
+    // frame.getContentPane().add(button, BorderLayout.SOUTH);
   }
 
   private void menuCalcularCreditoPrendarioEnColon() {
-    JPanel panel2 = new JPanel();
-    JButton regresar = new JButton("Regresar");
-    JLabel labelCredito = new JLabel("Calculo del Credito prendario en colones con tasa fija");
-    JTextArea textArea = new JTextArea();
-    JLabel labelMonto = new JLabel(" Monto inicial ");
-    JLabel labelMonto2 = new JLabel(" a solicitar ");
-    JLabel labelCosto = new JLabel(" Costo de avalúo ");
-    JLabel labelCosto2 = new JLabel(" para creditos");
-    JLabel labelCosto3 = new JLabel("hipotecarios ");
-    JLabel labelFormalizacion = new JLabel("Formalización");
-    JLabel labelHonorarios = new JLabel("Honorarios legales con");
-    JLabel labelHonorarios2 = new JLabel("respecto al monto incial a");
-    JLabel labelHonorarios3 = new JLabel("solicitar ");
-    JLabel labelMontoFinal = new JLabel("Monto final a solicitar");
-    JButton calcular = new JButton("Calcular");
-    JComboBox<String> creditoHipotecario = new JComboBox<String>();
 
+    // JFrame frame = new JFrame("Calcular credito personal en dolares");
+    JPanel panel2 = new JPanel();
+    JLabel codigo = new JLabel("numero de solicitud");
+    JLabel titulo = new JLabel("Calcular credito prendario en colones");
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    codigo.setBackground(new Color(0, 153, 153));
+    JComboBox<String> creditoPersonal = new JComboBox<String>();
+
+    // frame.setSize(500, 500);
+    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // frame.setVisible(true);
+    creditoPersonal.addItem("Seleccione");
+
+    // frame.add(panel2);
     panel2.setLayout(null);
     panel2.setBackground(new Color(0, 153, 153));
-    panel2.setBounds(0, 0, 800, 700);
+    panel2.setBounds(0, 0, 500, 500);
     this.add(panel2);
-    setBounds(350, 0, 800, 850);
 
-    labelCredito.setBounds(50, 50, 500, 20);
-    labelCredito.setBackground(new Color(0, 153, 153));
-    labelCredito.setFont(new Font("Times new Roman", Font.BOLD, 20));
-    panel2.add(labelCredito);
+    setBounds(350, 0, 780, 850);
 
-    creditoHipotecario.setBounds(50, 100, 200, 30);
-    creditoHipotecario.setBackground(new Color(255, 255, 255));
-    creditoHipotecario.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(creditoHipotecario);
+    titulo.setBounds(100, 10, 500, 40);
+    titulo.setBackground(new Color(0, 153, 153));
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    panel2.add(titulo);
 
-    labelMonto.setBounds(50, 150, 200, 20);
-    labelMonto.setBackground(new Color(0, 153, 153));
-    labelMonto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto);
+    codigo.setBounds(50, 100, 200, 40);
+    codigo.setBackground(new Color(0, 153, 153));
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(codigo);
 
-    labelMonto2.setBounds(50, 180, 200, 20);
-    labelMonto2.setBackground(new Color(0, 153, 153));
-    labelMonto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto2);
+    creditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    creditoPersonal.setBackground(new Color(255, 255, 255));
+    creditoPersonal.setBounds(50, 150, 200, 30);
+    panel2.add(creditoPersonal);
 
-    labelCosto.setBounds(200, 150, 200, 20);
-    labelCosto.setBackground(new Color(0, 153, 153));
-    labelCosto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto);
+    for (CreditoPersonal credito : creditosPersonales) {
+      String numero = credito.getNumSolicitud();
+      creditoPersonal.addItem(numero);
+    }
 
-    labelCosto2.setBounds(200, 180, 200, 20);
-    labelCosto2.setBackground(new Color(0, 153, 153));
-    labelCosto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto2);
+    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
+    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
 
-    labelCosto3.setBounds(200, 210, 200, 20);
-    labelCosto3.setBackground(new Color(0, 153, 153));
-    labelCosto3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto3);
+    // creamos el arreglo de objetos que contendra el
+    // contenido de las columnas
+    Object[] data = new Object[5]; // = new Object[5];
 
-    labelFormalizacion.setBounds(350, 150, 200, 20);
-    labelFormalizacion.setBackground(new Color(0, 153, 153));
-    labelFormalizacion.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelFormalizacion);
+    // creamos el modelo de Tabla
+    DefaultTableModel dtm = new DefaultTableModel();
 
-    labelHonorarios.setBounds(450, 150, 200, 20);
-    labelHonorarios.setBackground(new Color(0, 153, 153));
-    labelHonorarios.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios);
+    // se crea la Tabla con el modelo DefaultTableModel
+    final JTable table = new JTable(dtm);
 
-    labelHonorarios2.setBounds(450, 180, 200, 20);
-    labelHonorarios2.setBackground(new Color(0, 153, 153));
-    labelHonorarios2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios2);
+    // insertamos las columnas
+    dtm.addColumn("No. de cuota ");
+    dtm.addColumn("Monto Cuota ");
+    dtm.addColumn("Interes ");
+    dtm.addColumn("Amortizacion ");
+    dtm.addColumn("Deuda ");
 
-    labelHonorarios3.setBounds(450, 210, 200, 20);
-    labelHonorarios3.setBackground(new Color(0, 153, 153));
-    labelHonorarios3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios3);
+    // insertamos el contenido de las columnas
+    for (int row = 0; row < 20; row++) {
+      for (int column = 0; column < 5; column++) {
+        data[column] = "Celda " + row + "," + column;
+      }
+      dtm.addRow(data);
+    }
 
-    labelMontoFinal.setBounds(600, 150, 200, 20);
-    labelMontoFinal.setBackground(new Color(0, 153, 153));
-    labelMontoFinal.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMontoFinal);
+    // se define el tama�o
+    table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
-    textArea.setBounds(50, 250, 700, 300);
-    textArea.setBackground(new Color(255, 255, 255));
-    textArea.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    // Creamos un JscrollPane y le agregamos la JTable
+    JScrollPane scrollPane = new JScrollPane(table);
+    scrollPane.setBounds(50, 250, 700, 300);
+    scrollPane.setBackground(new Color(255, 255, 255));
+    scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(scrollPane);
 
-    panel2.add(textArea);
+    // Agregamos el JScrollPane al contenedor
+    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
+    // manejamos la salida
+
+    // frame.addWindowListener(new WindowAdapter() {
+    // public void windowClosing(WindowEvent e) {
+    // System.exit(0);
+    // }
+    // });
+    JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
     calcular.setFont(new Font("Times new Roman", Font.BOLD, 16));
     calcular.setForeground(new Color(0, 0, 0));
     panel2.add(calcular);
-
-    regresar.setBounds(50, 720, 150, 40);
-    regresar.setBackground(new Color(135, 206, 250));
-    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
-    regresar.setForeground(new Color(0, 0, 0));
-    panel2.add(regresar);
-
+    // frame.getContentPane().add(calcular);
     calcular.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String datos = "";
-        textArea.setText(datos);
+        String solicitud = creditoPersonal.getSelectedItem().toString();
+        if (solicitud.equals("Seleccione")) {
+          JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
+        } else {
+          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
+          credito.getAmortizacion().calcularCuotas();
+          credito.getAmortizacion().calcularCuotasInteres();
+          credito.getAmortizacion().calcularAmortizacion();
+          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+          double monto = credito.getMontoFinal();
+          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+            Object[] data = new Object[5];
+            data[0] = i + 1;
+            data[1] = cuotas.get(i);
+            data[2] = intereses.get(i);
+            data[3] = amortizacion.get(i);
+            data[4] = monto;
+            monto = monto - amortizacion.get(i);
+            dtm.addRow(data);
+          }
+        }
       }
     });
+    JButton button = new JButton("Salir");
+    button.setBounds(50, 680, 200, 30);
+    button.setBackground(new Color(135, 206, 250));
+    button.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    button.setForeground(new Color(0, 0, 0));
+    panel2.add(button);
+    button.addActionListener(new ActionListener() {
 
-    regresar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        // frame.setVisible(false);
         setBounds(350, 0, 700, 850);
         panel2.setVisible(false);
         panel.setVisible(true);
       }
+
     });
+    // frame.getContentPane().add(button, BorderLayout.SOUTH);
   }
 
   private void menuCalcularCreditoPrendarioDolar() {
-    JPanel panel2 = new JPanel();
-    JButton regresar = new JButton("Regresar");
-    JLabel labelCredito = new JLabel("Calculo del Credito prendario en dolares con tasa fija");
-    JTextArea textArea = new JTextArea();
-    JLabel labelMonto = new JLabel(" Monto inicial ");
-    JLabel labelMonto2 = new JLabel(" a solicitar ");
-    JLabel labelCosto = new JLabel(" Costo de avalúo ");
-    JLabel labelCosto2 = new JLabel(" para creditos");
-    JLabel labelCosto3 = new JLabel("hipotecarios ");
-    JLabel labelFormalizacion = new JLabel("Formalización");
-    JLabel labelHonorarios = new JLabel("Honorarios legales con");
-    JLabel labelHonorarios2 = new JLabel("respecto al monto incial a");
-    JLabel labelHonorarios3 = new JLabel("solicitar ");
-    JLabel labelMontoFinal = new JLabel("Monto final a solicitar");
-    JButton calcular = new JButton("Calcular");
-    JComboBox<String> creditoHipotecario = new JComboBox<String>();
 
+    // JFrame frame = new JFrame("Calcular credito personal en dolares");
+    JPanel panel2 = new JPanel();
+    JLabel codigo = new JLabel("numero de solicitud");
+    JLabel titulo = new JLabel("Calcular credito prendario en dolares");
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    codigo.setBackground(new Color(0, 153, 153));
+    JComboBox<String> creditoPersonal = new JComboBox<String>();
+
+    // frame.setSize(500, 500);
+    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // frame.setVisible(true);
+    creditoPersonal.addItem("Seleccione");
+
+    // frame.add(panel2);
     panel2.setLayout(null);
     panel2.setBackground(new Color(0, 153, 153));
-    panel2.setBounds(0, 0, 800, 700);
+    panel2.setBounds(0, 0, 500, 500);
     this.add(panel2);
-    setBounds(350, 0, 800, 850);
 
-    labelCredito.setBounds(50, 50, 500, 20);
-    labelCredito.setBackground(new Color(0, 153, 153));
-    labelCredito.setFont(new Font("Times new Roman", Font.BOLD, 20));
-    panel2.add(labelCredito);
+    setBounds(350, 0, 780, 850);
 
-    creditoHipotecario.setBounds(50, 100, 200, 30);
-    creditoHipotecario.setBackground(new Color(255, 255, 255));
-    creditoHipotecario.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(creditoHipotecario);
+    titulo.setBounds(100, 10, 500, 40);
+    titulo.setBackground(new Color(0, 153, 153));
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    panel2.add(titulo);
 
-    labelMonto.setBounds(50, 150, 200, 20);
-    labelMonto.setBackground(new Color(0, 153, 153));
-    labelMonto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto);
+    codigo.setBounds(50, 100, 200, 40);
+    codigo.setBackground(new Color(0, 153, 153));
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(codigo);
 
-    labelMonto2.setBounds(50, 180, 200, 20);
-    labelMonto2.setBackground(new Color(0, 153, 153));
-    labelMonto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto2);
+    creditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    creditoPersonal.setBackground(new Color(255, 255, 255));
+    creditoPersonal.setBounds(50, 150, 200, 30);
+    panel2.add(creditoPersonal);
 
-    labelCosto.setBounds(200, 150, 200, 20);
-    labelCosto.setBackground(new Color(0, 153, 153));
-    labelCosto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto);
+    for (CreditoPersonal credito : creditosPersonales) {
+      String numero = credito.getNumSolicitud();
+      creditoPersonal.addItem(numero);
+    }
 
-    labelCosto2.setBounds(200, 180, 200, 20);
-    labelCosto2.setBackground(new Color(0, 153, 153));
-    labelCosto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto2);
+    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
+    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
 
-    labelCosto3.setBounds(200, 210, 200, 20);
-    labelCosto3.setBackground(new Color(0, 153, 153));
-    labelCosto3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto3);
+    // creamos el arreglo de objetos que contendra el
+    // contenido de las columnas
+    Object[] data = new Object[5]; // = new Object[5];
 
-    labelFormalizacion.setBounds(350, 150, 200, 20);
-    labelFormalizacion.setBackground(new Color(0, 153, 153));
-    labelFormalizacion.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelFormalizacion);
+    // creamos el modelo de Tabla
+    DefaultTableModel dtm = new DefaultTableModel();
 
-    labelHonorarios.setBounds(450, 150, 200, 20);
-    labelHonorarios.setBackground(new Color(0, 153, 153));
-    labelHonorarios.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios);
+    // se crea la Tabla con el modelo DefaultTableModel
+    final JTable table = new JTable(dtm);
 
-    labelHonorarios2.setBounds(450, 180, 200, 20);
-    labelHonorarios2.setBackground(new Color(0, 153, 153));
-    labelHonorarios2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios2);
+    // insertamos las columnas
+    dtm.addColumn("No. de cuota ");
+    dtm.addColumn("Monto Cuota ");
+    dtm.addColumn("Interes ");
+    dtm.addColumn("Amortizacion ");
+    dtm.addColumn("Deuda ");
 
-    labelHonorarios3.setBounds(450, 210, 200, 20);
-    labelHonorarios3.setBackground(new Color(0, 153, 153));
-    labelHonorarios3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios3);
+    // insertamos el contenido de las columnas
+    for (int row = 0; row < 20; row++) {
+      for (int column = 0; column < 5; column++) {
+        data[column] = "Celda " + row + "," + column;
+      }
+      dtm.addRow(data);
+    }
 
-    labelMontoFinal.setBounds(600, 150, 200, 20);
-    labelMontoFinal.setBackground(new Color(0, 153, 153));
-    labelMontoFinal.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMontoFinal);
+    // se define el tama�o
+    table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
-    textArea.setBounds(50, 250, 700, 300);
-    textArea.setBackground(new Color(255, 255, 255));
-    textArea.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    // Creamos un JscrollPane y le agregamos la JTable
+    JScrollPane scrollPane = new JScrollPane(table);
+    scrollPane.setBounds(50, 250, 700, 300);
+    scrollPane.setBackground(new Color(255, 255, 255));
+    scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(scrollPane);
 
-    panel2.add(textArea);
+    // Agregamos el JScrollPane al contenedor
+    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
+    // manejamos la salida
+
+    // frame.addWindowListener(new WindowAdapter() {
+    // public void windowClosing(WindowEvent e) {
+    // System.exit(0);
+    // }
+    // });
+    JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
     calcular.setFont(new Font("Times new Roman", Font.BOLD, 16));
     calcular.setForeground(new Color(0, 0, 0));
     panel2.add(calcular);
-
-    regresar.setBounds(50, 720, 150, 40);
-    regresar.setBackground(new Color(135, 206, 250));
-    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
-    regresar.setForeground(new Color(0, 0, 0));
-    panel2.add(regresar);
-
+    // frame.getContentPane().add(calcular);
     calcular.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String datos = "";
-        textArea.setText(datos);
+        String solicitud = creditoPersonal.getSelectedItem().toString();
+        if (solicitud.equals("Seleccione")) {
+          JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
+        } else {
+          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
+          credito.getAmortizacion().calcularCuotas();
+          credito.getAmortizacion().calcularCuotasInteres();
+          credito.getAmortizacion().calcularAmortizacion();
+          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+          double monto = credito.getMontoFinal();
+          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+            Object[] data = new Object[5];
+            data[0] = i + 1;
+            data[1] = cuotas.get(i);
+            data[2] = intereses.get(i);
+            data[3] = amortizacion.get(i);
+            data[4] = monto;
+            monto = monto - amortizacion.get(i);
+            dtm.addRow(data);
+          }
+        }
       }
     });
+    JButton button = new JButton("Salir");
+    button.setBounds(50, 680, 200, 30);
+    button.setBackground(new Color(135, 206, 250));
+    button.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    button.setForeground(new Color(0, 0, 0));
+    panel2.add(button);
+    button.addActionListener(new ActionListener() {
 
-    regresar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        // frame.setVisible(false);
         setBounds(350, 0, 700, 850);
         panel2.setVisible(false);
         panel.setVisible(true);
       }
+
     });
+    // frame.getContentPane().add(button, BorderLayout.SOUTH);
   }
 
   private void menuCalcularCreditoPersonalEnColones() {
-    JPanel panel2 = new JPanel();
-    JButton regresar = new JButton("Regresar");
-    JLabel labelCredito = new JLabel("Calculo del Credito Personal en colones con tasa fija");
-    JTextArea textArea = new JTextArea();
-    JLabel labelMonto = new JLabel(" Monto inicial ");
-    JLabel labelMonto2 = new JLabel(" a solicitar ");
-    JLabel labelCosto = new JLabel(" Costo de avalúo ");
-    JLabel labelCosto2 = new JLabel(" para creditos");
-    JLabel labelCosto3 = new JLabel("hipotecarios ");
-    JLabel labelFormalizacion = new JLabel("Formalización");
-    JLabel labelHonorarios = new JLabel("Honorarios legales con");
-    JLabel labelHonorarios2 = new JLabel("respecto al monto incial a");
-    JLabel labelHonorarios3 = new JLabel("solicitar ");
-    JLabel labelMontoFinal = new JLabel("Monto final a solicitar");
-    JButton calcular = new JButton("Calcular");
-    JComboBox<String> creditoHipotecario = new JComboBox<String>();
 
+    // JFrame frame = new JFrame("Calcular credito personal en dolares");
+    JPanel panel2 = new JPanel();
+    JLabel codigo = new JLabel("numero de solicitud");
+    JLabel titulo = new JLabel("Calcular credito personal en colones");
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    codigo.setBackground(new Color(0, 153, 153));
+    JComboBox<String> creditoPersonal = new JComboBox<String>();
+
+    // frame.setSize(500, 500);
+    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // frame.setVisible(true);
+    creditoPersonal.addItem("Seleccione");
+
+    // frame.add(panel2);
     panel2.setLayout(null);
     panel2.setBackground(new Color(0, 153, 153));
-    panel2.setBounds(0, 0, 800, 700);
+    panel2.setBounds(0, 0, 500, 500);
     this.add(panel2);
-    setBounds(350, 0, 800, 850);
 
-    labelCredito.setBounds(50, 50, 500, 20);
-    labelCredito.setBackground(new Color(0, 153, 153));
-    labelCredito.setFont(new Font("Times new Roman", Font.BOLD, 20));
-    panel2.add(labelCredito);
+    setBounds(350, 0, 780, 850);
 
-    creditoHipotecario.setBounds(50, 100, 200, 30);
-    creditoHipotecario.setBackground(new Color(255, 255, 255));
-    creditoHipotecario.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(creditoHipotecario);
+    titulo.setBounds(100, 10, 500, 40);
+    titulo.setBackground(new Color(0, 153, 153));
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    panel2.add(titulo);
 
-    labelMonto.setBounds(50, 150, 200, 20);
-    labelMonto.setBackground(new Color(0, 153, 153));
-    labelMonto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto);
+    codigo.setBounds(50, 100, 200, 40);
+    codigo.setBackground(new Color(0, 153, 153));
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(codigo);
 
-    labelMonto2.setBounds(50, 180, 200, 20);
-    labelMonto2.setBackground(new Color(0, 153, 153));
-    labelMonto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto2);
+    creditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    creditoPersonal.setBackground(new Color(255, 255, 255));
+    creditoPersonal.setBounds(50, 150, 200, 30);
+    panel2.add(creditoPersonal);
 
-    labelCosto.setBounds(200, 150, 200, 20);
-    labelCosto.setBackground(new Color(0, 153, 153));
-    labelCosto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto);
+    for (CreditoPersonal credito : creditosPersonales) {
+      String numero = credito.getNumSolicitud();
+      creditoPersonal.addItem(numero);
+    }
 
-    labelCosto2.setBounds(200, 180, 200, 20);
-    labelCosto2.setBackground(new Color(0, 153, 153));
-    labelCosto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto2);
+    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
+    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
 
-    labelCosto3.setBounds(200, 210, 200, 20);
-    labelCosto3.setBackground(new Color(0, 153, 153));
-    labelCosto3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto3);
+    // creamos el arreglo de objetos que contendra el
+    // contenido de las columnas
+    Object[] data = new Object[5]; // = new Object[5];
 
-    labelFormalizacion.setBounds(350, 150, 200, 20);
-    labelFormalizacion.setBackground(new Color(0, 153, 153));
-    labelFormalizacion.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelFormalizacion);
+    // creamos el modelo de Tabla
+    DefaultTableModel dtm = new DefaultTableModel();
 
-    labelHonorarios.setBounds(450, 150, 200, 20);
-    labelHonorarios.setBackground(new Color(0, 153, 153));
-    labelHonorarios.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios);
+    // se crea la Tabla con el modelo DefaultTableModel
+    final JTable table = new JTable(dtm);
 
-    labelHonorarios2.setBounds(450, 180, 200, 20);
-    labelHonorarios2.setBackground(new Color(0, 153, 153));
-    labelHonorarios2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios2);
+    // insertamos las columnas
+    dtm.addColumn("No. de cuota ");
+    dtm.addColumn("Monto Cuota ");
+    dtm.addColumn("Interes ");
+    dtm.addColumn("Amortizacion ");
+    dtm.addColumn("Deuda ");
 
-    labelHonorarios3.setBounds(450, 210, 200, 20);
-    labelHonorarios3.setBackground(new Color(0, 153, 153));
-    labelHonorarios3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios3);
+    // insertamos el contenido de las columnas
+    // for (int row = 0; row < 20; row++) {
+    // for (int column = 0; column < 5; column++) {
+    // data[column] = "Celda " + row + "," + column;
+    // }
+    // dtm.addRow(data);
+    // }
 
-    labelMontoFinal.setBounds(600, 150, 200, 20);
-    labelMontoFinal.setBackground(new Color(0, 153, 153));
-    labelMontoFinal.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMontoFinal);
+    // se define el tama�o
+    table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
-    textArea.setBounds(50, 250, 700, 300);
-    textArea.setBackground(new Color(255, 255, 255));
-    textArea.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    // Creamos un JscrollPane y le agregamos la JTable
+    JScrollPane scrollPane = new JScrollPane(table);
+    scrollPane.setBounds(50, 250, 700, 300);
+    scrollPane.setBackground(new Color(255, 255, 255));
+    scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(scrollPane);
 
-    panel2.add(textArea);
+    // Agregamos el JScrollPane al contenedor
+    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
+    // manejamos la salida
+
+    // frame.addWindowListener(new WindowAdapter() {
+    // public void windowClosing(WindowEvent e) {
+    // System.exit(0);
+    // }
+    // });
+    JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
     calcular.setFont(new Font("Times new Roman", Font.BOLD, 16));
     calcular.setForeground(new Color(0, 0, 0));
     panel2.add(calcular);
-
-    regresar.setBounds(50, 720, 150, 40);
-    regresar.setBackground(new Color(135, 206, 250));
-    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
-    regresar.setForeground(new Color(0, 0, 0));
-    panel2.add(regresar);
-
+    // frame.getContentPane().add(calcular);
     calcular.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String datos = "";
-        textArea.setText(datos);
+        String solicitud = creditoPersonal.getSelectedItem().toString();
+        if (solicitud.equals("Seleccione")) {
+          JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
+        } else {
+          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
+          credito.getAmortizacion().calcularCuotas();
+          credito.getAmortizacion().calcularCuotasInteres();
+          credito.getAmortizacion().calcularAmortizacion();
+          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+          double monto = credito.getMontoFinal();
+          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+            Object[] data = new Object[5];
+            data[0] = i + 1;
+            data[1] = cuotas.get(i);
+            data[2] = intereses.get(i);
+            data[3] = amortizacion.get(i);
+            data[4] = monto;
+            monto -= amortizacion.get(i);
+            dtm.addRow(data);
+          }
+        }
       }
     });
+    JButton button = new JButton("Salir");
+    button.setBounds(50, 680, 200, 30);
+    button.setBackground(new Color(135, 206, 250));
+    button.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    button.setForeground(new Color(0, 0, 0));
+    panel2.add(button);
+    button.addActionListener(new ActionListener() {
 
-    regresar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        // frame.setVisible(false);
         setBounds(350, 0, 700, 850);
         panel2.setVisible(false);
         panel.setVisible(true);
       }
+
     });
+    // frame.getContentPane().add(button, BorderLayout.SOUTH);
   }
 
   private void menuCalcularCreditoPersonalEnDolar() {
-    JPanel panel2 = new JPanel();
-    JButton regresar = new JButton("Regresar");
-    JLabel labelCredito = new JLabel("Calculo del Credito Personal en dolares con tasa fija");
-    JTextArea textArea = new JTextArea();
-    JLabel labelMonto = new JLabel(" Monto inicial ");
-    JLabel labelMonto2 = new JLabel(" a solicitar ");
-    JLabel labelCosto = new JLabel(" Costo de avalúo ");
-    JLabel labelCosto2 = new JLabel(" para creditos");
-    JLabel labelCosto3 = new JLabel("hipotecarios ");
-    JLabel labelFormalizacion = new JLabel("Formalización");
-    JLabel labelHonorarios = new JLabel("Honorarios legales con");
-    JLabel labelHonorarios2 = new JLabel("respecto al monto incial a");
-    JLabel labelHonorarios3 = new JLabel("solicitar ");
-    JLabel labelMontoFinal = new JLabel("Monto final a solicitar");
-    JButton calcular = new JButton("Calcular");
-    JComboBox<String> creditoHipotecario = new JComboBox<String>();
 
+    // JFrame frame = new JFrame("Calcular credito personal en dolares");
+    JPanel panel2 = new JPanel();
+    JLabel codigo = new JLabel("numero de solicitud");
+    JLabel titulo = new JLabel("Calcular credito personal en dolares");
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    codigo.setBackground(new Color(0, 153, 153));
+    JComboBox<String> creditoPersonal = new JComboBox<String>();
+
+    // frame.setSize(500, 500);
+    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    // frame.setVisible(true);
+    creditoPersonal.addItem("Seleccione");
+
+    // frame.add(panel2);
     panel2.setLayout(null);
     panel2.setBackground(new Color(0, 153, 153));
-    panel2.setBounds(0, 0, 800, 700);
+    panel2.setBounds(0, 0, 500, 500);
     this.add(panel2);
-    setBounds(350, 0, 800, 850);
 
-    labelCredito.setBounds(50, 50, 500, 20);
-    labelCredito.setBackground(new Color(0, 153, 153));
-    labelCredito.setFont(new Font("Times new Roman", Font.BOLD, 20));
-    panel2.add(labelCredito);
+    setBounds(350, 0, 780, 850);
 
-    creditoHipotecario.setBounds(50, 100, 200, 30);
-    creditoHipotecario.setBackground(new Color(255, 255, 255));
-    creditoHipotecario.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(creditoHipotecario);
+    titulo.setBounds(100, 10, 500, 40);
+    titulo.setBackground(new Color(0, 153, 153));
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    panel2.add(titulo);
 
-    labelMonto.setBounds(50, 150, 200, 20);
-    labelMonto.setBackground(new Color(0, 153, 153));
-    labelMonto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto);
+    codigo.setBounds(50, 100, 200, 40);
+    codigo.setBackground(new Color(0, 153, 153));
+    codigo.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(codigo);
 
-    labelMonto2.setBounds(50, 180, 200, 20);
-    labelMonto2.setBackground(new Color(0, 153, 153));
-    labelMonto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMonto2);
+    creditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    creditoPersonal.setBackground(new Color(255, 255, 255));
+    creditoPersonal.setBounds(50, 150, 200, 30);
+    panel2.add(creditoPersonal);
 
-    labelCosto.setBounds(200, 150, 200, 20);
-    labelCosto.setBackground(new Color(0, 153, 153));
-    labelCosto.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto);
+    for (CreditoPersonal credito : creditosPersonales) {
+      String numero = credito.getNumSolicitud();
+      creditoPersonal.addItem(numero);
+    }
 
-    labelCosto2.setBounds(200, 180, 200, 20);
-    labelCosto2.setBackground(new Color(0, 153, 153));
-    labelCosto2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto2);
+    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
+    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
 
-    labelCosto3.setBounds(200, 210, 200, 20);
-    labelCosto3.setBackground(new Color(0, 153, 153));
-    labelCosto3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCosto3);
+    // creamos el arreglo de objetos que contendra el
+    // contenido de las columnas
+    Object[] data = new Object[5]; // = new Object[5];
 
-    labelFormalizacion.setBounds(350, 150, 200, 20);
-    labelFormalizacion.setBackground(new Color(0, 153, 153));
-    labelFormalizacion.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelFormalizacion);
+    // creamos el modelo de Tabla
+    DefaultTableModel dtm = new DefaultTableModel();
 
-    labelHonorarios.setBounds(450, 150, 200, 20);
-    labelHonorarios.setBackground(new Color(0, 153, 153));
-    labelHonorarios.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios);
+    // se crea la Tabla con el modelo DefaultTableModel
+    final JTable table = new JTable(dtm);
 
-    labelHonorarios2.setBounds(450, 180, 200, 20);
-    labelHonorarios2.setBackground(new Color(0, 153, 153));
-    labelHonorarios2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios2);
+    // insertamos las columnas
+    dtm.addColumn("No. de cuota ");
+    dtm.addColumn("Monto Cuota ");
+    dtm.addColumn("Interes ");
+    dtm.addColumn("Amortizacion ");
+    dtm.addColumn("Deuda ");
 
-    labelHonorarios3.setBounds(450, 210, 200, 20);
-    labelHonorarios3.setBackground(new Color(0, 153, 153));
-    labelHonorarios3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelHonorarios3);
+    // insertamos el contenido de las columnas
+    for (int row = 0; row < 20; row++) {
+      for (int column = 0; column < 5; column++) {
+        data[column] = "Celda " + row + "," + column;
+      }
+      dtm.addRow(data);
+    }
 
-    labelMontoFinal.setBounds(600, 150, 200, 20);
-    labelMontoFinal.setBackground(new Color(0, 153, 153));
-    labelMontoFinal.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelMontoFinal);
+    // se define el tama�o
+    table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
-    textArea.setBounds(50, 250, 700, 300);
-    textArea.setBackground(new Color(255, 255, 255));
-    textArea.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    // Creamos un JscrollPane y le agregamos la JTable
+    JScrollPane scrollPane = new JScrollPane(table);
+    scrollPane.setBounds(50, 250, 700, 300);
+    scrollPane.setBackground(new Color(255, 255, 255));
+    scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(scrollPane);
 
-    panel2.add(textArea);
+    // Agregamos el JScrollPane al contenedor
+    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 
+    // manejamos la salida
+
+    // frame.addWindowListener(new WindowAdapter() {
+    // public void windowClosing(WindowEvent e) {
+    // System.exit(0);
+    // }
+    // });
+    JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
     calcular.setFont(new Font("Times new Roman", Font.BOLD, 16));
     calcular.setForeground(new Color(0, 0, 0));
     panel2.add(calcular);
-
-    regresar.setBounds(50, 720, 150, 40);
-    regresar.setBackground(new Color(135, 206, 250));
-    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
-    regresar.setForeground(new Color(0, 0, 0));
-    panel2.add(regresar);
-
+    // frame.getContentPane().add(calcular);
     calcular.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String datos = "";
-        textArea.setText(datos);
+        String solicitud = creditoPersonal.getSelectedItem().toString();
+        if (solicitud.equals("Seleccione")) {
+          JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
+        } else {
+          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
+          credito.getAmortizacion().calcularCuotas();
+          credito.getAmortizacion().calcularCuotasInteres();
+          credito.getAmortizacion().calcularAmortizacion();
+          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+          double monto = credito.getMontoFinal();
+          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+            Object[] data = new Object[5];
+            data[0] = i + 1;
+            data[1] = cuotas.get(i);
+            data[2] = intereses.get(i);
+            data[3] = amortizacion.get(i);
+            data[4] = monto;
+            monto = monto - amortizacion.get(i);
+            dtm.addRow(data);
+          }
+        }
       }
     });
+    JButton button = new JButton("Salir");
+    button.setBounds(50, 680, 200, 30);
+    button.setBackground(new Color(135, 206, 250));
+    button.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    button.setForeground(new Color(0, 0, 0));
+    panel2.add(button);
+    button.addActionListener(new ActionListener() {
 
-    regresar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        // frame.setVisible(false);
         setBounds(350, 0, 700, 850);
         panel2.setVisible(false);
         panel.setVisible(true);
       }
+
     });
+    // frame.getContentPane().add(button, BorderLayout.SOUTH);
+  }
+
+  private CreditoPersonal buscarCreditoPersonal(String pNumeroSolicitud) {
+    for (CreditoPersonal credito : creditosPersonales) {
+      if (credito.getNumSolicitud().equals(pNumeroSolicitud)) {
+        return credito;
+      }
+    }
+    return null;
   }
 
   private void menuEnviarCorreo() {
@@ -1850,7 +2071,6 @@ public class ventana extends JFrame {
           panel2.setVisible(false);
           panel.setVisible(true);
         } catch (MessagingException e1) {
-          // TODO Auto-generated catch block
           e1.printStackTrace();
         }
       }
