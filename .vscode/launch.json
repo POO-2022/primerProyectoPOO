@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Email",
+            "request": "launch",
+            "mainClass": "utilies.Email",
+            "projectName": "primerProyectoPOO_cb7cc2d1"
+        },
+        {
+            "type": "java",
             "name": "Launch Aplicacion",
             "request": "launch",
             "mainClass": "aplicacion.Aplicacion",

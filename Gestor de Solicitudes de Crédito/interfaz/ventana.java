@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.mail.MessagingException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -19,10 +20,12 @@ import javax.swing.JTextField;
 
 import logicadenegocios.Credito;
 import logicadenegocios.CreditoPersonal;
+import logicadenegocios.CuotaMensual;
 import logicadenegocios.Deudor;
 import logicadenegocios.Direccion;
 import logicadenegocios.TCostosLegales;
 import logicadenegocios.TMoneda;
+import utilies.Email;
 import utilies.JsonManager;
 
 public class ventana extends JFrame {
@@ -41,14 +44,18 @@ public class ventana extends JFrame {
   private JButton salir;
   private JPanel panel;
   private ArrayList<Deudor> solicitantes;
+  private ArrayList<CreditoPersonal> creditosPersonales;
   private ArrayList<Credito> creditos;
   private static int numeroCredito = 0;
   private JsonManager jsonManager;
+  private Email email;
 
   public ventana() {
     solicitantes = new ArrayList<Deudor>();
+    creditosPersonales = new ArrayList<CreditoPersonal>();
     creditos = new ArrayList<Credito>();
     jsonManager = new JsonManager();
+    email = new Email();
     subirSolicitantes();
     setBounds(350, 0, 700, 850);
     setTitle("Gestion de Creditos");
@@ -485,23 +492,19 @@ public class ventana extends JFrame {
     JButton registraSolicitudCredito = new JButton("Registrar Solicitud de Credito");
     JButton regresar = new JButton("Regresar");
     JLabel etiquetaTipoCredito = new JLabel("Tipo de Credito");
-    JLabel etiquetaMonto = new JLabel("Monto");
     JLabel etiquetaMoneda = new JLabel("Moneda");
     JLabel etiquetaFechaSolicitud = new JLabel("Fecha de Solicitud");
-    JLabel etiquetaPlazo = new JLabel("Plazo en meses");
-    JLabel labelTasaInteres = new JLabel("Tasa de Interes");
     JLabel labelTasaPasiva = new JLabel("Tasa de Pasiva");
     JLabel labelCostoLegales = new JLabel("Costo Legales");
     JLabel etiquetaCliente = new JLabel("Cedula del Cliente");
-    JComboBox<String> tCostoLegalesBox = new JComboBox();
+    JLabel etiquetaComision = new JLabel("Comision");
+    JComboBox<String> tCostoLegalesBox = new JComboBox<String>();
     JComboBox<String> tipoCreditoBox = new JComboBox<String>();
     JComboBox<String> tipoMonedaBox = new JComboBox<String>();
     JComboBox<String> clienteBox = new JComboBox<String>();
-    JTextField montoTexT = new JTextField();
     JTextField fechaSolicitudText = new JTextField();
-    JTextField plazoText = new JTextField();
-    JTextField tasaInteresText = new JTextField();
     JTextField tasaPasivaText = new JTextField();
+    JTextField comisionText = new JTextField();
 
     tipoCreditoBox.addItem("Credito Personal");
     tipoCreditoBox.addItem("Credito Fiduciario");
@@ -525,11 +528,6 @@ public class ventana extends JFrame {
     etiquetaTipoCredito.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(etiquetaTipoCredito);
 
-    etiquetaMonto.setBounds(50, 100, 100, 30);
-    etiquetaMonto.setBackground(new Color(0, 153, 153));
-    etiquetaMonto.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(etiquetaMonto);
-
     etiquetaMoneda.setBounds(50, 150, 100, 30);
     etiquetaMoneda.setBackground(new Color(0, 153, 153));
     etiquetaMoneda.setFont(new Font("Times new Roman", Font.BOLD, 15));
@@ -540,15 +538,10 @@ public class ventana extends JFrame {
     etiquetaFechaSolicitud.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(etiquetaFechaSolicitud);
 
-    etiquetaPlazo.setBounds(50, 250, 200, 30);
-    etiquetaPlazo.setBackground(new Color(0, 153, 153));
-    etiquetaPlazo.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(etiquetaPlazo);
-
-    labelTasaInteres.setBounds(50, 300, 200, 30);
-    labelTasaInteres.setBackground(new Color(0, 153, 153));
-    labelTasaInteres.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(labelTasaInteres);
+    etiquetaComision.setBounds(50, 250, 100, 30);
+    etiquetaComision.setBackground(new Color(0, 153, 153));
+    etiquetaComision.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(etiquetaComision);
 
     labelTasaPasiva.setBounds(50, 350, 200, 30);
     labelTasaPasiva.setBackground(new Color(0, 153, 153));
@@ -570,11 +563,6 @@ public class ventana extends JFrame {
     tipoCreditoBox.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(tipoCreditoBox);
 
-    montoTexT.setBounds(250, 100, 200, 30);
-    montoTexT.setBackground(new Color(255, 255, 255));
-    montoTexT.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(montoTexT);
-
     tipoMonedaBox.setBounds(250, 150, 200, 30);
     tipoMonedaBox.setBackground(new Color(255, 255, 255));
     tipoMonedaBox.setFont(new Font("Times new Roman", Font.BOLD, 15));
@@ -586,15 +574,15 @@ public class ventana extends JFrame {
     fechaSolicitudText.setText(getFechaActual());
     panel2.add(fechaSolicitudText);
 
-    plazoText.setBounds(250, 250, 200, 30);
-    plazoText.setBackground(new Color(255, 255, 255));
-    plazoText.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(plazoText);
+    comisionText.setBounds(250, 250, 200, 30);
+    comisionText.setBackground(new Color(255, 255, 255));
+    comisionText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(comisionText);
 
-    tasaInteresText.setBounds(250, 300, 200, 30);
-    tasaInteresText.setBackground(new Color(255, 255, 255));
-    tasaInteresText.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(tasaInteresText);
+    tasaPasivaText.setBounds(250, 350, 200, 30);
+    tasaPasivaText.setBackground(new Color(255, 255, 255));
+    tasaPasivaText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel2.add(tasaPasivaText);
 
     tasaPasivaText.setBounds(250, 350, 200, 30);
     tasaPasivaText.setBackground(new Color(255, 255, 255));
@@ -631,22 +619,23 @@ public class ventana extends JFrame {
     registraSolicitudCredito.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         String tipoCredito = tipoCreditoBox.getSelectedItem().toString();
-        String monto = montoTexT.getText();
         String moneda = tipoMonedaBox.getSelectedItem().toString();
         String fechaSolicitud = fechaSolicitudText.getText();
         String cedulaCliente = clienteBox.getSelectedItem().toString();
-        String plazo = plazoText.getText();
-        String tasaInteres = tasaInteresText.getText();
         String tasaPasiva = tasaPasivaText.getText();
         String costoLegales = tCostoLegalesBox.getSelectedItem().toString();
-        if (!tipoCredito.equals("") && !monto.equals("") && !moneda.equals("") && !fechaSolicitud.equals("")
-            && !cedulaCliente.equals("") && !plazo.equals("") && !tasaInteres.equals("") && !tasaPasiva.equals("")
-            && !costoLegales.equals("")) {
+        String comision = comisionText.getText();
+        if (!tipoCredito.equals("") && !moneda.equals("") && !fechaSolicitud.equals("")
+            && !cedulaCliente.equals("") && !tasaPasiva.equals("")
+            && !costoLegales.equals("") && !comision.equals("")) {
           Deudor deudor = buscarCliente(cedulaCliente);
           if (tipoCredito.equals("Credito Personal")) {
             panel2.setVisible(false);
-            ventanaRegistrarCreditoPersonal(deudor, monto, moneda, fechaSolicitud, plazo, tasaInteres, tasaPasiva,
-                costoLegales);
+            ventanaRegistrarCreditoPersonal(deudor, moneda, tasaPasiva, costoLegales, comision);
+          }
+          if (tipoCredito.equals("Credito Hipotecario")) {
+            panel2.setVisible(false);
+            ventanaRegistrarCreditoHipotecario(deudor, moneda, tasaPasiva, costoLegales, comision);
           }
         } else {
           JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
@@ -655,12 +644,25 @@ public class ventana extends JFrame {
     });
   }
 
-  private void ventanaRegistrarCreditoPersonal(Deudor deudor2, String monto, String moneda, String fechaSolicitud,
-      String plazo, String pTasaInteres, String tasaPasiva, String costoLegales) {
+  private void ventanaRegistrarCreditoHipotecario(Deudor deudor, String moneda, String tasaPasiva, String costoLegales,
+      String comision) {
+    JPanel panel3 = new JPanel();
+    JLabel etiquetaTitulo = new JLabel("Registrar Credito Hipotecario");
+
+  }
+
+  private void ventanaRegistrarCreditoPersonal(Deudor pDeudor, String pMoneda, String tasaPasiva, String costoLegales,
+      String pComision) {
     JPanel panel3 = new JPanel();
     JLabel etiquetaCreditoPersonal = new JLabel("Regitrar Credito Personal");
+    JLabel labelTasaInteres = new JLabel("Tasa de Interes");
     JLabel etiquetaMotivo = new JLabel("Motivo de uso del credito");
+    JLabel etiquetaMonto = new JLabel("Monto");
+    JLabel etiquetaPlazo = new JLabel("Plazo en meses");
     JTextArea motivoText = new JTextArea();
+    JTextField plazoText = new JTextField();
+    JTextField tasaInteresText = new JTextField();
+    JTextField montoTexT = new JTextField();
     JButton Salir = new JButton("Salir");
     JButton registrarCredito = new JButton("Registrar Credito");
 
@@ -668,45 +670,140 @@ public class ventana extends JFrame {
     panel3.setBackground(new Color(135, 206, 250));
     panel3.setBounds(0, 0, 600, 700);
     this.add(panel3);
-    setBounds(300, 100, 600, 700);
+    setBounds(350, 0, 600, 700);
 
     etiquetaCreditoPersonal.setBounds(200, 50, 200, 30);
-    etiquetaCreditoPersonal.setBackground(new Color(255, 255, 255));
-    etiquetaCreditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    etiquetaCreditoPersonal.setBackground(new Color(0, 153, 153));
+    etiquetaCreditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel3.add(etiquetaCreditoPersonal);
 
-    etiquetaMotivo.setBounds(50, 100, 200, 30);
+    labelTasaInteres.setBounds(50, 150, 200, 30);
+    labelTasaInteres.setBackground(new Color(255, 255, 255));
+    labelTasaInteres.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel3.add(labelTasaInteres);
+
+    tasaInteresText.setBounds(250, 150, 200, 30);
+    tasaInteresText.setBackground(new Color(255, 255, 255));
+    tasaInteresText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel3.add(tasaInteresText);
+
+    etiquetaMotivo.setBounds(50, 200, 200, 30);
     etiquetaMotivo.setBackground(new Color(255, 255, 255));
     etiquetaMotivo.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel3.add(etiquetaMotivo);
 
-    motivoText.setBounds(50, 150, 500, 200);
+    motivoText.setBounds(250, 200, 200, 30);
     motivoText.setBackground(new Color(255, 255, 255));
     motivoText.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel3.add(motivoText);
 
-    Salir.setBounds(50, 500, 150, 40);
+    etiquetaMonto.setBounds(50, 250, 200, 30);
+    etiquetaMonto.setBackground(new Color(255, 255, 255));
+    etiquetaMonto.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel3.add(etiquetaMonto);
+
+    montoTexT.setBounds(250, 250, 200, 30);
+    montoTexT.setBackground(new Color(255, 255, 255));
+    montoTexT.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel3.add(montoTexT);
+
+    etiquetaPlazo.setBounds(50, 300, 200, 30);
+    etiquetaPlazo.setBackground(new Color(255, 255, 255));
+    etiquetaPlazo.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel3.add(etiquetaPlazo);
+
+    plazoText.setBounds(250, 300, 200, 30);
+    plazoText.setBackground(new Color(255, 255, 255));
+    plazoText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    panel3.add(plazoText);
+
+    Salir.setBounds(300, 350, 230, 40);
     Salir.setBackground(new Color(135, 206, 250));
     Salir.setFont(new Font("Times new Roman", Font.BOLD, 16));
     Salir.setForeground(new Color(0, 0, 0));
     panel3.add(Salir);
-    Salir.addActionListener(new ActionListener() {
+
+    registrarCredito.setBounds(50, 350, 230, 40);
+    registrarCredito.setBackground(new Color(135, 206, 250));
+    registrarCredito.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    registrarCredito.setForeground(new Color(0, 0, 0));
+    panel3.add(registrarCredito);
+
+    salir.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        setBounds(350, 0, 700, 850);
         panel3.setVisible(false);
         panel.setVisible(true);
       }
     });
 
-    registrarCredito.setBounds(300, 500, 280, 40);
-    registrarCredito.setBackground(new Color(135, 206, 250));
-    registrarCredito.setFont(new Font("Times new Roman", Font.BOLD, 16));
-    registrarCredito.setForeground(new Color(0, 0, 0));
-    panel3.add(registrarCredito);
     registrarCredito.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        String tasaInteres = tasaInteresText.getText();
         String motivo = motivoText.getText();
-        if (!motivo.equals("")) {
-
+        String monto = montoTexT.getText();
+        String plazo = plazoText.getText();
+        if (!tasaInteres.equals("") && !motivo.equals("") && !monto.equals("")
+            && !plazo.equals("")) {
+          double tasa = Double.parseDouble(tasaInteres);
+          double montoD = Double.parseDouble(monto);
+          int plazoI = Integer.parseInt(plazo);
+          double tasaBasicaPasiva = Double.parseDouble(tasaPasiva);
+          double comision = Double.parseDouble(pComision);
+          if (pMoneda.equals("Colon")) {
+            if (costoLegales.equals("Traspaso")) {
+              if (montoD < 3000000 && plazoI < 60) {
+                CuotaMensual cuota = null;
+                CreditoPersonal creditoPersonal = new CreditoPersonal(pDeudor, montoD, plazoI, TMoneda.COLONES, tasa,
+                    tasaBasicaPasiva, comision, TCostosLegales.TRASPASO, cuota, motivo);
+                creditosPersonales.add(creditoPersonal);
+                setBounds(350, 0, 700, 850);
+                panel3.setVisible(false);
+                panel.setVisible(true);
+              } else {
+                JOptionPane.showMessageDialog(null, "El monto debe ser menor a 3000000 y el plazo menor a 60 meses");
+              }
+            } else {
+              if (montoD < 3000000 && plazoI < 60) {
+                CuotaMensual cuota = null;
+                CreditoPersonal creditoPersonal = new CreditoPersonal(pDeudor, montoD, plazoI, TMoneda.COLONES, tasa,
+                    tasaBasicaPasiva,
+                    comision, TCostosLegales.INSCRIPCION_BIEN, cuota, motivo);
+                creditosPersonales.add(creditoPersonal);
+                setBounds(350, 0, 700, 850);
+                panel3.setVisible(false);
+                panel.setVisible(true);
+              } else {
+                JOptionPane.showMessageDialog(null, "El monto debe ser menor a 3000000 y el plazo menor a 60 meses");
+              }
+            }
+          } else {
+            if (costoLegales.equals("Traspaso")) {
+              if (montoD < 5000 && plazoI < 60) {
+                CuotaMensual cuota = null;
+                CreditoPersonal creditoPersonal = new CreditoPersonal(pDeudor, montoD, plazoI, TMoneda.DOLARES, tasa,
+                    tasaBasicaPasiva, comision, TCostosLegales.TRASPASO, cuota, motivo);
+                creditosPersonales.add(creditoPersonal);
+                setBounds(350, 0, 700, 850);
+                panel3.setVisible(false);
+                panel.setVisible(true);
+              } else {
+                JOptionPane.showMessageDialog(null, "El monto debe ser menor a 5000 y el plazo menor a 60 meses");
+              }
+            } else {
+              if (montoD < 5000 && plazoI < 60) {
+                CuotaMensual cuota = null;
+                CreditoPersonal creditoPersonal = new CreditoPersonal(pDeudor, montoD, plazoI, TMoneda.DOLARES, tasa,
+                    tasaBasicaPasiva, comision, TCostosLegales.INSCRIPCION_BIEN, cuota, motivo);
+                creditosPersonales.add(creditoPersonal);
+                setBounds(350, 0, 700, 850);
+                panel3.setVisible(false);
+                panel.setVisible(true);
+              } else {
+                JOptionPane.showMessageDialog(null, "El monto debe ser menor a 5000 y el plazo menor a 60 meses");
+              }
+            }
+          }
         } else {
           JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
         }
@@ -1684,6 +1781,7 @@ public class ventana extends JFrame {
     JLabel label4 = new JLabel("Mensaje: ");
     JTextField textField = new JTextField();
     JTextField textField2 = new JTextField();
+
     JTextArea textArea = new JTextArea();
     JButton enviar = new JButton("Enviar");
     JButton regresar = new JButton("Regresar");
@@ -1743,8 +1841,18 @@ public class ventana extends JFrame {
 
     enviar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String datos = "";
-        textArea.setText(datos);
+        String destinatario = textField.getText();
+        String asunto = textField2.getText();
+        String mensaje = textArea.getText();
+        try {
+          email.enviarEmail(destinatario, asunto, mensaje);
+          setBounds(350, 0, 700, 850);
+          panel2.setVisible(false);
+          panel.setVisible(true);
+        } catch (MessagingException e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
       }
     });
 
