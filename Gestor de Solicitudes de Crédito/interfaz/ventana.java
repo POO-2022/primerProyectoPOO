@@ -22,6 +22,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import logicadenegocios.BienInmueble;
+import logicadenegocios.CreditoHipotecario;
 import logicadenegocios.CreditoPersonal;
 import logicadenegocios.CuotaMensual;
 import logicadenegocios.Deudor;
@@ -48,18 +50,20 @@ public class ventana extends JFrame {
   private JPanel panel;
   private ArrayList<Deudor> solicitantes;
   private ArrayList<CreditoPersonal> creditosPersonales;
+  private ArrayList<CreditoHipotecario> creditosHipotecarios;
   private JsonManager jsonManager;
   private Email email;
 
   public ventana() {
     solicitantes = new ArrayList<Deudor>();
     creditosPersonales = new ArrayList<CreditoPersonal>();
+    creditosHipotecarios = new ArrayList<CreditoHipotecario>();
     jsonManager = new JsonManager();
     email = new Email();
     CuotaMensual cuotaMensual = null;
     subirSolicitantes();
-    CreditoPersonal creditoPersonal = new CreditoPersonal(solicitantes.get(0), 350000, 5, TMoneda.COLONES, 0.05,
-        0.05, 0.05, TCostosLegales.TRASPASO, cuotaMensual, "compra de prenda");
+    CreditoPersonal creditoPersonal = new CreditoPersonal(solicitantes.get(0), 1000000, 5, TMoneda.COLONES, 0.15,
+        0.05, 0, TCostosLegales.TRASPASO, cuotaMensual, "compra de prenda");
     creditosPersonales.add(creditoPersonal);
     setBounds(350, 0, 700, 850);
     setTitle("Gestion de Creditos");
@@ -648,10 +652,267 @@ public class ventana extends JFrame {
     });
   }
 
-  private void ventanaRegistrarCreditoHipotecario(Deudor deudor, String moneda, String tasaPasiva, String costoLegales,
-      String comision) {
+  private void ventanaRegistrarCreditoHipotecario(Deudor pDeudor, String pMoneda, String pTasaPasiva,
+      String pCostoLegales,
+      String pComision) {
     JPanel panel3 = new JPanel();
     JLabel etiquetaTitulo = new JLabel("Registrar Credito Hipotecario");
+    JLabel labelTasaInteres = new JLabel("Tasa de Interes");
+    JLabel etiquetaMonto = new JLabel("Monto");
+    JLabel etiquetaPlazo = new JLabel("Plazo en meses");
+    JLabel etiquetaBienInmueble = new JLabel("Bien Inmueble");
+    JLabel etiquetaNombreBien = new JLabel("Nombre del Bien");
+    JLabel etiquetaAreaTerreno = new JLabel("Area del Terreno");
+    JLabel etiquetaNumeroPlano = new JLabel("Numero del Plano");
+    JLabel etiquetaMontoAvaluo = new JLabel("Monto del Avaluo");
+    JLabel etiquetaDireccionBien = new JLabel("Direccion del Bien");
+    JLabel etiquetaProvincia = new JLabel("Provincia");
+    JLabel etiquetaCanton = new JLabel("Canton");
+    JLabel etiquetaDistrito = new JLabel("Distrito");
+    JLabel etitquetaSenas = new JLabel("Senas Particulares");
+
+    JTextField plazoText = new JTextField();
+    JTextField tasaInteresText = new JTextField();
+    JTextField montoText = new JTextField();
+    JTextField montoAvaluoText = new JTextField();
+    JTextField numeroPlano = new JTextField();
+    JTextField areaPlano = new JTextField();
+    JTextField nombreBienText = new JTextField();
+    JTextField provinciaText = new JTextField();
+    JTextField cantonText = new JTextField();
+    JTextField distritoText = new JTextField();
+    JTextField senasText = new JTextField();
+    JButton salir = new JButton("Salir");
+    JButton registrarCredito = new JButton("Registrar Credito");
+
+    panel3.setLayout(null);
+    panel3.setBackground(new Color(135, 206, 250));
+    panel3.setBounds(0, 0, 600, 700);
+    this.add(panel3);
+    setBounds(350, 0, 600, 800);
+
+    etiquetaTitulo.setBounds(200, 50, 300, 30);
+    etiquetaTitulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    etiquetaTitulo.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaTitulo);
+
+    labelTasaInteres.setBounds(50, 100, 200, 30);
+    labelTasaInteres.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    labelTasaInteres.setForeground(new Color(0, 0, 0));
+    panel3.add(labelTasaInteres);
+
+    tasaInteresText.setBounds(250, 100, 200, 30);
+    tasaInteresText.setBackground(new Color(255, 255, 255));
+    tasaInteresText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    tasaInteresText.setForeground(new Color(0, 0, 0));
+    panel3.add(tasaInteresText);
+
+    etiquetaMonto.setBounds(50, 150, 200, 30);
+    etiquetaMonto.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etiquetaMonto.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaMonto);
+
+    montoText.setBounds(250, 150, 200, 30);
+    montoText.setBackground(new Color(255, 255, 255));
+    montoText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    montoText.setForeground(new Color(0, 0, 0));
+    panel3.add(montoText);
+
+    etiquetaPlazo.setBounds(50, 200, 200, 30);
+    etiquetaPlazo.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etiquetaPlazo.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaPlazo);
+
+    plazoText.setBounds(250, 200, 200, 30);
+    plazoText.setBackground(new Color(255, 255, 255));
+    plazoText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    plazoText.setForeground(new Color(0, 0, 0));
+    panel3.add(plazoText);
+
+    etiquetaBienInmueble.setBounds(50, 250, 200, 30);
+    etiquetaBienInmueble.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etiquetaBienInmueble.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaBienInmueble);
+
+    etiquetaNombreBien.setBounds(50, 300, 200, 30);
+    etiquetaNombreBien.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etiquetaNombreBien.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaNombreBien);
+
+    nombreBienText.setBounds(250, 300, 200, 30);
+    nombreBienText.setBackground(new Color(255, 255, 255));
+    nombreBienText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    nombreBienText.setForeground(new Color(0, 0, 0));
+    panel3.add(nombreBienText);
+
+    etiquetaAreaTerreno.setBounds(50, 350, 200, 30);
+    etiquetaAreaTerreno.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etiquetaAreaTerreno.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaAreaTerreno);
+
+    areaPlano.setBounds(250, 350, 200, 30);
+    areaPlano.setBackground(new Color(255, 255, 255));
+    areaPlano.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    areaPlano.setForeground(new Color(0, 0, 0));
+    panel3.add(areaPlano);
+
+    etiquetaNumeroPlano.setBounds(50, 400, 200, 30);
+    etiquetaNumeroPlano.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etiquetaNumeroPlano.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaNumeroPlano);
+
+    numeroPlano.setBounds(250, 400, 200, 30);
+    numeroPlano.setBackground(new Color(255, 255, 255));
+    numeroPlano.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    numeroPlano.setForeground(new Color(0, 0, 0));
+    panel3.add(numeroPlano);
+
+    etiquetaMontoAvaluo.setBounds(50, 450, 200, 30);
+    etiquetaMontoAvaluo.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etiquetaMontoAvaluo.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaMontoAvaluo);
+
+    montoAvaluoText.setBounds(250, 450, 200, 30);
+    montoAvaluoText.setBackground(new Color(255, 255, 255));
+    montoAvaluoText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    montoAvaluoText.setForeground(new Color(0, 0, 0));
+    panel3.add(montoAvaluoText);
+
+    etiquetaDireccionBien.setBounds(50, 500, 200, 30);
+    etiquetaDireccionBien.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etiquetaDireccionBien.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaDireccionBien);
+
+    etiquetaProvincia.setBounds(50, 550, 200, 30);
+    etiquetaProvincia.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etiquetaProvincia.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaProvincia);
+
+    etiquetaCanton.setBounds(50, 600, 200, 30);
+    etiquetaCanton.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etiquetaCanton.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaCanton);
+
+    etiquetaDistrito.setBounds(50, 650, 200, 30);
+    etiquetaDistrito.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etiquetaDistrito.setForeground(new Color(0, 0, 0));
+    panel3.add(etiquetaDistrito);
+
+    etitquetaSenas.setBounds(50, 700, 200, 30);
+    etitquetaSenas.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    etitquetaSenas.setForeground(new Color(0, 0, 0));
+    panel3.add(etitquetaSenas);
+
+    provinciaText.setBounds(250, 550, 200, 30);
+    provinciaText.setBackground(new Color(255, 255, 255));
+    provinciaText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    provinciaText.setForeground(new Color(0, 0, 0));
+    panel3.add(provinciaText);
+
+    cantonText.setBounds(250, 600, 200, 30);
+    cantonText.setBackground(new Color(255, 255, 255));
+    cantonText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    cantonText.setForeground(new Color(0, 0, 0));
+    panel3.add(cantonText);
+
+    distritoText.setBounds(250, 650, 200, 30);
+    distritoText.setBackground(new Color(255, 255, 255));
+    distritoText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    distritoText.setForeground(new Color(0, 0, 0));
+    panel3.add(distritoText);
+
+    senasText.setBounds(250, 700, 200, 30);
+    senasText.setBackground(new Color(255, 255, 255));
+    senasText.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    senasText.setForeground(new Color(0, 0, 0));
+    panel3.add(senasText);
+
+    salir.setBounds(50, 750, 200, 30);
+    salir.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    salir.setForeground(new Color(0, 0, 0));
+    panel3.add(salir);
+
+    registrarCredito.setBounds(250, 750, 200, 30);
+    registrarCredito.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    registrarCredito.setForeground(new Color(0, 0, 0));
+    panel3.add(registrarCredito);
+
+    salir.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        panel3.setVisible(false);
+        panel.setVisible(true);
+      }
+    });
+    registrarCredito.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        String plazo = plazoText.getText();
+        String monto = montoText.getText();
+        String area = areaPlano.getText();
+        String numero = numeroPlano.getText();
+        String provincia = provinciaText.getText();
+        String canton = cantonText.getText();
+        String distrito = distritoText.getText();
+        String senas = senasText.getText();
+        String montoAvaluo = montoAvaluoText.getText();
+        String nombreBien = nombreBienText.getText();
+        String tasaInteres = tasaInteresText.getText();
+        if (plazo.equals("") || monto.equals("") || area.equals("") || numero.equals("") || provincia.equals("")
+            || canton.equals("") || distrito.equals("") || senas.equals("") || montoAvaluo.equals("")) {
+          JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
+        } else {
+          int plazoInt = Integer.parseInt(plazo);
+          int montoInt = Integer.parseInt(monto);
+          Double areaInt = Double.parseDouble(area);
+          int numeroInt = Integer.parseInt(numero);
+          Double montoAvaluoInt = Double.parseDouble(montoAvaluo);
+          double tasaInteresDouble = Double.parseDouble(tasaInteres);
+          Double comisionInt = Double.parseDouble(pComision);
+          double tasaPasiva = Double.parseDouble(pTasaPasiva);
+          Direccion direccion = new Direccion(provincia, canton, distrito, senas);
+          BienInmueble bien = new BienInmueble(nombreBien, pDeudor, direccion, areaInt, numeroInt,
+              montoAvaluoInt);
+          CuotaMensual cuota = null;
+          if (plazoInt < 0 || montoInt < 0 || areaInt < 0 || numeroInt < 0 || montoAvaluoInt < 0) {
+            JOptionPane.showMessageDialog(null, "Debe ingresar valores positivos");
+          } else {
+            if (montoInt < 230000 && plazoInt < 361) {
+              if (pMoneda.equals("Dolares")) {
+                if (pCostoLegales.equals("Traspaso")) { // Traspaso
+                  CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.DOLARES,
+                      tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.TRASPASO, cuota, bien);
+                  creditosHipotecarios.add(credito);
+                  JOptionPane.showMessageDialog(null, "Credito registrado");
+                  panel3.setVisible(false);
+                  panel.setVisible(true);
+                } else { // No traspaso
+                  CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.DOLARES,
+                      tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.INSCRIPCION_BIEN, cuota, bien);
+                  creditosHipotecarios.add(credito);
+                  panel3.setVisible(false);
+                  panel.setVisible(true);
+                }
+              } else {
+                if (pCostoLegales.equals("Traspaso")) { // Traspaso
+                  CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.COLONES,
+                      tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.TRASPASO, cuota, bien);
+                  creditosHipotecarios.add(credito);
+                  panel3.setVisible(false);
+                  panel.setVisible(true);
+                } else { // No traspaso
+                  CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.COLONES,
+                      tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.INSCRIPCION_BIEN, cuota, bien);
+                  creditosHipotecarios.add(credito);
+                  panel3.setVisible(false);
+                  panel.setVisible(true);
+                }
+              }
+            } else {
+              JOptionPane.showMessageDialog(null, "El monto debe ser menor a $230,000 y el plazo menor a 361 meses");
+            }
+          }
+        }
+      }
+    });
 
   }
 
@@ -1808,7 +2069,7 @@ public class ventana extends JFrame {
           ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
           ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
           ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
-          double monto = credito.getMontoFinal();
+          double monto = credito.getAmortizacion().calcularMontoFinalASolicitar();
           for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
             Object[] data = new Object[5];
             data[0] = i + 1;

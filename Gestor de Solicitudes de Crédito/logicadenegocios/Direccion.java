@@ -10,7 +10,6 @@ public class Direccion {
   String canton;
   String distrito;
   String senas;
-  String codigoPostal = "1";
 
   /**
    * Constructor
@@ -25,10 +24,6 @@ public class Direccion {
     this.canton = pCanton;
     this.distrito = pDistrito;
     this.senas = pSenas;
-  }
-
-  public String getCodigoPostal() {
-    return codigoPostal;
   }
 
   public String getProvincia() {

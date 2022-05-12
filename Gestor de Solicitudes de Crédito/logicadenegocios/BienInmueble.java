@@ -21,8 +21,8 @@ public class BienInmueble extends Bien {
    * @param pNumPlano    el numero de plano
    * @param pMontoAvaluo el monto de avaluo
    */
-  public BienInmueble(String pNombre, Deudor pDeudor, Direccion pDireccion, double pAreaTerreno, int pNumPlano,
-      double pMontoAvaluo) {
+  public BienInmueble(String pNombre, Deudor pDeudor, Direccion pDireccion, Double pAreaTerreno, int pNumPlano,
+      Double pMontoAvaluo) {
     super(pNombre, pDeudor);
     direccion = pDireccion;
     areaTerreno = pAreaTerreno;

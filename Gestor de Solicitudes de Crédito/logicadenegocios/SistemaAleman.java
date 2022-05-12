@@ -53,9 +53,7 @@ public class SistemaAleman extends SistemaAmortizacion {
 
   public double calcularMontoFinalASolicitar() {
     double result = 0;
-    for (Double cuotas : montoCuotas) {
-      result += cuotas;
-    }
+    result = super.getPrestamoOtorgado();
     return result;
   }
 

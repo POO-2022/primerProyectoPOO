@@ -41,6 +41,7 @@ public class JsonManager {
     }
     return pNombre;
   }
+
   public String leerJson(String pFile) {
     String ruta = "./data/" + pFile + ".json";
     String contenido = "";
@@ -102,7 +103,7 @@ public class JsonManager {
     JSONObject direccion = new JSONObject();
     String contenido = direcciones.toString();
     try {
-      direcciones.get(pDireccion.getCodigoPostal());
+      // direcciones.get(pDireccion.getCodigoPostal());
       JOptionPane.showMessageDialog(null, "La Direccion ya ha cido registrada ya ha sido registrada.");
       return false;
     } catch (Exception e) {
@@ -115,12 +116,12 @@ public class JsonManager {
       // pDireccion.getEspecialidades().get(i).getEspecialidad());
       // }
       contenido = contenido.substring(0, contenido.length() - 1);
-      direcciones.put(pDireccion.getCodigoPostal(), direccion.toString());
+      //(), direccion.toString());
       if (contenido.length() > 2) {
         contenido += ",";
       }
-      contenido += "\"" + pDireccion.getCodigoPostal() + "\":"
-          + direcciones.get(pDireccion.getCodigoPostal()).toString().replace("\\", "") + "}";
+      // contenido += "\"" + pDireccion.getCodigoPostal() + "\":"
+      //     + direcciones.get(pDireccion.getCodigoPostal()).toString().replace("\\", "") + "}";
 
       actualizarJson("direcciones", contenido);
       JOptionPane.showMessageDialog(null, "La direcciones ha sido registrado con éxito.");
@@ -154,6 +155,7 @@ public class JsonManager {
       return true;
     }
   }
+
   public boolean actualizarJson(String pFile, String pContent) {
     String ruta = "./data/" + pFile + ".json";
     try {
