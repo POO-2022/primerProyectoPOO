@@ -77,9 +77,10 @@ public class ventana extends JFrame {
     pdf = new PDF();
     CuotaMensual cuotaMensual = null;
     subirSolicitantes();
+    subirFiadores();
     subirCreditosPersonales();
     // subirCreditosHipotecarios();
-    subirCreditosFiduciarios();
+    // subirCreditosFiduciarios();
     // CreditoPersonal creditoPersonal = new CreditoPersonal(solicitantes.get(0),
     // 1000000, 5, TMoneda.COLONES, 0.15,
     // 0.05, 0, TCostosLegales.TRASPASO, cuotaMensual, "compra de prenda");
@@ -91,10 +92,33 @@ public class ventana extends JFrame {
     setDefaultCloseOperation(EXIT_ON_CLOSE);
   }
 
+  public void subirFiadores() {
+    String datos = jsonManager.leerJson("fiadores");
+    if (datos != null) {
+      while (datos.length() > 3) {
+        if (datos.contains("{")) {
+          int i = datos.indexOf("salario Bruto") + 16;
+          double salarioBruto = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("salario Liquido") + 18;
+          double salarioLiquido = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("nombre") + 10;
+          String nombre = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("telefono") + 12;
+          String telefono = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("\"");
+          String cedula = datos.substring(i + 1, datos.indexOf(":", i) - 1);
+          Fiador fiador = new Fiador(nombre, cedula, telefono, salarioBruto, salarioLiquido);
+          fiadores.add(fiador);
+          datos = datos.substring(datos.indexOf("}") + 1, datos.length());
+        }
+      }
+    }
+  }
+
   public void subirCreditosFiduciarios() {
     String datos = jsonManager.leerJson("creditosFiduciarios");
     if (datos != null) {
-      while (datos.length() > 5) {
+      while (datos.length() > 3) {
         int i = datos.indexOf("Moneda del credito") + 22;
         String moneda = datos.substring(i, datos.indexOf("\"", i));
         i = datos.indexOf("tasa basica pasiva") + 21;
@@ -115,6 +139,7 @@ public class ventana extends JFrame {
         String cedulaDeudor = datos.substring(i, datos.indexOf("\"", i));
         Deudor deudor = buscarCliente(cedulaDeudor);
         CuotaMensual cuotaMensual2 = null;
+        i = datos.indexOf("fiador 1");
       }
     }
 
@@ -123,40 +148,42 @@ public class ventana extends JFrame {
   public void subirCreditosPersonales() {
     String datos = jsonManager.leerJson("creditosPersonal");
     if (datos != null) {
-      while (datos.length() > 5) {
-        int i = datos.indexOf("Moneda del credito") + 22;
-        String moneda = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("tasa basica pasiva") + 21;
-        double tasaBasicaPasiva = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
-        i = datos.indexOf("tasa de interes") + 18;
-        double tasaInteres = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
-        i = datos.indexOf("tipo costo legales") + 22;
-        String tipoCostoLegales = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("plazo en meses") + 17;
-        int plazo = Integer.parseInt(datos.substring(i, datos.indexOf(",", i)));
-        i = datos.indexOf("fecha de la solicitud") + 25;
-        String fechaSolicitud = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("comision") + 10;
-        double comision = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
-        i = datos.indexOf("monto Solicitado") + 19;
-        double montoSolicitado = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
-        i = datos.indexOf("cedula del deudor") + 21;
-        String cedulaDeudor = datos.substring(i, datos.indexOf("\"", i));
-        Deudor deudor = buscarCliente(cedulaDeudor);
-        CuotaMensual cuotaMensual2 = null;
-        i = datos.indexOf("movito de uso") + 17;
-        String movitoUso = datos.substring(i, datos.indexOf("\"", i));
-        CreditoPersonal creditoPersonal = new CreditoPersonal(deudor, montoSolicitado, plazo, TMoneda.valueOf(moneda),
-            tasaBasicaPasiva, tasaInteres, comision, TCostosLegales.valueOf(tipoCostoLegales), cuotaMensual2,
-            movitoUso);
-        i = datos.indexOf("\"");
-        String numSolicitud = datos.substring(i + 1, datos.indexOf(":", i) - 1);
-        creditoPersonal.setNumSolicitud(numSolicitud);
-        DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate local_date = LocalDate.parse(fechaSolicitud, JEFormatter);
-        creditoPersonal.setFechaSolicitud(local_date);
-        creditosPersonales.add(creditoPersonal);
-        datos = datos.substring(datos.indexOf("}", i) + 1);
+      while (datos.length() > 2) {
+        if (datos.length() > 2) {
+          int i = datos.indexOf("Moneda del credito") + 22;
+          String moneda = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("tasa basica pasiva") + 21;
+          double tasaBasicaPasiva = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("tasa de interes") + 18;
+          double tasaInteres = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("tipo costo legales") + 22;
+          String tipoCostoLegales = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("plazo en meses") + 17;
+          int plazo = Integer.parseInt(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("fecha de la solicitud") + 25;
+          String fechaSolicitud = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("comision") + 10;
+          double comision = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("monto Solicitado") + 19;
+          double montoSolicitado = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("cedula del deudor") + 21;
+          String cedulaDeudor = datos.substring(i, datos.indexOf("\"", i));
+          Deudor deudor = buscarCliente(cedulaDeudor);
+          CuotaMensual cuotaMensual2 = null;
+          i = datos.indexOf("movito de uso") + 17;
+          String movitoUso = datos.substring(i, datos.indexOf("\"", i));
+          CreditoPersonal creditoPersonal = new CreditoPersonal(deudor, montoSolicitado, plazo, TMoneda.valueOf(moneda),
+              tasaBasicaPasiva, tasaInteres, comision, TCostosLegales.valueOf(tipoCostoLegales), cuotaMensual2,
+              movitoUso);
+          i = datos.indexOf("\"");
+          String numSolicitud = datos.substring(i + 1, datos.indexOf(":", i) - 1);
+          creditoPersonal.setNumSolicitud(numSolicitud);
+          DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+          LocalDate local_date = LocalDate.parse(fechaSolicitud, JEFormatter);
+          creditoPersonal.setFechaSolicitud(local_date);
+          creditosPersonales.add(creditoPersonal);
+          datos = datos.substring(datos.indexOf("}") + 1, datos.length());
+        }
       }
     }
 
@@ -165,38 +192,49 @@ public class ventana extends JFrame {
   private void subirSolicitantes() {
     String datos = jsonManager.leerJson("deudores");
     if (datos != null) {
-      while (datos.length() > 5) {
-        int i = datos.indexOf("primerNombre") + 16;
-        String primerNombre = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("segundoNombre") + 17;
-        String segundoNombre = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("primerApellido") + 18;
-        String primerApellido = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("segundoApellido") + 19;
-        String segundoApellido = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("salario Bruto") + 16;
-        String salarioBruto = datos.substring(i, datos.indexOf(",", i));
-        i = datos.indexOf("salario Liquido") + 18;
-        String salarioLiquido = datos.substring(i, datos.indexOf(",", i));
-        i = datos.indexOf("correo") + 10;
-        String correo = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("telefono") + 12;
-        String telefono = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("provincia") + 13;
-        String provincia = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("canton") + 10;
-        String canto = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("distrito") + 12;
-        String distrito = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("senas") + 9;
-        String senas = datos.substring(i, datos.indexOf("\"", i));
-        i = datos.indexOf("\"");
-        String cedula = datos.substring(i + 1, datos.indexOf(":", i) - 1);
-        Direccion direccion = new Direccion(provincia, canto, distrito, senas);
-        Deudor deudor = new Deudor(primerNombre, segundoNombre, primerApellido, segundoApellido,
-            cedula, direccion, telefono, correo, Double.parseDouble(salarioBruto), Double.parseDouble(salarioLiquido));
-        solicitantes.add(deudor);
-        datos = datos.substring(datos.indexOf("}") + 1);
+      while (datos.length() > 4) {
+        if (datos.length() > 2) {
+          System.out.println(datos.length());
+          System.out.println(datos);
+
+          int i = datos.indexOf("primerNombre") + 16;
+          String primerNombre = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("segundoNombre") + 17;
+          String segundoNombre = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("primerApellido") + 18;
+          String primerApellido = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("segundoApellido") + 19;
+          String segundoApellido = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("salario Bruto") + 16;
+          String salarioBruto = datos.substring(i, datos.indexOf(",", i));
+          i = datos.indexOf("salario Liquido") + 18;
+          String salarioLiquido = datos.substring(i, datos.indexOf(",", i));
+          i = datos.indexOf("correo") + 10;
+          String correo = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("telefono") + 12;
+          String telefono = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("provincia") + 13;
+          String provincia = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("canton") + 10;
+          String canto = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("distrito") + 12;
+          String distrito = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("senas") + 9;
+          String senas = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("\"");
+          String cedula = datos.substring(i + 1, datos.indexOf(":", i) - 1);
+          Direccion direccion = new Direccion(provincia, canto, distrito, senas);
+          Deudor deudor = new Deudor(primerNombre, segundoNombre, primerApellido, segundoApellido,
+              cedula, direccion, telefono, correo, Double.parseDouble(salarioBruto),
+              Double.parseDouble(salarioLiquido));
+          solicitantes.add(deudor);
+          datos = datos.substring(datos.indexOf("}") + 1, datos.length());
+          i = datos.indexOf("}") + 1;
+          System.out.println(i);
+          System.out.println(datos);
+          System.out.println(datos.length());
+          System.out.println(datos.length() > 4);
+        }
       }
     }
     // System.out.println(solicitantes.size());
@@ -593,7 +631,7 @@ public class ventana extends JFrame {
     JLabel etiquetaTipoCredito = new JLabel("Tipo de Credito");
     JLabel etiquetaMoneda = new JLabel("Moneda");
     JLabel etiquetaFechaSolicitud = new JLabel("Fecha de Solicitud");
-    JLabel labelTasaPasiva = new JLabel("Tasa de Pasiva");
+    JLabel labelTasaPasiva = new JLabel("Interes Pasivo");
     JLabel labelCostoLegales = new JLabel("Costo Legales");
     JLabel etiquetaCliente = new JLabel("Cedula del Cliente");
     JLabel etiquetaComision = new JLabel("Comision");
@@ -615,7 +653,6 @@ public class ventana extends JFrame {
     tCostoLegalesBox.addItem("Inscripcion Bien ");
     for (Deudor cliente : solicitantes) {
       clienteBox.addItem(cliente.getCedula());
-      System.out.println(cliente.getCedula());
     }
 
     panel2.setLayout(null);
@@ -796,6 +833,7 @@ public class ventana extends JFrame {
     this.add(panel2);
     setBounds(350, 0, 600, 800);
 
+    fiadorBox.addItem("Seleccione un fiador");
     for (Fiador fiador : fiadores) {
       fiadorBox.addItem(fiador.getCedula());
     }
@@ -877,41 +915,83 @@ public class ventana extends JFrame {
     registrarCredito.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (!tasaInteresText.getText().isEmpty() && !montoText.getText().isEmpty()
-            && !plazoText.getText().isEmpty() && !fiadorBox.getSelectedItem().toString().isEmpty()) {
-          Double tasaInteres = Double.parseDouble(tasaInteresText.getText());
-          Double monto = Double.parseDouble(montoText.getText());
-          int plazo = Integer.parseInt(plazoText.getText());
-          CuotaMensual cuotaMensual = null;
-          CreditoFiduciario credito = new CreditoFiduciario(pDeudor, monto, plazo, pMoneda, tasaInteres, pTasaPasiva,
-              pComision, pCostoLegales, cuotaMensual, fiadoresARegistrar);
-          creditosFiduciarios.add(credito);
-          JOptionPane.showMessageDialog(null, "Credito registrado con exito");
-          panel2.setVisible(false);
-          panel.setVisible(true);
+        if (fiadoresARegistrar.size() == 0) {
+          JOptionPane.showMessageDialog(null, "Debe agregar un fiador");
         } else {
-          JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
+          if (!tasaInteresText.getText().isEmpty() && !montoText.getText().isEmpty()
+              && !plazoText.getText().isEmpty() && !fiadorBox.getSelectedItem().toString().isEmpty()) {
+            Double tasaInteres = Double.parseDouble(tasaInteresText.getText());
+            Double monto = Double.parseDouble(montoText.getText());
+            int plazo = Integer.parseInt(plazoText.getText());
+            CuotaMensual cuotaMensual = null;
+            if (pMoneda.compareTo(TMoneda.COLONES) == 0) {
+              if (monto < 40000000 && plazo < 96) {
+                CreditoFiduciario credito = new CreditoFiduciario(pDeudor, monto, plazo, pMoneda, tasaInteres,
+                    pTasaPasiva,
+                    pComision, pCostoLegales, cuotaMensual, fiadoresARegistrar);
+                if (jsonManager.agregarCreditoFiduciario(credito)) {
+                  creditosFiduciarios.add(credito);
+                  JOptionPane.showMessageDialog(null, "Credito registrado con exito");
+                  setBounds(350, 0, 700, 850);
+                  panel2.setVisible(false);
+                  panel.setVisible(true);
+                } else {
+                  JOptionPane.showMessageDialog(null, "Error al registrar el credito");
+                }
+              } else {
+                JOptionPane.showMessageDialog(null, "El monto debe ser menor a 40.000.000 y el plazo menor a 96 meses");
+              }
+            } else {
+              if (monto < 60000 && plazo < 96) {
+                CreditoFiduciario credito = new CreditoFiduciario(pDeudor, monto, plazo, pMoneda, tasaInteres,
+                    pTasaPasiva,
+                    pComision, pCostoLegales, cuotaMensual, fiadoresARegistrar);
+                if (jsonManager.agregarCreditoFiduciario(credito)) {
+                  creditosFiduciarios.add(credito);
+                  JOptionPane.showMessageDialog(null, "Credito registrado con exito");
+                  setBounds(350, 0, 700, 850);
+                  panel2.setVisible(false);
+                  panel.setVisible(true);
+                } else {
+                  JOptionPane.showMessageDialog(null, "Error al registrar el credito");
+                }
+              } else {
+                JOptionPane.showMessageDialog(null, "El monto debe ser menor a $60 000 y el plazo menor a 96 meses");
+              }
+            }
+
+          } else {
+            JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
+          }
         }
       }
     });
 
     agregarFiador.addActionListener(new ActionListener() {
-      @Override
       public void actionPerformed(ActionEvent e) {
-        for (Fiador fiador : fiadores) {
-          if (fiador.getCedula().equals(fiadorBox.getSelectedItem().toString())) {
-            if (!fiadoresARegistrar.contains(fiador)) {
-              fiadoresARegistrar.add(fiador);
-              JOptionPane.showMessageDialog(null, "Fiador agregado");
-            } else {
-              JOptionPane.showMessageDialog(null, "Fiador ya agregado");
+        if (fiadorBox.getSelectedItem().toString().equals("Seleccione un fiador")) {
+          JOptionPane.showMessageDialog(null, "Debe seleccionar un fiador");
+        } else {
+          if (fiadores.size() < 3) {
+            for (Fiador fiador : fiadores) {
+              if (fiador.getCedula().equals(fiadorBox.getSelectedItem().toString())) {
+                if (!fiadoresARegistrar.contains(fiador)) {
+                  fiadoresARegistrar.add(fiador);
+                  JOptionPane.showMessageDialog(null, "Fiador agregado");
+                } else {
+                  JOptionPane.showMessageDialog(null, "Fiador ya agregado");
+                }
+              }
             }
+          } else {
+            JOptionPane.showMessageDialog(null, "No se pueden agregar mas fiadores");
           }
         }
       }
     });
 
     crearFiador.addActionListener(new ActionListener() {
+
       @Override
       public void actionPerformed(ActionEvent e) {
         panel2.setVisible(false);
@@ -1031,6 +1111,8 @@ public class ventana extends JFrame {
             } else {
               Fiador fiador = new Fiador(cedula, nombre, telefono, salarioBrutoDouble, salarioLiquidoDouble);
               fiadores.add(fiador);
+              JOptionPane.showMessageDialog(null, "Fiador creado");
+              jsonManager.agregarFiador(fiador);
               panel2.setVisible(false);
               ventanaRegistrarCreditoFiduciario(pdeudor, pMoneda, pTasaPasiva, pCostoLegales, pComision);
             }
@@ -1817,7 +1899,7 @@ public class ventana extends JFrame {
     creditoPersonal.setBounds(50, 150, 200, 30);
     panel2.add(creditoPersonal);
 
-    for (CreditoPersonal credito : creditosPersonales) {
+    for (CreditoFiduciario credito : creditosFiduciarios) {
       String numero = credito.getNumSolicitud();
       creditoPersonal.addItem(numero);
     }
@@ -1875,6 +1957,8 @@ public class ventana extends JFrame {
             data[3] = amortizacion.get(i);
             data[4] = monto;
             monto = monto - amortizacion.get(i);
+            interes += intereses.get(i);
+            amortizacion1 += amortizacion.get(i);
             dtm.addRow(data);
           }
           data[0] = "Total";
@@ -1953,16 +2037,10 @@ public class ventana extends JFrame {
     creditoPersonal.setBounds(50, 150, 200, 30);
     panel2.add(creditoPersonal);
 
-    for (CreditoPersonal credito : creditosPersonales) {
+    for (CreditoFiduciario credito : creditosFiduciarios) {
       String numero = credito.getNumSolicitud();
       creditoPersonal.addItem(numero);
     }
-
-    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
-    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
-
-    // creamos el arreglo de objetos que contendra el
-    // contenido de las columnas
     Object[] data = new Object[5]; // = new Object[5];
 
     // creamos el modelo de Tabla
@@ -1978,14 +2056,6 @@ public class ventana extends JFrame {
     dtm.addColumn("Amortizacion ");
     dtm.addColumn("Deuda ");
 
-    // insertamos el contenido de las columnas
-    for (int row = 0; row < 20; row++) {
-      for (int column = 0; column < 5; column++) {
-        data[column] = "Celda " + row + "," + column;
-      }
-      dtm.addRow(data);
-    }
-
     // se define el tama�o
     table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
@@ -1996,16 +2066,6 @@ public class ventana extends JFrame {
     scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(scrollPane);
 
-    // Agregamos el JScrollPane al contenedor
-    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-    // manejamos la salida
-
-    // frame.addWindowListener(new WindowAdapter() {
-    // public void windowClosing(WindowEvent e) {
-    // System.exit(0);
-    // }
-    // });
     JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
@@ -2019,14 +2079,13 @@ public class ventana extends JFrame {
         if (solicitud.equals("Seleccione")) {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
-          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
-          credito.getAmortizacion().calcularCuotas();
-          credito.getAmortizacion().calcularCuotasInteres();
-          credito.getAmortizacion().calcularAmortizacion();
+          CreditoFiduciario credito = buscarCreditoFiduciario(solicitud);
           ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
           ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
           ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
           double monto = credito.getMontoFinal();
+          double interes = 0;
+          double amortizacion1 = 0;
           for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
             Object[] data = new Object[5];
             data[0] = i + 1;
@@ -2035,8 +2094,15 @@ public class ventana extends JFrame {
             data[3] = amortizacion.get(i);
             data[4] = monto;
             monto = monto - amortizacion.get(i);
+            interes += intereses.get(i);
+            amortizacion1 += amortizacion.get(i);
             dtm.addRow(data);
           }
+          data[0] = "Total";
+          data[1] = "";
+          data[2] = interes;
+          data[3] = amortizacion1;
+          data[4] = monto;
         }
       }
     });

@@ -14,6 +14,7 @@ import logicadenegocios.CreditoFiduciario;
 import logicadenegocios.CreditoPersonal;
 import logicadenegocios.Deudor;
 import logicadenegocios.Direccion;
+import logicadenegocios.Fiador;
 
 public class JsonManager {
   public JsonManager() {
@@ -59,7 +60,7 @@ public class JsonManager {
       e.printStackTrace();
     }
     if (contenido.equals("")) {
-      return "{}";
+      return "";
     } else {
       return contenido;
     }
@@ -122,8 +123,10 @@ public class JsonManager {
       creditoFiduciario.put("comision", pCreditoFiduciario.getComision());
       creditoFiduciario.put("tipo costo legales", pCreditoFiduciario.getTipoCostosLegales());
       creditoFiduciario.put("cedula del deudor", pCreditoFiduciario.getCedulaDeudor());
+      System.out.println(pCreditoFiduciario.getFiadores().size());
       if (pCreditoFiduciario.getFiadores().size() <= 1) {
-        creditoFiduciario.put("fiadores 1", pCreditoFiduciario.getFiadores().get(0));
+        creditoFiduciario.put("fiador 1", pCreditoFiduciario.getFiadores().get(0).getCedula());
+        creditoFiduciario.put("fiador 2", "");
         contenido = contenido.substring(0, contenido.length() - 1);
         creditosFiduciarios.put(pCreditoFiduciario.getNumSolicitud(), creditoFiduciario.toString());
         if (contenido.length() > 2) {
@@ -135,8 +138,8 @@ public class JsonManager {
         JOptionPane.showMessageDialog(null, "Credito fiduciario a sido agregado con exito a la base de datos");
         return true;
       } else {
-        creditoFiduciario.put("fiadores 1", pCreditoFiduciario.getFiadores().get(0));
-        creditoFiduciario.put("fiadores 2", pCreditoFiduciario.getFiadores().get(1));
+        creditoFiduciario.put("fiador 1", pCreditoFiduciario.getFiadores().get(0).getCedula());
+        creditoFiduciario.put("fiador 2", pCreditoFiduciario.getFiadores().get(1).getCedula());
         contenido = contenido.substring(0, contenido.length() - 1);
         creditosFiduciarios.put(pCreditoFiduciario.getNumSolicitud(), creditoFiduciario.toString());
         if (contenido.length() > 2) {
@@ -148,6 +151,32 @@ public class JsonManager {
         JOptionPane.showMessageDialog(null, "Credito fiduciario a sido agregado con exito a la base de datos");
         return true;
       }
+    }
+  }
+
+  public boolean agregarFiador(Fiador pFiador) {
+    JSONObject fiadores = new JSONObject(leerJson("fiadores"));
+    JSONObject fiador = new JSONObject();
+    String contenido = fiadores.toString();
+    try {
+      fiadores.get(pFiador.getCedula());
+      JOptionPane.showMessageDialog(null, "Ya existe un fiador con ese numero de cedula");
+      return false;
+    } catch (Exception e) {
+      fiador.put("nombre", pFiador.getNombre());
+      fiador.put("telefono", pFiador.getTelefono());
+      fiador.put("salario Bruto", pFiador.getSalarioBruto());
+      fiador.put("salario Liquido", pFiador.getSalarioLiquido());
+      contenido = contenido.substring(0, contenido.length() - 1);
+      fiadores.put(pFiador.getCedula(), fiador.toString());
+      if (contenido.length() > 2) {
+        contenido += ",";
+      }
+      contenido += "\"" + pFiador.getCedula() + "\":"
+          + fiadores.get(pFiador.getCedula()).toString().replace("\\", "") + "}";
+      actualizarJson("fiadores", contenido);
+      JOptionPane.showMessageDialog(null, "Fiador a sido agregado con exito a la base de datos");
+      return true;
     }
   }
 

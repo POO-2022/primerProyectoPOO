@@ -8,7 +8,7 @@ import java.time.LocalDate;
  * @author Derrick Acosta
  * @version 19/04/2022
  */
-public abstract class Credito {
+public class Credito {
   // atributos de la clase
   private Deudor cliente;
   private double montoSolicitado;//
@@ -222,11 +222,6 @@ public abstract class Credito {
   public void calcularTasaPasiva() {
 
   }
-
-  /**
-   * Metodo abstracto para calcular el monto final que va solicitar
-   */
-  public abstract double calcularMontoFinalASolicitar();
 
   /**
    * Genera el estado del objeto en una cadena de caracteres
