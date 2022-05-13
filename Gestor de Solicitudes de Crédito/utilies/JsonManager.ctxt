@@ -12,13 +12,12 @@ comment4.params=pFile
 comment4.target=java.lang.String\ leerJson(java.lang.String)
 comment5.params=pDeudor
 comment5.target=boolean\ agregarDeudor(logicadenegocios.Deudor)
-comment6.params=pDireccion
-comment6.target=boolean\ agregarDireccion(logicadenegocios.Direccion)
+comment6.params=pCreditoPersonal
+comment6.target=boolean\ agregarCreditoPersonal(logicadenegocios.CreditoPersonal)
 comment7.params=pCredito
 comment7.target=boolean\ agregarCredito(logicadenegocios.Credito)
 comment8.params=pFile\ pContent
 comment8.target=boolean\ actualizarJson(java.lang.String,\ java.lang.String)
-comment8.text=\r\n\ public\ boolean\ agregarSecretario(Secretario\ pSecretario)\ {\r\n\ JSONObject\ secretarios\ \=\ new\ JSONObject(leerJson("secretarios"));\r\n\ JSONObject\ secretario\ \=\ new\ JSONObject();\r\n\ String\ contenido\ \=\ secretarios.toString();\r\n\ \r\n\ try\r\n\ {\r\n\ secretarios.get(pSecretario.getIdentificacion());\r\n\ JOptionPane.showMessageDialog(null,\r\n\ "La\ identificaci\u00C3\u00B3n\ ya\ ha\ sido\ registrada.");\r\n\ return\ false;\r\n\ }catch(\r\n\ Exception\ e)\r\n\ {\r\n\ secretario.put("nombreCompleto",\ pSecretario.getNombreCompleto());\r\n\ secretario.put("fechaIngreso",\ pSecretario.getFechaIngreso());\r\n\ secretario.put("areaDeTrabajo",\ pSecretario.getAreaTrabajo());\r\n\ \r\n\ contenido\ \=\ contenido.substring(0,\ contenido.length()\ -\ 1);\r\n\ secretarios.put(pSecretario.getIdentificacion(),\ secretario.toString());\r\n\ \r\n\ contenido\ +\=\ ",\\""\ +\ pSecretario.getIdentificacion()\ +\ "\\"\:"\r\n\ +\ secretarios.get(pSecretario.getIdentificacion()).toString().\r\n\ replace("\\\\",\ "")\ +\ "}";\r\n\ \r\n\ actualizarJson("secretarios",\ contenido);\r\n\ JOptionPane.showMessageDialog(null,\r\n\ "El\ funcionario\ ha\ sido\ registrado\ con\ \u00C3\u00A9xito.");\r\n\ return\ true;\r\n\ }\r\n\ }\r\n
 comment9.params=pFile\ pIdentificacion
 comment9.target=boolean\ buscarEnJson(java.lang.String,\ java.lang.String)
 numComments=11

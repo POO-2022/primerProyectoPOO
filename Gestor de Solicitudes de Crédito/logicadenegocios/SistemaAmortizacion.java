@@ -25,23 +25,18 @@ public abstract class SistemaAmortizacion {
     this.prestamoOtorgado = pPrestamoOtorgado;
     this.plazoEnAnos = pPlazoEnAnos;
     this.tasaInteresAnual = pTasaInteresAnual;
-    this.deuda = pPrestamoOtorgado;
   }
 
-  //metodos accesores
+  // metodos accesores
   public double getPrestamoOtorgado() {
     return prestamoOtorgado;
   }
 
-  public double getPlazoEnAnos() {
+  public int getPlazoEnAnos() {
     return plazoEnAnos;
   }
 
   public double getTasaInteresAnual() {
     return tasaInteresAnual;
   }
-
-  //metodo abstracto
-  public abstract void calcularAmortizacion();
-
 }

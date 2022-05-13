@@ -18,6 +18,10 @@ public class SistemaAleman extends SistemaAmortizacion {
     cuotasInteres = new ArrayList<Double>();
     montoCuotas = new ArrayList<Double>();
     amortazacion = new ArrayList<Double>();
+    calcularAmortizacion();
+    calcularCuotas();
+    calcularCuotasInteres();
+    calcularMontoFinalASolicitar();
   }
 
   // Ck cuota
@@ -37,10 +41,12 @@ public class SistemaAleman extends SistemaAmortizacion {
   }
 
   public void calcularCuotasInteres() {// S
-    for (int i = 0; i < super.getPlazoEnAnos(); i++) {
+    for (int i = 0; i < super.getPlazoEnAnos() + 1; i++) {
       double valor = (super.getPlazoEnAnos() - i + 1)
           * ((super.getPrestamoOtorgado() * super.getTasaInteresAnual()) / super.getPlazoEnAnos());
-      cuotasInteres.add(valor);
+      if (i > 0) {
+        cuotasInteres.add(valor);
+      }
     }
   }
 
@@ -67,5 +73,10 @@ public class SistemaAleman extends SistemaAmortizacion {
 
   public ArrayList<Double> getAmortizacion() {
     return amortazacion;
+  }
+
+  public String toString() {
+    String result = "";
+    return result;
   }
 }

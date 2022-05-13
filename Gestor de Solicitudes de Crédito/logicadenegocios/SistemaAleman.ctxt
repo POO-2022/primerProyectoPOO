@@ -17,4 +17,6 @@ comment7.params=
 comment7.target=java.util.ArrayList\ getMontoCuotas()
 comment8.params=
 comment8.target=java.util.ArrayList\ getAmortizacion()
-numComments=9
+comment9.params=
+comment9.target=java.lang.String\ toString()
+numComments=10

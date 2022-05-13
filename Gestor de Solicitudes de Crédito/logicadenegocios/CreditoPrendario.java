@@ -44,9 +44,7 @@ public class CreditoPrendario extends Credito {
 
   public double calcularMontoFinalASolicitar() {
     double result = 0;
-    for (Double cuotas : amortizacion.getAmortizacion()) {
-      result += cuotas;
-    }
+    result = super.getMontoSolicitado() + getGastoFormalizacion();
     return result;
   }
 }

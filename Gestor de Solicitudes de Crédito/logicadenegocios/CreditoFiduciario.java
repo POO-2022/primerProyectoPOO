@@ -18,13 +18,20 @@ public class CreditoFiduciario extends Credito {
   public CreditoFiduciario(Deudor pCliente, double pMontoSolicitado, int pPlazoEnMeses, TMoneda pMoneda,
       double pTasaInteres, double pTasaBasicaPasiva,
       double pComision, TCostosLegales pTipoCostosLegales,
-      CuotaMensual pCuotaMensual, Fiador pFiador) {
+      CuotaMensual pCuotaMensual, ArrayList<Fiador> pFiadores) {
     super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pTasaInteres,
         pTasaBasicaPasiva, pComision, pTipoCostosLegales, pCuotaMensual);
-    fiadores = new ArrayList<Fiador>();
-    fiadores.add(pFiador);
+    fiadores = pFiadores;
     setGastoFormalizacion();
-    amortizacion = new SistemaFrances(pMontoSolicitado, pPlazoEnMeses, pTasaInteres);
+    amortizacion = new SistemaFrances(calcularMontoFinalASolicitar(), pPlazoEnMeses, pTasaInteres);
+  }
+
+  public String getCedulaDeudor() {
+    return super.getCliente().getCedula();
+  }
+
+  public SistemaFrances getAmortizacion() {
+    return amortizacion;
   }
 
   public double getGastoFormalizacion() {
@@ -37,9 +44,8 @@ public class CreditoFiduciario extends Credito {
 
   public double calcularMontoFinalASolicitar() {
     double result = 0;
-    for (Double cuotas : amortizacion.getAmortizacion()) {
-      result += cuotas;
-    }
+    result += super.getMontoSolicitado() * COSTO_FORMALIZACION;
+    result += super.getMontoSolicitado();
     return result;
   }
 

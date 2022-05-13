@@ -36,6 +36,10 @@ public class CreditoHipotecario extends Credito {
     this.hipoteca = hipoteca;
   }
 
+  public SistemaFrances getAmortizacion() {
+    return amortizacion;
+  }
+
   public double getHonorario() {
     return honorario;
   }
@@ -87,10 +91,9 @@ public class CreditoHipotecario extends Credito {
 
   public double calcularMontoFinalASolicitar() {
     double result = 0;
-    amortizacion.calcularCuotas();
-    for (double cuota : amortizacion.getMontoCuotas()) {
-      result += cuota;
-    }
+    result += super.getMontoSolicitado() * 0.065;
+    result += super.getMontoSolicitado() * 0.75;
+    result += super.getMontoSolicitado();
     return result;
   }
 }

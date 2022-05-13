@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=PDF
+comment0.text=\r\n\ Crea\ un\ archivo\ de\ extension\ pdf\ a\ partir\ de\ un\ string\r\n\ @author\ KEVIN\ SALAZAR\r\n\ @version\ 2.0\r\n
+comment1.params=
+comment1.target=PDF()
+comment2.params=pTexto\ pNombreArchivo
+comment2.target=void\ crearPDF(java.lang.String,\ java.lang.String)
+comment2.text=\r\n\ Crea\ un\ pdf\ a\ partir\ de\ un\ string\r\n\ @param\ pTexto\ Texto\ a\ agregar\ al\ pdf\r\n\ @param\ pNombreArchivo\ Nombre\ del\ pdf\ a\ crear,\ tambien\ se\ puede\ insertar\ una\ direccion\ junto\ con\ el\ nombre,\ \r\n\ \r\n\ \u00A1\u00A1\u00A1PONER\ LA\ EXTENSION.PDF\ NO\ ES\ NECESARIO\!\!\!\r\n
+numComments=3

@@ -5,16 +5,22 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import org.apache.fontbox.type1.DamagedFontException;
+
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import java.awt.*;
 import javax.mail.MessagingException;
+import javax.naming.TimeLimitExceededException;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,15 +29,18 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import logicadenegocios.BienInmueble;
+import logicadenegocios.CreditoFiduciario;
 import logicadenegocios.CreditoHipotecario;
 import logicadenegocios.CreditoPersonal;
 import logicadenegocios.CuotaMensual;
 import logicadenegocios.Deudor;
 import logicadenegocios.Direccion;
+import logicadenegocios.Fiador;
 import logicadenegocios.TCostosLegales;
 import logicadenegocios.TMoneda;
 import utilies.Email;
 import utilies.JsonManager;
+import utilies.PDF;
 
 public class ventana extends JFrame {
   private JButton registrarSolicitante;
@@ -49,26 +58,108 @@ public class ventana extends JFrame {
   private JButton salir;
   private JPanel panel;
   private ArrayList<Deudor> solicitantes;
+  private ArrayList<Fiador> fiadores;
   private ArrayList<CreditoPersonal> creditosPersonales;
   private ArrayList<CreditoHipotecario> creditosHipotecarios;
+  private ArrayList<CreditoFiduciario> creditosFiduciarios;
   private JsonManager jsonManager;
   private Email email;
+  private PDF pdf;
 
   public ventana() {
     solicitantes = new ArrayList<Deudor>();
     creditosPersonales = new ArrayList<CreditoPersonal>();
     creditosHipotecarios = new ArrayList<CreditoHipotecario>();
+    creditosFiduciarios = new ArrayList<CreditoFiduciario>();
+    fiadores = new ArrayList<Fiador>();
     jsonManager = new JsonManager();
     email = new Email();
+    pdf = new PDF();
     CuotaMensual cuotaMensual = null;
     subirSolicitantes();
-    CreditoPersonal creditoPersonal = new CreditoPersonal(solicitantes.get(0), 1000000, 5, TMoneda.COLONES, 0.15,
-        0.05, 0, TCostosLegales.TRASPASO, cuotaMensual, "compra de prenda");
-    creditosPersonales.add(creditoPersonal);
+    subirCreditosPersonales();
+    // subirCreditosHipotecarios();
+    subirCreditosFiduciarios();
+    // CreditoPersonal creditoPersonal = new CreditoPersonal(solicitantes.get(0),
+    // 1000000, 5, TMoneda.COLONES, 0.15,
+    // 0.05, 0, TCostosLegales.TRASPASO, cuotaMensual, "compra de prenda");
+    // creditosPersonales.add(creditoPersonal);
+    // jsonManager.agregarCreditoPersonal(creditoPersonal);
     setBounds(350, 0, 700, 850);
     setTitle("Gestion de Creditos");
     initComponents();
     setDefaultCloseOperation(EXIT_ON_CLOSE);
+  }
+
+  public void subirCreditosFiduciarios() {
+    String datos = jsonManager.leerJson("creditosFiduciarios");
+    if (datos != null) {
+      while (datos.length() > 5) {
+        int i = datos.indexOf("Moneda del credito") + 22;
+        String moneda = datos.substring(i, datos.indexOf("\"", i));
+        i = datos.indexOf("tasa basica pasiva") + 21;
+        double tasaBasicaPasiva = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+        i = datos.indexOf("tasa de interes") + 18;
+        double tasaInteres = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+        i = datos.indexOf("tipo costo legales") + 22;
+        String tipoCostoLegales = datos.substring(i, datos.indexOf("\"", i));
+        i = datos.indexOf("plazo en meses") + 17;
+        int plazo = Integer.parseInt(datos.substring(i, datos.indexOf(",", i)));
+        i = datos.indexOf("fecha de la solicitud") + 25;
+        String fechaSolicitud = datos.substring(i, datos.indexOf("\"", i));
+        i = datos.indexOf("comision") + 10;
+        double comision = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+        i = datos.indexOf("monto Solicitado") + 19;
+        double montoSolicitado = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+        i = datos.indexOf("cedula del deudor") + 21;
+        String cedulaDeudor = datos.substring(i, datos.indexOf("\"", i));
+        Deudor deudor = buscarCliente(cedulaDeudor);
+        CuotaMensual cuotaMensual2 = null;
+      }
+    }
+
+  }
+
+  public void subirCreditosPersonales() {
+    String datos = jsonManager.leerJson("creditosPersonal");
+    if (datos != null) {
+      while (datos.length() > 5) {
+        int i = datos.indexOf("Moneda del credito") + 22;
+        String moneda = datos.substring(i, datos.indexOf("\"", i));
+        i = datos.indexOf("tasa basica pasiva") + 21;
+        double tasaBasicaPasiva = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+        i = datos.indexOf("tasa de interes") + 18;
+        double tasaInteres = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+        i = datos.indexOf("tipo costo legales") + 22;
+        String tipoCostoLegales = datos.substring(i, datos.indexOf("\"", i));
+        i = datos.indexOf("plazo en meses") + 17;
+        int plazo = Integer.parseInt(datos.substring(i, datos.indexOf(",", i)));
+        i = datos.indexOf("fecha de la solicitud") + 25;
+        String fechaSolicitud = datos.substring(i, datos.indexOf("\"", i));
+        i = datos.indexOf("comision") + 10;
+        double comision = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+        i = datos.indexOf("monto Solicitado") + 19;
+        double montoSolicitado = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+        i = datos.indexOf("cedula del deudor") + 21;
+        String cedulaDeudor = datos.substring(i, datos.indexOf("\"", i));
+        Deudor deudor = buscarCliente(cedulaDeudor);
+        CuotaMensual cuotaMensual2 = null;
+        i = datos.indexOf("movito de uso") + 17;
+        String movitoUso = datos.substring(i, datos.indexOf("\"", i));
+        CreditoPersonal creditoPersonal = new CreditoPersonal(deudor, montoSolicitado, plazo, TMoneda.valueOf(moneda),
+            tasaBasicaPasiva, tasaInteres, comision, TCostosLegales.valueOf(tipoCostoLegales), cuotaMensual2,
+            movitoUso);
+        i = datos.indexOf("\"");
+        String numSolicitud = datos.substring(i + 1, datos.indexOf(":", i) - 1);
+        creditoPersonal.setNumSolicitud(numSolicitud);
+        DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate local_date = LocalDate.parse(fechaSolicitud, JEFormatter);
+        creditoPersonal.setFechaSolicitud(local_date);
+        creditosPersonales.add(creditoPersonal);
+        datos = datos.substring(datos.indexOf("}", i) + 1);
+      }
+    }
+
   }
 
   private void subirSolicitantes() {
@@ -524,6 +615,7 @@ public class ventana extends JFrame {
     tCostoLegalesBox.addItem("Inscripcion Bien ");
     for (Deudor cliente : solicitantes) {
       clienteBox.addItem(cliente.getCedula());
+      System.out.println(cliente.getCedula());
     }
 
     panel2.setLayout(null);
@@ -637,6 +729,8 @@ public class ventana extends JFrame {
             && !cedulaCliente.equals("") && !tasaPasiva.equals("")
             && !costoLegales.equals("") && !comision.equals("")) {
           Deudor deudor = buscarCliente(cedulaCliente);
+          Double tasaPasivaDouble = Double.parseDouble(tasaPasiva);
+          Double comisionDouble = Double.parseDouble(comision);
           if (tipoCredito.equals("Credito Personal")) {
             panel2.setVisible(false);
             ventanaRegistrarCreditoPersonal(deudor, moneda, tasaPasiva, costoLegales, comision);
@@ -645,11 +739,316 @@ public class ventana extends JFrame {
             panel2.setVisible(false);
             ventanaRegistrarCreditoHipotecario(deudor, moneda, tasaPasiva, costoLegales, comision);
           }
+          if (tipoCredito.equals("Credito Fiduciario")) {
+            if (moneda.equals("Dolares")) {
+              if (costoLegales.equals("Traspaso")) {
+                panel2.setVisible(false);
+                ventanaRegistrarCreditoFiduciario(deudor, TMoneda.DOLARES, tasaPasivaDouble, TCostosLegales.TRASPASO,
+                    comisionDouble);
+              } else {
+                panel2.setVisible(false);
+                ventanaRegistrarCreditoFiduciario(deudor, TMoneda.DOLARES, tasaPasivaDouble,
+                    TCostosLegales.INSCRIPCION_BIEN, comisionDouble);
+              }
+            } else {
+              if (costoLegales.equals("Traspaso")) {
+                panel2.setVisible(false);
+                ventanaRegistrarCreditoFiduciario(deudor, TMoneda.COLONES, tasaPasivaDouble, TCostosLegales.TRASPASO,
+                    comisionDouble);
+              } else {
+                panel2.setVisible(false);
+                ventanaRegistrarCreditoFiduciario(deudor, TMoneda.COLONES, tasaPasivaDouble,
+                    TCostosLegales.INSCRIPCION_BIEN, comisionDouble);
+              }
+            }
+          } else {
+            JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
+          }
         } else {
           JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
         }
       }
     });
+  }
+
+  private void ventanaRegistrarCreditoFiduciario(Deudor pDeudor, TMoneda pMoneda, Double pTasaPasiva,
+      TCostosLegales pCostoLegales, Double pComision) {
+    JPanel panel2 = new JPanel();
+    JLabel titulo = new JLabel("Registrar Credito Fiduciario");
+    JLabel labelTasaInteres = new JLabel("Tasa de Interes");
+    JLabel etiquetaMonto = new JLabel("Monto");
+    JLabel etiquetaPlazo = new JLabel("Plazo en meses");
+    JLabel etiquetaFiador = new JLabel("Fiador");
+
+    JTextField plazoText = new JTextField();
+    JTextField tasaInteresText = new JTextField();
+    JTextField montoText = new JTextField();
+    JComboBox<String> fiadorBox = new JComboBox<String>();
+
+    JButton salir = new JButton("Salir");
+    JButton registrarCredito = new JButton("Registrar Credito");
+    JButton agregarFiador = new JButton("Agregar Fiador");
+    JButton crearFiador = new JButton("Crear Fiador");
+
+    panel2.setLayout(null);
+    panel2.setBackground(new Color(135, 206, 250));
+    panel2.setBounds(0, 0, 600, 700);
+    this.add(panel2);
+    setBounds(350, 0, 600, 800);
+
+    for (Fiador fiador : fiadores) {
+      fiadorBox.addItem(fiador.getCedula());
+    }
+
+    titulo.setBounds(200, 50, 400, 50);
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 28));
+    titulo.setForeground(new Color(0, 0, 0));
+    panel2.add(titulo);
+
+    labelTasaInteres.setBounds(50, 150, 200, 40);
+    labelTasaInteres.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    labelTasaInteres.setForeground(new Color(0, 0, 0));
+    panel2.add(labelTasaInteres);
+
+    etiquetaMonto.setBounds(50, 200, 200, 40);
+    etiquetaMonto.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    etiquetaMonto.setForeground(new Color(0, 0, 0));
+    panel2.add(etiquetaMonto);
+
+    etiquetaPlazo.setBounds(50, 250, 200, 40);
+    etiquetaPlazo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    etiquetaPlazo.setForeground(new Color(0, 0, 0));
+    panel2.add(etiquetaPlazo);
+
+    etiquetaFiador.setBounds(50, 300, 200, 40);
+    etiquetaFiador.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    etiquetaFiador.setForeground(new Color(0, 0, 0));
+    panel2.add(etiquetaFiador);
+
+    tasaInteresText.setBounds(250, 150, 200, 40);
+    tasaInteresText.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    tasaInteresText.setForeground(new Color(0, 0, 0));
+    panel2.add(tasaInteresText);
+
+    montoText.setBounds(250, 200, 200, 40);
+    montoText.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    montoText.setForeground(new Color(0, 0, 0));
+    panel2.add(montoText);
+
+    plazoText.setBounds(250, 250, 200, 40);
+    plazoText.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    plazoText.setForeground(new Color(0, 0, 0));
+    panel2.add(plazoText);
+
+    fiadorBox.setBounds(250, 300, 200, 40);
+    fiadorBox.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    fiadorBox.setForeground(new Color(0, 0, 0));
+    panel2.add(fiadorBox);
+
+    salir.setBounds(50, 500, 200, 40);
+    salir.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    salir.setForeground(new Color(0, 0, 0));
+    panel2.add(salir);
+
+    registrarCredito.setBounds(270, 500, 200, 40);
+    registrarCredito.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    registrarCredito.setForeground(new Color(0, 0, 0));
+    panel2.add(registrarCredito);
+
+    agregarFiador.setBounds(50, 560, 200, 40);
+    agregarFiador.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    agregarFiador.setForeground(new Color(0, 0, 0));
+    panel2.add(agregarFiador);
+
+    crearFiador.setBounds(270, 560, 200, 40);
+    crearFiador.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    crearFiador.setForeground(new Color(0, 0, 0));
+    panel2.add(crearFiador);
+    salir.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        setBounds(350, 0, 700, 850);
+        panel2.setVisible(false);
+        panel.setVisible(true);
+      }
+    });
+    ArrayList<Fiador> fiadoresARegistrar = new ArrayList<Fiador>();
+
+    registrarCredito.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (!tasaInteresText.getText().isEmpty() && !montoText.getText().isEmpty()
+            && !plazoText.getText().isEmpty() && !fiadorBox.getSelectedItem().toString().isEmpty()) {
+          Double tasaInteres = Double.parseDouble(tasaInteresText.getText());
+          Double monto = Double.parseDouble(montoText.getText());
+          int plazo = Integer.parseInt(plazoText.getText());
+          CuotaMensual cuotaMensual = null;
+          CreditoFiduciario credito = new CreditoFiduciario(pDeudor, monto, plazo, pMoneda, tasaInteres, pTasaPasiva,
+              pComision, pCostoLegales, cuotaMensual, fiadoresARegistrar);
+          creditosFiduciarios.add(credito);
+          JOptionPane.showMessageDialog(null, "Credito registrado con exito");
+          panel2.setVisible(false);
+          panel.setVisible(true);
+        } else {
+          JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
+        }
+      }
+    });
+
+    agregarFiador.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        for (Fiador fiador : fiadores) {
+          if (fiador.getCedula().equals(fiadorBox.getSelectedItem().toString())) {
+            if (!fiadoresARegistrar.contains(fiador)) {
+              fiadoresARegistrar.add(fiador);
+              JOptionPane.showMessageDialog(null, "Fiador agregado");
+            } else {
+              JOptionPane.showMessageDialog(null, "Fiador ya agregado");
+            }
+          }
+        }
+      }
+    });
+
+    crearFiador.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        panel2.setVisible(false);
+        ventanaCrearFiador(pDeudor, pMoneda, pTasaPasiva, pCostoLegales, pComision);
+      }
+    });
+
+  }
+
+  private void ventanaCrearFiador(Deudor pdeudor, TMoneda pMoneda, Double pTasaPasiva,
+      TCostosLegales pCostoLegales, Double pComision) {
+    JPanel panel2 = new JPanel();
+    JLabel titulo = new JLabel("Crear Fiador");
+    JLabel etiquetaCedula = new JLabel("Cedula");
+    JLabel etiquetaNombre = new JLabel("Nombre");
+    JLabel etiquetaTelefono = new JLabel("Telefono");
+    JLabel etiquetaSalarioBruto = new JLabel("Salario Bruto");
+    JLabel etiquetaSalarioLiquido = new JLabel("Salario Liquido");
+
+    JTextField cedulaText = new JTextField();
+    JTextField nombreText = new JTextField();
+    JTextField telefonoText = new JTextField();
+    JTextField salarioBrutoText = new JTextField();
+    JTextField salarioLiquidoText = new JTextField();
+
+    JButton crearFiador = new JButton("Crear");
+    JButton regresarButton = new JButton("Regresar");
+
+    panel2.setLayout(null);
+    panel2.setBackground(new Color(135, 206, 250));
+    panel2.setBounds(0, 0, 600, 700);
+    this.add(panel2);
+    setBounds(350, 0, 600, 800);
+
+    titulo.setBounds(200, 50, 200, 40);
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 25));
+    titulo.setForeground(new Color(0, 0, 0));
+    panel2.add(titulo);
+
+    etiquetaCedula.setBounds(50, 150, 200, 40);
+    etiquetaCedula.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    etiquetaCedula.setForeground(new Color(0, 0, 0));
+    panel2.add(etiquetaCedula);
+
+    etiquetaNombre.setBounds(50, 200, 200, 40);
+    etiquetaNombre.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    etiquetaNombre.setForeground(new Color(0, 0, 0));
+    panel2.add(etiquetaNombre);
+
+    etiquetaTelefono.setBounds(50, 250, 200, 40);
+    etiquetaTelefono.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    etiquetaTelefono.setForeground(new Color(0, 0, 0));
+    panel2.add(etiquetaTelefono);
+
+    etiquetaSalarioBruto.setBounds(50, 300, 200, 40);
+    etiquetaSalarioBruto.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    etiquetaSalarioBruto.setForeground(new Color(0, 0, 0));
+    panel2.add(etiquetaSalarioBruto);
+
+    etiquetaSalarioLiquido.setBounds(50, 350, 200, 40);
+    etiquetaSalarioLiquido.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    etiquetaSalarioLiquido.setForeground(new Color(0, 0, 0));
+    panel2.add(etiquetaSalarioLiquido);
+
+    cedulaText.setBounds(200, 150, 200, 40);
+    cedulaText.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    cedulaText.setForeground(new Color(0, 0, 0));
+    panel2.add(cedulaText);
+
+    nombreText.setBounds(200, 200, 200, 40);
+    nombreText.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    nombreText.setForeground(new Color(0, 0, 0));
+    panel2.add(nombreText);
+
+    telefonoText.setBounds(200, 250, 200, 40);
+    telefonoText.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    telefonoText.setForeground(new Color(0, 0, 0));
+    panel2.add(telefonoText);
+
+    salarioBrutoText.setBounds(200, 300, 200, 40);
+    salarioBrutoText.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    salarioBrutoText.setForeground(new Color(0, 0, 0));
+    panel2.add(salarioBrutoText);
+
+    salarioLiquidoText.setBounds(200, 350, 200, 40);
+    salarioLiquidoText.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    salarioLiquidoText.setForeground(new Color(0, 0, 0));
+    panel2.add(salarioLiquidoText);
+
+    crearFiador.setBounds(50, 450, 200, 40);
+    crearFiador.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    crearFiador.setForeground(new Color(0, 0, 0));
+    panel2.add(crearFiador);
+
+    regresarButton.setBounds(300, 450, 200, 40);
+    regresarButton.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    regresarButton.setForeground(new Color(0, 0, 0));
+    panel2.add(regresarButton);
+
+    crearFiador.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        String cedula = cedulaText.getText();
+        String nombre = nombreText.getText();
+        String telefono = telefonoText.getText();
+        String salarioBruto = salarioBrutoText.getText();
+        String salarioLiquido = salarioLiquidoText.getText();
+        if (cedula.equals("") || nombre.equals("") || telefono.equals("") || salarioBruto.equals("")
+            || salarioLiquido.equals("")) {
+          JOptionPane.showMessageDialog(null, "Debe llenar todos los campos");
+        } else {
+          try {
+            Double salarioBrutoDouble = Double.parseDouble(salarioBruto);
+            Double salarioLiquidoDouble = Double.parseDouble(salarioLiquido);
+            if (salarioBrutoDouble < salarioLiquidoDouble) {
+              JOptionPane.showMessageDialog(null, "El salario liquido no puede ser mayor al salario bruto");
+            } else {
+              Fiador fiador = new Fiador(cedula, nombre, telefono, salarioBrutoDouble, salarioLiquidoDouble);
+              fiadores.add(fiador);
+              panel2.setVisible(false);
+              ventanaRegistrarCreditoFiduciario(pdeudor, pMoneda, pTasaPasiva, pCostoLegales, pComision);
+            }
+          } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Debe ingresar numeros en los campos de salario bruto y liquido");
+          }
+        }
+      }
+    });
+
+    regresarButton.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        panel2.setVisible(false);
+        ventanaRegistrarCreditoFiduciario(pdeudor, pMoneda, pTasaPasiva, pCostoLegales, pComision);
+      }
+    });
+
   }
 
   private void ventanaRegistrarCreditoHipotecario(Deudor pDeudor, String pMoneda, String pTasaPasiva,
@@ -844,6 +1243,7 @@ public class ventana extends JFrame {
       }
     });
     registrarCredito.addActionListener(new ActionListener() {
+      @Override
       public void actionPerformed(ActionEvent e) {
         String plazo = plazoText.getText();
         String monto = montoText.getText();
@@ -875,8 +1275,8 @@ public class ventana extends JFrame {
           if (plazoInt < 0 || montoInt < 0 || areaInt < 0 || numeroInt < 0 || montoAvaluoInt < 0) {
             JOptionPane.showMessageDialog(null, "Debe ingresar valores positivos");
           } else {
-            if (montoInt < 230000 && plazoInt < 361) {
-              if (pMoneda.equals("Dolares")) {
+            if (pMoneda.equals("Dolares")) {
+              if (montoInt < 230000 && plazoInt < 361) {
                 if (pCostoLegales.equals("Traspaso")) { // Traspaso
                   CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.DOLARES,
                       tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.TRASPASO, cuota, bien);
@@ -888,26 +1288,34 @@ public class ventana extends JFrame {
                   CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.DOLARES,
                       tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.INSCRIPCION_BIEN, cuota, bien);
                   creditosHipotecarios.add(credito);
+                  JOptionPane.showMessageDialog(null, "Credito registrado");
                   panel3.setVisible(false);
                   panel.setVisible(true);
                 }
               } else {
+                JOptionPane.showMessageDialog(null, "El monto debe ser menor a $230,000 y el plazo menor a 361 meses");
+              }
+            } else {
+              if (montoInt < 150000000 && plazoInt < 361) {
                 if (pCostoLegales.equals("Traspaso")) { // Traspaso
                   CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.COLONES,
                       tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.TRASPASO, cuota, bien);
                   creditosHipotecarios.add(credito);
+                  JOptionPane.showMessageDialog(null, "Credito registrado");
                   panel3.setVisible(false);
                   panel.setVisible(true);
                 } else { // No traspaso
                   CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.COLONES,
                       tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.INSCRIPCION_BIEN, cuota, bien);
                   creditosHipotecarios.add(credito);
+                  JOptionPane.showMessageDialog(null, "Credito registrado");
                   panel3.setVisible(false);
                   panel.setVisible(true);
                 }
+              } else {
+                JOptionPane.showMessageDialog(null,
+                    "El monto debe ser menor a 150 000 000 y el plazo menor a 360 meses");
               }
-            } else {
-              JOptionPane.showMessageDialog(null, "El monto debe ser menor a $230,000 y el plazo menor a 361 meses");
             }
           }
         }
@@ -918,86 +1326,88 @@ public class ventana extends JFrame {
 
   private void ventanaRegistrarCreditoPersonal(Deudor pDeudor, String pMoneda, String tasaPasiva, String costoLegales,
       String pComision) {
-    JPanel panel3 = new JPanel();
+    JPanel panel2 = new JPanel();
     JLabel etiquetaCreditoPersonal = new JLabel("Regitrar Credito Personal");
     JLabel labelTasaInteres = new JLabel("Tasa de Interes");
     JLabel etiquetaMotivo = new JLabel("Motivo de uso del credito");
     JLabel etiquetaMonto = new JLabel("Monto");
     JLabel etiquetaPlazo = new JLabel("Plazo en meses");
+
     JTextArea motivoText = new JTextArea();
     JTextField plazoText = new JTextField();
     JTextField tasaInteresText = new JTextField();
     JTextField montoTexT = new JTextField();
-    JButton Salir = new JButton("Salir");
+
+    JButton salir = new JButton("Salir");
     JButton registrarCredito = new JButton("Registrar Credito");
 
-    panel3.setLayout(null);
-    panel3.setBackground(new Color(135, 206, 250));
-    panel3.setBounds(0, 0, 600, 700);
-    this.add(panel3);
+    panel2.setLayout(null);
+    panel2.setBackground(new Color(135, 206, 250));
+    panel2.setBounds(0, 0, 600, 700);
+    this.add(panel2);
     setBounds(350, 0, 600, 700);
 
     etiquetaCreditoPersonal.setBounds(200, 50, 200, 30);
     etiquetaCreditoPersonal.setBackground(new Color(0, 153, 153));
     etiquetaCreditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel3.add(etiquetaCreditoPersonal);
+    panel2.add(etiquetaCreditoPersonal);
 
     labelTasaInteres.setBounds(50, 150, 200, 30);
     labelTasaInteres.setBackground(new Color(255, 255, 255));
     labelTasaInteres.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel3.add(labelTasaInteres);
+    panel2.add(labelTasaInteres);
 
     tasaInteresText.setBounds(250, 150, 200, 30);
     tasaInteresText.setBackground(new Color(255, 255, 255));
     tasaInteresText.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel3.add(tasaInteresText);
+    panel2.add(tasaInteresText);
 
     etiquetaMotivo.setBounds(50, 200, 200, 30);
     etiquetaMotivo.setBackground(new Color(255, 255, 255));
     etiquetaMotivo.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel3.add(etiquetaMotivo);
+    panel2.add(etiquetaMotivo);
 
     motivoText.setBounds(250, 200, 200, 30);
     motivoText.setBackground(new Color(255, 255, 255));
     motivoText.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel3.add(motivoText);
+    panel2.add(motivoText);
 
     etiquetaMonto.setBounds(50, 250, 200, 30);
     etiquetaMonto.setBackground(new Color(255, 255, 255));
     etiquetaMonto.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel3.add(etiquetaMonto);
+    panel2.add(etiquetaMonto);
 
     montoTexT.setBounds(250, 250, 200, 30);
     montoTexT.setBackground(new Color(255, 255, 255));
     montoTexT.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel3.add(montoTexT);
+    panel2.add(montoTexT);
 
     etiquetaPlazo.setBounds(50, 300, 200, 30);
     etiquetaPlazo.setBackground(new Color(255, 255, 255));
     etiquetaPlazo.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel3.add(etiquetaPlazo);
+    panel2.add(etiquetaPlazo);
 
     plazoText.setBounds(250, 300, 200, 30);
     plazoText.setBackground(new Color(255, 255, 255));
     plazoText.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel3.add(plazoText);
+    panel2.add(plazoText);
 
-    Salir.setBounds(300, 350, 230, 40);
-    Salir.setBackground(new Color(135, 206, 250));
-    Salir.setFont(new Font("Times new Roman", Font.BOLD, 16));
-    Salir.setForeground(new Color(0, 0, 0));
-    panel3.add(Salir);
+    salir.setBounds(300, 350, 230, 40);
+    salir.setBackground(new Color(135, 206, 250));
+    salir.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    salir.setForeground(new Color(0, 0, 0));
+    panel2.add(salir);
 
     registrarCredito.setBounds(50, 350, 230, 40);
     registrarCredito.setBackground(new Color(135, 206, 250));
     registrarCredito.setFont(new Font("Times new Roman", Font.BOLD, 16));
     registrarCredito.setForeground(new Color(0, 0, 0));
-    panel3.add(registrarCredito);
+    panel2.add(registrarCredito);
 
     salir.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         setBounds(350, 0, 700, 850);
-        panel3.setVisible(false);
+        panel2.setVisible(false);
         panel.setVisible(true);
       }
     });
@@ -1022,8 +1432,10 @@ public class ventana extends JFrame {
                 CreditoPersonal creditoPersonal = new CreditoPersonal(pDeudor, montoD, plazoI, TMoneda.COLONES, tasa,
                     tasaBasicaPasiva, comision, TCostosLegales.TRASPASO, cuota, motivo);
                 creditosPersonales.add(creditoPersonal);
+                JOptionPane.showMessageDialog(null, "Credito Personal Registrado");
+                jsonManager.agregarCreditoPersonal(creditoPersonal);
                 setBounds(350, 0, 700, 850);
-                panel3.setVisible(false);
+                panel2.setVisible(false);
                 panel.setVisible(true);
               } else {
                 JOptionPane.showMessageDialog(null, "El monto debe ser menor a 3000000 y el plazo menor a 60 meses");
@@ -1035,8 +1447,10 @@ public class ventana extends JFrame {
                     tasaBasicaPasiva,
                     comision, TCostosLegales.INSCRIPCION_BIEN, cuota, motivo);
                 creditosPersonales.add(creditoPersonal);
+                JOptionPane.showMessageDialog(null, "El credito ha sido registrado");
+                jsonManager.agregarCreditoPersonal(creditoPersonal);
                 setBounds(350, 0, 700, 850);
-                panel3.setVisible(false);
+                panel2.setVisible(false);
                 panel.setVisible(true);
               } else {
                 JOptionPane.showMessageDialog(null, "El monto debe ser menor a 3000000 y el plazo menor a 60 meses");
@@ -1050,7 +1464,9 @@ public class ventana extends JFrame {
                     tasaBasicaPasiva, comision, TCostosLegales.TRASPASO, cuota, motivo);
                 creditosPersonales.add(creditoPersonal);
                 setBounds(350, 0, 700, 850);
-                panel3.setVisible(false);
+                JOptionPane.showMessageDialog(null, "Credito registrado");
+                jsonManager.agregarCreditoPersonal(creditoPersonal);
+                panel2.setVisible(false);
                 panel.setVisible(true);
               } else {
                 JOptionPane.showMessageDialog(null, "El monto debe ser menor a 5000 y el plazo menor a 60 meses");
@@ -1062,7 +1478,9 @@ public class ventana extends JFrame {
                     tasaBasicaPasiva, comision, TCostosLegales.INSCRIPCION_BIEN, cuota, motivo);
                 creditosPersonales.add(creditoPersonal);
                 setBounds(350, 0, 700, 850);
-                panel3.setVisible(false);
+                JOptionPane.showMessageDialog(null, "Credito registrado");
+                jsonManager.agregarCreditoPersonal(creditoPersonal);
+                panel2.setVisible(false);
                 panel.setVisible(true);
               } else {
                 JOptionPane.showMessageDialog(null, "El monto debe ser menor a 5000 y el plazo menor a 60 meses");
@@ -1100,10 +1518,6 @@ public class ventana extends JFrame {
     codigo.setFont(new Font("Times new Roman", Font.BOLD, 20));
     codigo.setBackground(new Color(0, 153, 153));
     JComboBox<String> creditoPersonal = new JComboBox<String>();
-
-    // frame.setSize(500, 500);
-    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    // frame.setVisible(true);
     creditoPersonal.addItem("Seleccione");
 
     // frame.add(panel2);
@@ -1129,7 +1543,7 @@ public class ventana extends JFrame {
     creditoPersonal.setBounds(50, 150, 200, 30);
     panel2.add(creditoPersonal);
 
-    for (CreditoPersonal credito : creditosPersonales) {
+    for (CreditoHipotecario credito : creditosHipotecarios) {
       String numero = credito.getNumSolicitud();
       creditoPersonal.addItem(numero);
     }
@@ -1154,14 +1568,6 @@ public class ventana extends JFrame {
     dtm.addColumn("Amortizacion ");
     dtm.addColumn("Deuda ");
 
-    // insertamos el contenido de las columnas
-    for (int row = 0; row < 20; row++) {
-      for (int column = 0; column < 5; column++) {
-        data[column] = "Celda " + row + "," + column;
-      }
-      dtm.addRow(data);
-    }
-
     // se define el tama�o
     table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
@@ -1172,15 +1578,6 @@ public class ventana extends JFrame {
     scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(scrollPane);
 
-    // Agregamos el JScrollPane al contenedor
-    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-    // manejamos la salida
-
-    // frame.addWindowListener(new WindowAdapter() {
-    // public void windowClosing(WindowEvent e) {
-    // System.exit(0);
-    // }
     // });
     JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
@@ -1195,14 +1592,13 @@ public class ventana extends JFrame {
         if (solicitud.equals("Seleccione")) {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
-          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
-          credito.getAmortizacion().calcularCuotas();
-          credito.getAmortizacion().calcularCuotasInteres();
-          credito.getAmortizacion().calcularAmortizacion();
+          CreditoHipotecario credito = buscarCreditoHipotecario(solicitud);
           ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
           ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
           ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
           double monto = credito.getMontoFinal();
+          double interes = 0.0;
+          double amortizacion1 = 0.0;
           for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
             Object[] data = new Object[5];
             data[0] = i + 1;
@@ -1211,8 +1607,15 @@ public class ventana extends JFrame {
             data[3] = amortizacion.get(i);
             data[4] = monto;
             monto = monto - amortizacion.get(i);
+            interes = interes + intereses.get(i);
+            amortizacion1 = amortizacion1 + amortizacion.get(i);
             dtm.addRow(data);
           }
+          data[0] = "Total";
+          data[1] = "";
+          data[2] = interes;
+          data[3] = amortizacion1;
+          data[4] = monto;
         }
       }
     });
@@ -1275,17 +1678,14 @@ public class ventana extends JFrame {
     creditoPersonal.setBounds(50, 150, 200, 30);
     panel2.add(creditoPersonal);
 
-    for (CreditoPersonal credito : creditosPersonales) {
+    for (CreditoHipotecario credito : creditosHipotecarios) {
       String numero = credito.getNumSolicitud();
       creditoPersonal.addItem(numero);
     }
 
-    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
-    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
-
     // creamos el arreglo de objetos que contendra el
     // contenido de las columnas
-    Object[] data = new Object[5]; // = new Object[5];
+    Object[] data = new Object[5];
 
     // creamos el modelo de Tabla
     DefaultTableModel dtm = new DefaultTableModel();
@@ -1300,14 +1700,6 @@ public class ventana extends JFrame {
     dtm.addColumn("Amortizacion ");
     dtm.addColumn("Deuda ");
 
-    // insertamos el contenido de las columnas
-    for (int row = 0; row < 20; row++) {
-      for (int column = 0; column < 5; column++) {
-        data[column] = "Celda " + row + "," + column;
-      }
-      dtm.addRow(data);
-    }
-
     // se define el tama�o
     table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
@@ -1318,16 +1710,6 @@ public class ventana extends JFrame {
     scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(scrollPane);
 
-    // Agregamos el JScrollPane al contenedor
-    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-    // manejamos la salida
-
-    // frame.addWindowListener(new WindowAdapter() {
-    // public void windowClosing(WindowEvent e) {
-    // System.exit(0);
-    // }
-    // });
     JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
@@ -1341,14 +1723,13 @@ public class ventana extends JFrame {
         if (solicitud.equals("Seleccione")) {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
-          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
-          credito.getAmortizacion().calcularCuotas();
-          credito.getAmortizacion().calcularCuotasInteres();
-          credito.getAmortizacion().calcularAmortizacion();
+          CreditoHipotecario credito = buscarCreditoHipotecario(solicitud);
           ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
           ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
           ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
           double monto = credito.getMontoFinal();
+          double interes = 0.0;
+          double amortizacion1 = 0.0;
           for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
             Object[] data = new Object[5];
             data[0] = i + 1;
@@ -1357,8 +1738,15 @@ public class ventana extends JFrame {
             data[3] = amortizacion.get(i);
             data[4] = monto;
             monto = monto - amortizacion.get(i);
+            interes += intereses.get(i);
+            amortizacion1 += amortizacion.get(i);
             dtm.addRow(data);
           }
+          data[0] = "Total";
+          data[1] = "";
+          data[2] = interes;
+          data[3] = amortizacion1;
+          data[4] = monto;
         }
       }
     });
@@ -1379,6 +1767,15 @@ public class ventana extends JFrame {
 
     });
     // frame.getContentPane().add(button, BorderLayout.SOUTH);
+  }
+
+  private CreditoHipotecario buscarCreditoHipotecario(String solicitud) {
+    for (CreditoHipotecario credito : creditosHipotecarios) {
+      if (credito.getNumSolicitud().equals(solicitud)) {
+        return credito;
+      }
+    }
+    return null;
   }
 
   // debo editar las etiqueta
@@ -1424,12 +1821,6 @@ public class ventana extends JFrame {
       String numero = credito.getNumSolicitud();
       creditoPersonal.addItem(numero);
     }
-
-    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
-    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
-
-    // creamos el arreglo de objetos que contendra el
-    // contenido de las columnas
     Object[] data = new Object[5]; // = new Object[5];
 
     // creamos el modelo de Tabla
@@ -1445,14 +1836,6 @@ public class ventana extends JFrame {
     dtm.addColumn("Amortizacion ");
     dtm.addColumn("Deuda ");
 
-    // insertamos el contenido de las columnas
-    for (int row = 0; row < 20; row++) {
-      for (int column = 0; column < 5; column++) {
-        data[column] = "Celda " + row + "," + column;
-      }
-      dtm.addRow(data);
-    }
-
     // se define el tama�o
     table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
@@ -1463,16 +1846,6 @@ public class ventana extends JFrame {
     scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(scrollPane);
 
-    // Agregamos el JScrollPane al contenedor
-    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-    // manejamos la salida
-
-    // frame.addWindowListener(new WindowAdapter() {
-    // public void windowClosing(WindowEvent e) {
-    // System.exit(0);
-    // }
-    // });
     JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
@@ -1486,14 +1859,14 @@ public class ventana extends JFrame {
         if (solicitud.equals("Seleccione")) {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
-          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
-          credito.getAmortizacion().calcularCuotas();
-          credito.getAmortizacion().calcularCuotasInteres();
-          credito.getAmortizacion().calcularAmortizacion();
+          CreditoFiduciario credito = buscarCreditoFiduciario(solicitud);
           ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
           ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
           ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+          // double monto = credito.;
           double monto = credito.getMontoFinal();
+          Double interes = 0.0;
+          Double amortizacion1 = 0.0;
           for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
             Object[] data = new Object[5];
             data[0] = i + 1;
@@ -1504,6 +1877,13 @@ public class ventana extends JFrame {
             monto = monto - amortizacion.get(i);
             dtm.addRow(data);
           }
+          data[0] = "Total";
+          data[1] = "";
+          data[2] = interes;
+          data[3] = amortizacion1;
+          data[4] = monto;
+          dtm.addRow(data);
+
         }
       }
     });
@@ -1524,6 +1904,15 @@ public class ventana extends JFrame {
 
     });
     // frame.getContentPane().add(button, BorderLayout.SOUTH);
+  }
+
+  private CreditoFiduciario buscarCreditoFiduciario(String solicitud) {
+    for (CreditoFiduciario credito : creditosFiduciarios) {
+      if (credito.getNumSolicitud().equals(solicitud)) {
+        return credito;
+      }
+    }
+    return null;
   }
 
   private void menuCalcularCreditoFiduciarioEnDolar() {
@@ -1712,10 +2101,6 @@ public class ventana extends JFrame {
       String numero = credito.getNumSolicitud();
       creditoPersonal.addItem(numero);
     }
-
-    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
-    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
-
     // creamos el arreglo de objetos que contendra el
     // contenido de las columnas
     Object[] data = new Object[5]; // = new Object[5];
@@ -1733,14 +2118,6 @@ public class ventana extends JFrame {
     dtm.addColumn("Amortizacion ");
     dtm.addColumn("Deuda ");
 
-    // insertamos el contenido de las columnas
-    for (int row = 0; row < 20; row++) {
-      for (int column = 0; column < 5; column++) {
-        data[column] = "Celda " + row + "," + column;
-      }
-      dtm.addRow(data);
-    }
-
     // se define el tama�o
     table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
@@ -1751,16 +2128,6 @@ public class ventana extends JFrame {
     scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(scrollPane);
 
-    // Agregamos el JScrollPane al contenedor
-    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-    // manejamos la salida
-
-    // frame.addWindowListener(new WindowAdapter() {
-    // public void windowClosing(WindowEvent e) {
-    // System.exit(0);
-    // }
-    // });
     JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
@@ -1782,6 +2149,8 @@ public class ventana extends JFrame {
           ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
           ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
           double monto = credito.getMontoFinal();
+          double interes = 0.0;
+          double amortizacion1 = 0.0;
           for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
             Object[] data = new Object[5];
             data[0] = i + 1;
@@ -1790,8 +2159,16 @@ public class ventana extends JFrame {
             data[3] = amortizacion.get(i);
             data[4] = monto;
             monto = monto - amortizacion.get(i);
+            interes += intereses.get(i);
+            amortizacion1 += amortizacion.get(i);
             dtm.addRow(data);
           }
+          data[0] = "Total";
+          data[1] = "";
+          data[2] = interes;
+          data[3] = amortizacion1;
+          data[4] = monto;
+          dtm.addRow(data);
         }
       }
     });
@@ -2063,23 +2440,32 @@ public class ventana extends JFrame {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
           CreditoPersonal credito = buscarCreditoPersonal(solicitud);
-          credito.getAmortizacion().calcularCuotas();
-          credito.getAmortizacion().calcularCuotasInteres();
-          credito.getAmortizacion().calcularAmortizacion();
           ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
           ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
           ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
           double monto = credito.getAmortizacion().calcularMontoFinalASolicitar();
+          Double interes = 0.0;
+          Double amortizacion1 = 0.0;
           for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
-            Object[] data = new Object[5];
+            // Object[] data = new Object[5];
             data[0] = i + 1;
             data[1] = cuotas.get(i);
             data[2] = intereses.get(i);
             data[3] = amortizacion.get(i);
             data[4] = monto;
             monto -= amortizacion.get(i);
+            interes += intereses.get(i);
+            amortizacion1 += amortizacion.get(i);
             dtm.addRow(data);
+            // System.out.println(data[0] + " " + data[1] + " " + data[2] + " " + data[3] +
+            // " " + data[4]);
           }
+          data[0] = "Total";
+          data[1] = "";
+          data[2] = interes;
+          data[3] = amortizacion1;
+          data[4] = monto;
+          dtm.addRow(data);
         }
       }
     });
@@ -2165,14 +2551,6 @@ public class ventana extends JFrame {
     dtm.addColumn("Amortizacion ");
     dtm.addColumn("Deuda ");
 
-    // insertamos el contenido de las columnas
-    for (int row = 0; row < 20; row++) {
-      for (int column = 0; column < 5; column++) {
-        data[column] = "Celda " + row + "," + column;
-      }
-      dtm.addRow(data);
-    }
-
     // se define el tama�o
     table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
@@ -2207,21 +2585,17 @@ public class ventana extends JFrame {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
           CreditoPersonal credito = buscarCreditoPersonal(solicitud);
-          credito.getAmortizacion().calcularCuotas();
-          credito.getAmortizacion().calcularCuotasInteres();
-          credito.getAmortizacion().calcularAmortizacion();
           ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
           ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
           ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
-          double monto = credito.getMontoFinal();
+          double monto = credito.getAmortizacion().calcularMontoFinalASolicitar();
           for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
-            Object[] data = new Object[5];
             data[0] = i + 1;
             data[1] = cuotas.get(i);
             data[2] = intereses.get(i);
             data[3] = amortizacion.get(i);
             data[4] = monto;
-            monto = monto - amortizacion.get(i);
+            monto -= amortizacion.get(i);
             dtm.addRow(data);
           }
         }
@@ -2348,6 +2722,69 @@ public class ventana extends JFrame {
   }
 
   private void menuCrearPDF() {
+    JPanel panel2 = new JPanel();
+    JLabel titulo = new JLabel("Crear PDF");
+    JLabel labelNombre = new JLabel("Nombre del archivo: ");
+    JLabel labelCredito = new JLabel("Credito: ");
+
+    JTextField nombreText = new JTextField();
+    JTextField creditoText = new JTextField();
+
+    JButton crear = new JButton("Crear");
+    JButton regresar = new JButton("Regresar");
+
+    panel2.setLayout(null);
+    panel2.setBackground(new Color(0, 153, 153));
+    panel2.setBounds(0, 0, 800, 700);
+    this.add(panel2);
+
+    titulo.setBounds(50, 50, 500, 40);
+    titulo.setBackground(new Color(0, 153, 153));
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    panel2.add(titulo);
+
+    labelNombre.setBounds(50, 100, 200, 20);
+    labelNombre.setBackground(new Color(0, 153, 153));
+    labelNombre.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    panel2.add(labelNombre);
+
+    labelCredito.setBounds(50, 150, 200, 20);
+    labelCredito.setBackground(new Color(0, 153, 153));
+    labelCredito.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    panel2.add(labelCredito);
+
+    nombreText.setBounds(50, 130, 200, 20);
+    nombreText.setBackground(new Color(255, 255, 255));
+    nombreText.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    panel2.add(nombreText);
+
+    creditoText.setBounds(50, 170, 200, 20);
+    creditoText.setBackground(new Color(255, 255, 255));
+    creditoText.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    panel2.add(creditoText);
+
+    crear.setBounds(50, 620, 200, 30);
+    crear.setBackground(new Color(135, 206, 250));
+    crear.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    crear.setForeground(new Color(0, 0, 0));
+    panel2.add(crear);
+
+    regresar.setBounds(50, 720, 150, 40);
+    regresar.setBackground(new Color(135, 206, 250));
+    regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
+    regresar.setForeground(new Color(0, 0, 0));
+    panel2.add(regresar);
+
+    crear.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        String nombre = nombreText.getText();
+        String credito = creditoText.getText();
+        // pdf.crearPDF(nombre, credito);
+        setBounds(350, 0, 700, 850);
+        panel2.setVisible(false);
+        panel.setVisible(true);
+      }
+    });
 
   }
 

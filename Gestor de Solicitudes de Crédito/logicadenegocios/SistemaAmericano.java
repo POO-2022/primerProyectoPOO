@@ -2,7 +2,6 @@ package logicadenegocios;
 
 import java.util.ArrayList;
 
-
 /**
  * Clase extendida de la superclase SistemaAmortizacion
  * Pretende simular el funcionamiento de un sistema de amortizacion americano
@@ -12,19 +11,19 @@ import java.util.ArrayList;
  * @version 2.0
  */
 public class SistemaAmericano extends SistemaAmortizacion {
-  private ArrayList<Double> cuotasAmortizacion; //vk
-  private double cuotasInteres; //sk
-  private ArrayList<Double> deudas; //V
-  private ArrayList<Double> cuotas; //ck
+  private ArrayList<Double> cuotasAmortizacion; // vk
+  private double cuotasInteres; // sk
+  private ArrayList<Double> deudas; // V
+  private ArrayList<Double> cuotas; // ck
 
   public SistemaAmericano(double pPrestamoOtorgado, int pPlazoEnAnios, double pTasaInteresAnual) {
     super(pPrestamoOtorgado, pPlazoEnAnios, pTasaInteresAnual);
-    cuotasInteres = calcularInteres();
-    cuotasAmortizacion = calculoAmortizacion();
-    cuotas = calculoCuotas();
+    calcularInteres();
+    calculoAmortizacion();
+    calculoCuotas();
   }
-  
-  //metodos accesores
+
+  // metodos accesores
   public ArrayList<Double> getCuotasAmortizacion() {
     return cuotasAmortizacion;
   }
@@ -33,8 +32,12 @@ public class SistemaAmericano extends SistemaAmortizacion {
     return cuotasInteres;
   }
 
-  public ArrayList<Double> getDeudas(){
+  public ArrayList<Double> getDeudas() {
     return deudas;
+  }
+
+  public ArrayList<Double> getCuotas() {
+    return cuotas;
   }
 
   /**
@@ -42,29 +45,30 @@ public class SistemaAmericano extends SistemaAmortizacion {
    * dicho monto es constante
    */
   public void calcularInteres() {
-    cuotasInteres = super.getPrestamoOtorgado()*super.getTasaInteresAnual();
+    cuotasInteres = super.getPrestamoOtorgado() * super.getTasaInteresAnual();
   }
-  
-  /** 
+
+  /**
    * setea el calculo de amortizaciones en el plazo otorgado
-   * Segun el sistema americano, todas las amortizaciones son nulas, excepto la ultima, que corresponde al monto otorgado
-  */
-  public void calculoAmortizacion(){
+   * Segun el sistema americano, todas las amortizaciones son nulas, excepto la
+   * ultima, que corresponde al monto otorgado
+   */
+  public void calculoAmortizacion() {
     int n = super.getPlazoEnAnos();
-    for(int i = 0; i<n-1;i++){
-      cuotasAmortizacion.add(0.0); //vk = 0
-      deudas.add(super.getPrestamoOtorgado()); 
+    for (int i = 0; i < n - 1; i++) {
+      cuotasAmortizacion.add(0.0); // vk = 0
+      deudas.add(super.getPrestamoOtorgado());
     }
     cuotasAmortizacion.add(super.getPrestamoOtorgado());
-    deudas.add(0.0); 
+    deudas.add(0.0);
   }
-  
+
   /**
    * Calcula el monto de cada cuota en el plazo de años correspondiente
    */
-  public void calculoCuotas(){
-    for(int i=0; i<super.getPlazoEnAnos(); i++){
-      cuotas.add(getCuotasAmortizacion().get(i)+getCuotasInteres());
+  public void calculoCuotas() {
+    for (int i = 0; i < super.getPlazoEnAnos(); i++) {
+      cuotas.add(getCuotasAmortizacion().get(i) + getCuotasInteres());
     }
   }
 }

@@ -10,6 +10,8 @@ import javax.swing.JOptionPane;
 import org.json.*;
 
 import logicadenegocios.Credito;
+import logicadenegocios.CreditoFiduciario;
+import logicadenegocios.CreditoPersonal;
 import logicadenegocios.Deudor;
 import logicadenegocios.Direccion;
 
@@ -56,7 +58,11 @@ public class JsonManager {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return contenido;
+    if (contenido.equals("")) {
+      return "{}";
+    } else {
+      return contenido;
+    }
   }
 
   public boolean agregarDeudor(Deudor pDeudor) {
@@ -98,33 +104,81 @@ public class JsonManager {
 
   }
 
-  public boolean agregarDireccion(Direccion pDireccion) {
-    JSONObject direcciones = new JSONObject(leerJson("direcciones"));
-    JSONObject direccion = new JSONObject();
-    String contenido = direcciones.toString();
+  public boolean agregarCreditoFiduciario(CreditoFiduciario pCreditoFiduciario) {
+    JSONObject creditosFiduciarios = new JSONObject(leerJson("creditosFiduciarios"));
+    JSONObject creditoFiduciario = new JSONObject();
+    String contenido = creditosFiduciarios.toString();
     try {
-      // direcciones.get(pDireccion.getCodigoPostal());
-      JOptionPane.showMessageDialog(null, "La Direccion ya ha cido registrada ya ha sido registrada.");
+      creditosFiduciarios.get(pCreditoFiduciario.getNumSolicitud());
+      JOptionPane.showMessageDialog(null, "Ya existe un credito fiduciario con ese numero de credito");
       return false;
     } catch (Exception e) {
-      direccion.put("provincia", pDireccion.getProvincia());
-      direccion.put("canto", pDireccion.getCanton());
-      direccion.put("distrito", pDireccion.getDistrito());
-      direccion.put("senas", pDireccion.getSenas());
-      // for (int i = 0; i < pDireccion.getEspecialidades().size(); i++) {
-      // direccion.put("especialidad" + i,
-      // pDireccion.getEspecialidades().get(i).getEspecialidad());
-      // }
+      creditoFiduciario.put("monto Solicitado", pCreditoFiduciario.getMontoSolicitado());
+      creditoFiduciario.put("plazo en meses", pCreditoFiduciario.getPlazoEnMeses());
+      creditoFiduciario.put("Moneda del credito", pCreditoFiduciario.getMoneda());
+      creditoFiduciario.put("fecha de la solicitud", pCreditoFiduciario.getFechaSolicitud());
+      creditoFiduciario.put("tasa de interes", pCreditoFiduciario.getTasaIntereses());
+      creditoFiduciario.put("tasa basica pasiva", pCreditoFiduciario.getTasaBasicaPasiva());
+      creditoFiduciario.put("comision", pCreditoFiduciario.getComision());
+      creditoFiduciario.put("tipo costo legales", pCreditoFiduciario.getTipoCostosLegales());
+      creditoFiduciario.put("cedula del deudor", pCreditoFiduciario.getCedulaDeudor());
+      if (pCreditoFiduciario.getFiadores().size() <= 1) {
+        creditoFiduciario.put("fiadores 1", pCreditoFiduciario.getFiadores().get(0));
+        contenido = contenido.substring(0, contenido.length() - 1);
+        creditosFiduciarios.put(pCreditoFiduciario.getNumSolicitud(), creditoFiduciario.toString());
+        if (contenido.length() > 2) {
+          contenido += ",";
+        }
+        contenido += "\"" + pCreditoFiduciario.getNumSolicitud() + "\":"
+            + creditosFiduciarios.get(pCreditoFiduciario.getNumSolicitud()).toString().replace("\\", "") + "}";
+        actualizarJson("creditosFiduciarios", contenido);
+        JOptionPane.showMessageDialog(null, "Credito fiduciario a sido agregado con exito a la base de datos");
+        return true;
+      } else {
+        creditoFiduciario.put("fiadores 1", pCreditoFiduciario.getFiadores().get(0));
+        creditoFiduciario.put("fiadores 2", pCreditoFiduciario.getFiadores().get(1));
+        contenido = contenido.substring(0, contenido.length() - 1);
+        creditosFiduciarios.put(pCreditoFiduciario.getNumSolicitud(), creditoFiduciario.toString());
+        if (contenido.length() > 2) {
+          contenido += ",";
+        }
+        contenido += "\"" + pCreditoFiduciario.getNumSolicitud() + "\":"
+            + creditosFiduciarios.get(pCreditoFiduciario.getNumSolicitud()).toString().replace("\\", "") + "}";
+        actualizarJson("creditosFiduciarios", contenido);
+        JOptionPane.showMessageDialog(null, "Credito fiduciario a sido agregado con exito a la base de datos");
+        return true;
+      }
+    }
+  }
+
+  public boolean agregarCreditoPersonal(CreditoPersonal pCreditoPersonal) {
+    JSONObject creditosPersonales = new JSONObject(leerJson("creditosPersonal"));
+    JSONObject creditoPersonal = new JSONObject();
+    String contenido = creditosPersonales.toString();
+    try {
+      creditosPersonales.get(pCreditoPersonal.getNumSolicitud());
+      JOptionPane.showMessageDialog(null, "Ya existe un credito personal con esa solicitud");
+      return false;
+    } catch (Exception e) {
+      creditoPersonal.put("monto Solicitado", pCreditoPersonal.getMontoSolicitado());
+      creditoPersonal.put("plazo en meses", pCreditoPersonal.getPlazoEnMeses());
+      creditoPersonal.put("Moneda del credito", pCreditoPersonal.getMoneda());
+      creditoPersonal.put("fecha de la solicitud", pCreditoPersonal.getFechaSolicitud());
+      creditoPersonal.put("tasa de interes", pCreditoPersonal.getTasaIntereses());
+      creditoPersonal.put("tasa basica pasiva", pCreditoPersonal.getTasaBasicaPasiva());
+      creditoPersonal.put("comision", pCreditoPersonal.getComision());
+      creditoPersonal.put("tipo costo legales", pCreditoPersonal.getTipoCostosLegales());
+      creditoPersonal.put("cedula del deudor", pCreditoPersonal.getCedulaDeudor());
+      creditoPersonal.put("motivo de uso", pCreditoPersonal.getMotivoUso());
       contenido = contenido.substring(0, contenido.length() - 1);
-      //(), direccion.toString());
+      creditosPersonales.put(pCreditoPersonal.getNumSolicitud(), creditoPersonal.toString());
       if (contenido.length() > 2) {
         contenido += ",";
       }
-      // contenido += "\"" + pDireccion.getCodigoPostal() + "\":"
-      //     + direcciones.get(pDireccion.getCodigoPostal()).toString().replace("\\", "") + "}";
-
-      actualizarJson("direcciones", contenido);
-      JOptionPane.showMessageDialog(null, "La direcciones ha sido registrado con éxito.");
+      contenido += "\"" + pCreditoPersonal.getNumSolicitud() + "\":"
+          + creditosPersonales.get(pCreditoPersonal.getNumSolicitud()).toString().replace("\\", "") + "}";
+      actualizarJson("creditosPersonal", contenido);
+      JOptionPane.showMessageDialog(null, "Credito personal a sido agregado con exito a la base de datos");
       return true;
     }
   }

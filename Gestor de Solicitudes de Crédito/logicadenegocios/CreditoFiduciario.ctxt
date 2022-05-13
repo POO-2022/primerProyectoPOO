@@ -1,8 +1,8 @@
 #BlueJ class context
 comment0.target=CreditoFiduciario
 comment0.text=\r\n\ Subclase\ derivada\ de\ la\ superclase\ Credito\r\n\ Representa\ la\ abstraccion\ de\ un\ credito\ fiduciario\r\n\ \r\n\ @author\ KEVIN\ SALAZAR\r\n\ @version\ 1.0\r\n
-comment1.params=pCliente\ pMontoSolicitado\ pPlazoEnMeses\ pMoneda\ pTasaInteres\ pTasaBasicaPasiva\ pComision\ pTipoCostosLegales\ pCuotaMensual\ pFiador
-comment1.target=CreditoFiduciario(Deudor,\ double,\ int,\ TMoneda,\ double,\ double,\ double,\ TCostosLegales,\ CuotaMensual,\ Fiador)
+comment1.params=pCliente\ pMontoSolicitado\ pPlazoEnMeses\ pMoneda\ pTasaInteres\ pTasaBasicaPasiva\ pComision\ pTipoCostosLegales\ pCuotaMensual\ pFiadores
+comment1.target=CreditoFiduciario(Deudor,\ double,\ int,\ TMoneda,\ double,\ double,\ double,\ TCostosLegales,\ CuotaMensual,\ java.util.ArrayList)
 comment2.params=
 comment2.target=double\ getGastoFormalizacion()
 comment3.params=

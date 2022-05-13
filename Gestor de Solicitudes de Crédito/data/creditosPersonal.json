@@ -1,0 +1,14 @@
+{
+    "CRE0001": {
+        "Moneda del credito": "COLONES",
+        "tasa basica pasiva": 0.05,
+        "tasa de interes": 0.15,
+        "tipo costo legales": "TRASPASO",
+        "plazo en meses": 5,
+        "fecha de la solicitud": "2022-05-13",
+        "comision": 0,
+        "motivo de uso": "compra de prenda",
+        "monto Solicitado": 1000000,
+        "cedula del deudor": "2021067834"
+    }
+}

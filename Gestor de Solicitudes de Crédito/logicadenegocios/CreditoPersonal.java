@@ -31,7 +31,7 @@ public class CreditoPersonal extends Credito {
         pTasaBasicaPasiva, pComision, pTipoCostosLegales, pCuotaMensual);
     motivoUso = pMotivoUso;
     gastoFormalizacion = pMontoSolicitado * COSTO_FORMALIZACION;
-    amortizacion = new SistemaAleman(pMontoSolicitado, pPlazoEnMeses, pTasaInteres);
+    amortizacion = new SistemaAleman(calcularMontoFinalASolicitar(), pPlazoEnMeses, pTasaInteres);
     // super.setAmortizacion()
   }
 
@@ -51,6 +51,10 @@ public class CreditoPersonal extends Credito {
     return gastoFormalizacion;
   }
 
+  public String getCedulaDeudor() {
+    return super.getCliente().getCedula();
+  }
+
   public void setGastoFormalizacion(double gastoFormalizacion) {
     this.gastoFormalizacion = gastoFormalizacion;
   }
@@ -63,9 +67,8 @@ public class CreditoPersonal extends Credito {
 
   public double calcularMontoFinalASolicitar() {
     double result = 0;
-    for (Double cuotas : amortizacion.getAmortizacion()) {
-      result += cuotas;
-    }
+    result += gastoFormalizacion;
+    result += super.getMontoSolicitado();
     return result;
   }
 }

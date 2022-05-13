@@ -7,7 +7,7 @@ package logicadenegocios;
  * @version 1.0
  */
 public class Fiador {
-  private int cedula;
+  private String cedula;
   private String nombre;
   private String telefono;
   private double salarioBruto;
@@ -16,13 +16,13 @@ public class Fiador {
   /**
    * Constructor principal de la clase Fiador
    * 
-   * @param pCedula: cedula del fiador
-   * @param pNombre: nombre y apellidos del fiador
-   * @param pTelefono: telefono del fiador
-   * @param pSalarioBruto: salario bruto (sin deducciones) del fiador
+   * @param pCedula:         cedula del fiador
+   * @param pNombre:         nombre y apellidos del fiador
+   * @param pTelefono:       telefono del fiador
+   * @param pSalarioBruto:   salario bruto (sin deducciones) del fiador
    * @param pSalarioLiquido: salario liquido (con deducciones) del fiador
    */
-  public Fiador(int pCedula, String pNombre, String pTelefono, double pSalarioBruto, double pSalarioLiquido) {
+  public Fiador(String pCedula, String pNombre, String pTelefono, double pSalarioBruto, double pSalarioLiquido) {
     this.cedula = pCedula;
     this.nombre = pNombre;
     this.telefono = pTelefono;
@@ -30,13 +30,9 @@ public class Fiador {
     this.salarioLiquido = pSalarioLiquido;
   }
 
-  //m?todos accesores
-  public int getCedula() {
+  // m?todos accesores
+  public String getCedula() {
     return cedula;
-  }
-
-  public void setCedula(int pCedula) {
-    this.cedula = pCedula;
   }
 
   public String getNombre() {
@@ -70,18 +66,19 @@ public class Fiador {
   public void setSalarioLiquido(double pSalarioLiquido) {
     this.salarioLiquido = pSalarioLiquido;
   }
-  
+
   /**
    * Genera el estado del objeto en una cadena de caracteres
+   * 
    * @return cadena de caracteres
    */
   public String toString() {
-    String msg= "Fiador: \n";
+    String msg = "Fiador: \n";
     msg += "C?dula: " + cedula + "\n";
-    msg += "Nombre: " + nombre + "\n"; 
+    msg += "Nombre: " + nombre + "\n";
     msg += "Telefono: " + telefono + "\n";
     msg += "Salario Bruto: " + salarioBruto + "\n";
     msg += "Salario l?quido: " + salarioLiquido + "\n";
-    return msg;  
+    return msg;
   }
 }

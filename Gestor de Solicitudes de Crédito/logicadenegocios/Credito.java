@@ -11,15 +11,15 @@ import java.time.LocalDate;
 public abstract class Credito {
   // atributos de la clase
   private Deudor cliente;
-  private double montoSolicitado;
-  private int plazoEnMeses;
-  private TMoneda moneda;
-  private LocalDate fechaSolicitud;
-  private String numSolicitud;
-  private double tasaIntereses;
-  private double tasaBasicaPasiva;
-  private double comision;
-  private TCostosLegales tipoCostosLegales;
+  private double montoSolicitado;//
+  private int plazoEnMeses;//
+  private TMoneda moneda;//
+  private LocalDate fechaSolicitud;//
+  protected String numSolicitud;
+  private double tasaIntereses;//
+  private double tasaBasicaPasiva;//
+  private double comision;//
+  private TCostosLegales tipoCostosLegales;//
   private CuotaMensual cuotaMensual;
   private double montoFinal;
   private static int sNumSolicitud = 0;
@@ -82,6 +82,10 @@ public abstract class Credito {
     return LocalDate.now();
   }
 
+  public String getFechaSolicitudString() {
+    return fechaSolicitud.toString();
+  }
+
   public Deudor getCliente() {
     return cliente;
   }
@@ -123,6 +127,7 @@ public abstract class Credito {
   }
 
   public String getNumSolicitud() {
+    sNumSolicitud--;
     return numSolicitud;
   }
 

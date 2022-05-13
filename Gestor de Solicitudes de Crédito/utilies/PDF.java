@@ -34,7 +34,8 @@ public class PDF {
         //Inicio de escritura del pdf
         contenido.beginText();
         contenido.newLineAtOffset(20, pag.getMediaBox().getHeight()-52); //medidas estandar donde comienza el archivo
-        contenido.setFont(PDType1Font.TIMES_ROMAN, 12); //Fuente Times new Roman, tamaño 12
+        //quitar las //
+        //contenido.setFont(PDType1Font.TIMES_ROMAN, 12); //Fuente Times new Roman, tamaño 12
         
         //preparacion del texto para guardado en pdf
         String linea = "";
