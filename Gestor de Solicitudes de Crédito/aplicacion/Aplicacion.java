@@ -4,8 +4,12 @@ import interfaz.*;
 
 public class Aplicacion {
   public static void main(String[] args) {
-    ventana ventana = new ventana();
-    ventana.setVisible(true);
+    try{
+      ventana ventana = new ventana();
+      ventana.setVisible(true);
+    }catch(Exception e){
+      System.out.println("Error");
+    }
   }
 
 }

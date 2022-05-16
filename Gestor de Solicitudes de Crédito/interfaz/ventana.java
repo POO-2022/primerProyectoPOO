@@ -14,6 +14,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.fontbox.type1.DamagedFontException;
+import javax.mail.MessagingException;
 
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
@@ -75,7 +76,6 @@ public class ventana extends JFrame {
     jsonManager = new JsonManager();
     email = new Email();
     pdf = new PDF();
-    CuotaMensual cuotaMensual = null;
     subirSolicitantes();
     subirFiadores();
     subirCreditosPersonales();
@@ -140,6 +140,7 @@ public class ventana extends JFrame {
         Deudor deudor = buscarCliente(cedulaDeudor);
         CuotaMensual cuotaMensual2 = null;
         i = datos.indexOf("fiador 1");
+        
       }
     }
 
@@ -194,9 +195,6 @@ public class ventana extends JFrame {
     if (datos != null) {
       while (datos.length() > 4) {
         if (datos.length() > 2) {
-          System.out.println(datos.length());
-          System.out.println(datos);
-
           int i = datos.indexOf("primerNombre") + 16;
           String primerNombre = datos.substring(i, datos.indexOf("\"", i));
           i = datos.indexOf("segundoNombre") + 17;
@@ -229,11 +227,6 @@ public class ventana extends JFrame {
               Double.parseDouble(salarioLiquido));
           solicitantes.add(deudor);
           datos = datos.substring(datos.indexOf("}") + 1, datos.length());
-          i = datos.indexOf("}") + 1;
-          System.out.println(i);
-          System.out.println(datos);
-          System.out.println(datos.length());
-          System.out.println(datos.length() > 4);
         }
       }
     }

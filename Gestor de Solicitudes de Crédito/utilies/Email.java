@@ -70,7 +70,7 @@ public class Email {
     }
   }
 
-  public static void main(String[] args) throws MessagingException {
-    enviarEmail("andyporras6@gmail.com", "correo de prueba", "hola mundo");
-  }
+  // public static void main(String[] args) throws MessagingException {
+  //   enviarEmail("andyporras6@gmail.com", "correo de prueba", "hola mundo");
+  // }
 }

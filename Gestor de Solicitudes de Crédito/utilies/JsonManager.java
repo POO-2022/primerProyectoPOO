@@ -13,7 +13,6 @@ import logicadenegocios.Credito;
 import logicadenegocios.CreditoFiduciario;
 import logicadenegocios.CreditoPersonal;
 import logicadenegocios.Deudor;
-import logicadenegocios.Direccion;
 import logicadenegocios.Fiador;
 
 public class JsonManager {
