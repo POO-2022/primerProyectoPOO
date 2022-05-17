@@ -24,6 +24,7 @@ public class Credito {
   private double montoFinal;
   private static int sNumSolicitud = 0;
 
+
   /**
    * Constructor de la clase Credito
    * 
@@ -127,11 +128,11 @@ public class Credito {
   }
 
   public String getNumSolicitud() {
-    sNumSolicitud--;
     return numSolicitud;
   }
 
   public void setNumSolicitud(String numSolicitud) {
+    sNumSolicitud--;
     this.numSolicitud = numSolicitud;
   }
 

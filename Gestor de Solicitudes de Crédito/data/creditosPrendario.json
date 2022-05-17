@@ -2,7 +2,7 @@
     "CRE0003": {
         "Moneda del credito": "COLONES",
         "tasa basica pasiva": 0.13,
-        "tasa de interes": 0.13,
+        "tasa de interes": 0.15,
         "tipo costo legales": "TRASPASO",
         "valor del bien": 2000000,
         "plazo en meses": 20,

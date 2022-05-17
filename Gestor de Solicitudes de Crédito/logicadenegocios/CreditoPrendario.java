@@ -20,9 +20,9 @@ public class CreditoPrendario extends Credito {
     super(pCliente, pMontoSolicitado, pPlazoEnMeses, pMoneda, pTasaInteres,
         pTasaBasicaPasiva,
         pComision, pTipoCostosLegales, pCuotaMensual);
-    setGastoFormalizacion();
-    setPrenda(pPrenda);
-    amortizacion = new SistemaAmericano(pMontoSolicitado, pPlazoEnMeses, pTasaInteres);
+        setGastoFormalizacion();
+        setPrenda(pPrenda);
+        amortizacion = new SistemaAmericano(calcularMontoFinalASolicitar(), pPlazoEnMeses, pTasaInteres);
     // super.setAmortizacion()
   }
   public SistemaAmericano getAmortizacion() {
@@ -31,6 +31,10 @@ public class CreditoPrendario extends Credito {
 
   public String getNumSolicitud() {
     return super.getNumSolicitud();
+  }
+
+  public void setNumSolicitud(String pNumSolicitud) {
+    super.setNumSolicitud(pNumSolicitud);
   }
   
   public String getCedulaDeudor() {

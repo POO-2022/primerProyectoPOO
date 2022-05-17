@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.ProcessHandle.Info;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -39,6 +40,7 @@ import logicadenegocios.CuotaMensual;
 import logicadenegocios.Deudor;
 import logicadenegocios.Direccion;
 import logicadenegocios.Fiador;
+import logicadenegocios.SistemaAmericano;
 import logicadenegocios.TCostosLegales;
 import logicadenegocios.TMoneda;
 import utilies.Email;
@@ -84,6 +86,7 @@ public class ventana extends JFrame {
     subirFiadores();
     subirCreditosPersonales();
     subirCreditosFiduciarios();
+    subirCreditosPrendarios();
     // subirCreditosHipotecarios();
     // CreditoPersonal creditoPersonal = new CreditoPersonal(solicitantes.get(0),
     // 1000000, 5, TMoneda.COLONES, 0.15,
@@ -96,6 +99,53 @@ public class ventana extends JFrame {
     setDefaultCloseOperation(EXIT_ON_CLOSE);
   }
 
+  private void subirCreditosPrendarios() {
+    String datos = jsonManager.leerJson("creditosPrendario");
+    if (datos != null) {
+      while (datos.length() > 3) {
+        if (datos.contains("{")) {
+          int i = datos.indexOf("Moneda del credito") + 22;
+          String moneda = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("tasa basica pasiva") + 21;
+          double tasaBasicaPasiva = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("tasa de interes") + 18;
+          double tasaInteres = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("tipo costo legales") + 22;
+          String tipoCostoLegales = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("plazo en meses") + 17;
+          int plazo = Integer.parseInt(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("fecha de la solicitud") + 25;
+          String fechaSolicitud = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("comision") + 10;
+          double comision = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("monto Solicitado") + 19;
+          double montoSolicitado = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("cedula del deudor") + 21;
+          String cedulaDeudor = datos.substring(i, datos.indexOf("\"", i));
+          Deudor deudor = buscarCliente(cedulaDeudor);
+          CuotaMensual cuotaMensual2 = null;
+          i = datos.indexOf("valor del bien") + 17;
+          double valorBien = Double.parseDouble(datos.substring(i, datos.indexOf(",", i)));
+          i = datos.indexOf("nombre del bien") + 19;
+          String nombreBien = datos.substring(i, datos.indexOf("\"", i));
+          i = datos.indexOf("\"");
+          String codigoCredito = datos.substring(i + 1, datos.indexOf(":", i) - 1);
+          TMoneda moneda2 = TMoneda.valueOf(moneda);
+          TCostosLegales costosLegales = TCostosLegales.valueOf(tipoCostoLegales);
+          BienMueble bien = new BienMueble(nombreBien, deudor, valorBien);
+          CreditoPrendario creditoPrendario = new CreditoPrendario(deudor, montoSolicitado, plazo,
+              moneda2, tasaBasicaPasiva, tasaInteres, comision, costosLegales, cuotaMensual2,
+              bien);
+              DateTimeFormatter JEFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+              LocalDate local_date = LocalDate.parse(fechaSolicitud, JEFormatter);
+            creditoPrendario.setFechaSolicitud(local_date);
+            creditoPrendario.setNumSolicitud(codigoCredito);
+            creditosPrendarios.add(creditoPrendario);
+            datos = datos.substring(datos.indexOf("}") + 1, datos.length());
+        }
+      }
+    }
+  }
   public void subirFiadores() {
     String datos = jsonManager.leerJson("fiadores");
     if (datos != null) {
@@ -169,6 +219,7 @@ public class ventana extends JFrame {
     }
 
   }
+
   public Fiador buscarFiador(String cedulaFiador) {
     for (Fiador fiador : fiadores) {
       if (fiador.getCedula().equals(cedulaFiador)) {
@@ -875,6 +926,13 @@ public class ventana extends JFrame {
     JButton registraCredito = new JButton("Registrar Credito");
     JButton cancelar = new JButton("Cancelar");
 
+    if (pMoneda.compareTo(TMoneda.COLONES) == 0) {
+      tasaInteresText.setText("" + 0.15);
+    }
+    if (pMoneda.compareTo(TMoneda.DOLARES) == 0) {
+      tasaInteresText.setText("" + 0.13);
+    }
+
     panel2.setLayout(null);
     panel2.setBackground(new Color(135, 206, 250));
     panel2.setBounds(0, 0, 600, 700);
@@ -971,31 +1029,32 @@ public class ventana extends JFrame {
           Double valorBienDouble = Double.parseDouble(valorBien);
           if (pMoneda.compareTo(TMoneda.COLONES) == 0) {
             if (montoDouble <= 30000000 && montoDouble > 0 ) {
-              if (tasaInteresDouble < 0.1 || tasaInteresDouble > 0.16) {
-                JOptionPane.showMessageDialog(null, "La tasa debe estar entre 0.1 y 0.15");
-              }
-              if (plazoInt < 0 || plazoInt > 85) {
-                JOptionPane.showMessageDialog(null, "El plazo debe estar entre 1 y 84");
-              }else{
-                BienMueble bien = new BienMueble(nombreMueble, pDeudor, valorBienDouble);
-                CuotaMensual cuota = null;
-                CreditoPrendario credito = new CreditoPrendario(pDeudor, montoDouble,plazoInt, pMoneda, tasaInteresDouble, pTasaPasiva, pComision, pCostoLegales, cuota, bien);
-                if (jsonManager.agregarCreditoPrendario(credito)) {
-                  creditosPrendarios.add(credito);
-                  JOptionPane.showMessageDialog(null, "Credito registrado");
-                  setBounds(350, 0, 700, 850);
-                  panel2.setVisible(false);
-                  panel.setVisible(true);
+              //if (tasaInteresDouble > 0.1 && tasaInteresDouble  <0.16) {
+                if (plazoInt < 0 || plazoInt > 85) {
+                  JOptionPane.showMessageDialog(null, "El plazo debe estar entre 1 y 84");
                 }else{
-                  JOptionPane.showMessageDialog(null, "Credito no registrado");
+                  BienMueble bien = new BienMueble(nombreMueble, pDeudor, valorBienDouble);
+                  CuotaMensual cuota = null;
+                  CreditoPrendario credito = new CreditoPrendario(pDeudor, montoDouble,plazoInt, pMoneda, tasaInteresDouble, pTasaPasiva, pComision, pCostoLegales, cuota, bien);
+                  if (jsonManager.agregarCreditoPrendario(credito)) {
+                    creditosPrendarios.add(credito);
+                    JOptionPane.showMessageDialog(null, "Credito registrado");
+                    setBounds(350, 0, 700, 850);
+                    panel2.setVisible(false);
+                    panel.setVisible(true);
+                  }else{
+                    JOptionPane.showMessageDialog(null, "Credito no registrado");
+                  }
                 }
-              }
+              // }else{
+              //   JOptionPane.showMessageDialog(null, "La tasa debe estar entre 0.1 y 0.15");
+              // }
             } else {
               JOptionPane.showMessageDialog(null, "El monto debe estar entre 30,000,000 y 0, y la tasa debe estar entre 0 y 0.15");
             }
           }else{
             if (montoDouble < 45000 && montoDouble > 0 && tasaInteresDouble < 0.13 && tasaInteresDouble > 0){
-              if (tasaInteresDouble < 0 || tasaInteresDouble > 0.14) {
+              if (tasaInteresDouble < 0 || tasaInteresDouble > 0.16) {
                 JOptionPane.showMessageDialog(null, "La tasa debe estar entre 0.1 y 0.13");
               }
               if(plazoInt < 0 || plazoInt > 85){
@@ -2375,7 +2434,7 @@ public class ventana extends JFrame {
     creditoPersonal.setBounds(50, 150, 200, 30);
     panel2.add(creditoPersonal);
 
-    for (CreditoPersonal credito : creditosPersonales) {
+    for (CreditoPrendario credito : creditosPrendarios) {
       String numero = credito.getNumSolicitud();
       creditoPersonal.addItem(numero);
     }
@@ -2419,25 +2478,23 @@ public class ventana extends JFrame {
         if (solicitud.equals("Seleccione")) {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
-          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
-          credito.getAmortizacion().calcularCuotas();
-          credito.getAmortizacion().calcularCuotasInteres();
-          credito.getAmortizacion().calcularAmortizacion();
-          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
-          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
-          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
-          double monto = credito.getMontoFinal();
+          CreditoPrendario credito = buscarCreditoPrendario(solicitud);
+          SistemaAmericano sistemaAmericano = credito.getAmortizacion();
+          ArrayList<Double> cuotas = sistemaAmericano.getCuotas();
+          Double intereses = sistemaAmericano.getCuotasInteres();
+          ArrayList<Double> amortizacion = sistemaAmericano.getCuotasAmortizacion();
+          double monto = credito.calcularMontoFinalASolicitar();
           double interes = 0.0;
           double amortizacion1 = 0.0;
           for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
             Object[] data = new Object[5];
             data[0] = i + 1;
             data[1] = cuotas.get(i);
-            data[2] = intereses.get(i);
+            data[2] = intereses;
             data[3] = amortizacion.get(i);
             data[4] = monto;
             monto = monto - amortizacion.get(i);
-            interes += intereses.get(i);
+            interes += intereses;
             amortizacion1 += amortizacion.get(i);
             dtm.addRow(data);
           }
@@ -2457,7 +2514,6 @@ public class ventana extends JFrame {
     button.setForeground(new Color(0, 0, 0));
     panel2.add(button);
     button.addActionListener(new ActionListener() {
-
       public void actionPerformed(ActionEvent e) {
         // frame.setVisible(false);
         setBounds(350, 0, 700, 850);
@@ -2468,7 +2524,14 @@ public class ventana extends JFrame {
     });
     // frame.getContentPane().add(button, BorderLayout.SOUTH);
   }
-
+  private CreditoPrendario buscarCreditoPrendario(String solicitud) {
+    for (CreditoPrendario credito : creditosPrendarios) {
+      if (credito.getNumSolicitud().equals(solicitud)) {
+        return credito;
+      }
+    }
+    return null;
+  }
   private void menuCalcularCreditoPrendarioDolar() {
 
     // JFrame frame = new JFrame("Calcular credito personal en dolares");
@@ -2507,7 +2570,7 @@ public class ventana extends JFrame {
     creditoPersonal.setBounds(50, 150, 200, 30);
     panel2.add(creditoPersonal);
 
-    for (CreditoPersonal credito : creditosPersonales) {
+    for (CreditoPrendario credito : creditosPrendarios) {
       String numero = credito.getNumSolicitud();
       creditoPersonal.addItem(numero);
     }
@@ -2531,14 +2594,6 @@ public class ventana extends JFrame {
     dtm.addColumn("Interes ");
     dtm.addColumn("Amortizacion ");
     dtm.addColumn("Deuda ");
-
-    // insertamos el contenido de las columnas
-    for (int row = 0; row < 20; row++) {
-      for (int column = 0; column < 5; column++) {
-        data[column] = "Celda " + row + "," + column;
-      }
-      dtm.addRow(data);
-    }
 
     // se define el tama�o
     table.setPreferredScrollableViewportSize(new Dimension(500, 70));
@@ -2573,24 +2628,32 @@ public class ventana extends JFrame {
         if (solicitud.equals("Seleccione")) {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
-          CreditoPersonal credito = buscarCreditoPersonal(solicitud);
-          credito.getAmortizacion().calcularCuotas();
-          credito.getAmortizacion().calcularCuotasInteres();
-          credito.getAmortizacion().calcularAmortizacion();
-          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
-          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
-          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
-          double monto = credito.getMontoFinal();
+          CreditoPrendario credito = buscarCreditoPrendario(solicitud);
+          SistemaAmericano sistemaAmericano = credito.getAmortizacion();
+          ArrayList<Double> cuotas = sistemaAmericano.getCuotas();
+          Double intereses = sistemaAmericano.getCuotasInteres();
+          ArrayList<Double> amortizacion = sistemaAmericano.getCuotasAmortizacion();;
+          double monto = credito.calcularMontoFinalASolicitar();
+          double interes = 0.0;
+          double amortizacion1 = 0.0;
           for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
             Object[] data = new Object[5];
             data[0] = i + 1;
             data[1] = cuotas.get(i);
-            data[2] = intereses.get(i);
+            data[2] = intereses;
             data[3] = amortizacion.get(i);
             data[4] = monto;
             monto = monto - amortizacion.get(i);
+            interes += intereses;
+            amortizacion1 += amortizacion.get(i);
             dtm.addRow(data);
           }
+          data[0] = "Total";
+          data[1] = "";
+          data[2] = interes;
+          data[3] = amortizacion1;
+          data[4] = monto;
+          dtm.addRow(data);
         }
       }
     });
@@ -2909,16 +2972,35 @@ public class ventana extends JFrame {
 
   private void menuEnviarCorreo() {
     JPanel panel2 = new JPanel();
-    JLabel label = new JLabel("Enviar correo");
-    JLabel label2 = new JLabel("Para: ");
-    JLabel label3 = new JLabel("Asunto: ");
-    JLabel label4 = new JLabel("Mensaje: ");
+    JLabel titulo = new JLabel("Enviar correo");
+    JLabel labelSelecione = new JLabel("Seleccione una solicitud de credito");
+    JLabel labelPara = new JLabel("Para: ");
+    JLabel labelAsunto = new JLabel("Asunto: ");
+
     JTextField textField = new JTextField();
     JTextField textField2 = new JTextField();
 
-    JTextArea textArea = new JTextArea();
+    JComboBox<String> comboBox = new JComboBox<String>();
+
     JButton enviar = new JButton("Enviar");
     JButton regresar = new JButton("Regresar");
+
+    for (CreditoPersonal credito : creditosPersonales) {
+      String numero = credito.getNumSolicitud();
+      comboBox.addItem(numero);
+    }
+    for (CreditoPrendario credito : creditosPrendarios) {
+      String numero = credito.getNumSolicitud();
+      comboBox.addItem(numero);
+    }
+    for (CreditoHipotecario credito : creditosHipotecarios) {
+      String numero = credito.getNumSolicitud();
+      comboBox.addItem(numero);
+    }
+    for (CreditoFiduciario credito : creditosFiduciarios) {
+      String numero = credito.getNumSolicitud();
+      comboBox.addItem(numero);
+    }
 
     panel2.setLayout(null);
     panel2.setBackground(new Color(0, 153, 153));
@@ -2926,60 +3008,79 @@ public class ventana extends JFrame {
     this.add(panel2);
     setBounds(350, 0, 800, 850);
 
-    label.setBounds(50, 50, 500, 20);
-    label.setBackground(new Color(0, 153, 153));
-    label.setFont(new Font("Times new Roman", Font.BOLD, 20));
-    panel2.add(label);
+    titulo.setBounds(50, 50, 500, 40);
+    titulo.setBackground(new Color(0, 153, 153));
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 22));
+    panel2.add(titulo);
 
-    label2.setBounds(50, 100, 200, 20);
-    label2.setBackground(new Color(0, 153, 153));
-    label2.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(label2);
+    labelSelecione.setBounds(50, 100, 500, 40);
+    labelSelecione.setBackground(new Color(0, 153, 153));
+    labelSelecione.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(labelSelecione);
 
-    label3.setBounds(50, 150, 200, 20);
-    label3.setBackground(new Color(0, 153, 153));
-    label3.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(label3);
+    comboBox.setBounds(50, 150, 500, 40);
+    comboBox.setBackground(new Color(0, 153, 153));
+    comboBox.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(comboBox);
 
-    label4.setBounds(50, 200, 200, 20);
-    label4.setBackground(new Color(0, 153, 153));
-    label4.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(label4);
+    labelPara.setBounds(50, 200, 500, 40);
+    labelPara.setBackground(new Color(0, 153, 153));
+    labelPara.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(labelPara);
 
-    textField.setBounds(50, 130, 200, 20);
-    textField.setBackground(new Color(255, 255, 255));
-    textField.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    textField.setBounds(50, 250, 500, 40);
+    textField.setBackground(new Color(0, 153, 153));
+    textField.setFont(new Font("Times new Roman", Font.BOLD, 18));
     panel2.add(textField);
 
-    textField2.setBounds(50, 170, 200, 20);
-    textField2.setBackground(new Color(255, 255, 255));
-    textField2.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    labelAsunto.setBounds(50, 300, 500, 40);
+    labelAsunto.setBackground(new Color(0, 153, 153));
+    labelAsunto.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(labelAsunto);
+
+    textField2.setBounds(50, 350, 500, 40);
+    textField2.setBackground(new Color(0, 153, 153));
+    textField2.setFont(new Font("Times new Roman", Font.BOLD, 18));
     panel2.add(textField2);
 
-    textArea.setBounds(50, 220, 700, 300);
-    textArea.setBackground(new Color(255, 255, 255));
-    textArea.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    panel2.add(textArea);
-
-    enviar.setBounds(50, 620, 200, 30);
+    enviar.setBounds(50, 400, 200, 40);
     enviar.setBackground(new Color(135, 206, 250));
     enviar.setFont(new Font("Times new Roman", Font.BOLD, 16));
     enviar.setForeground(new Color(0, 0, 0));
     panel2.add(enviar);
 
-    regresar.setBounds(50, 720, 150, 40);
+    regresar.setBounds(50, 500, 200, 40);
     regresar.setBackground(new Color(135, 206, 250));
     regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
     regresar.setForeground(new Color(0, 0, 0));
     panel2.add(regresar);
 
+
     enviar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         String destinatario = textField.getText();
         String asunto = textField2.getText();
-        String mensaje = textArea.getText();
+        String numeroSolicitud = comboBox.getSelectedItem().toString();
+        String info = "";
+        if (buscarCreditoPersonal(numeroSolicitud) != null) {
+          CreditoPersonal credito = buscarCreditoPersonal(numeroSolicitud);
+          info = credito.toString();
+        } 
+        if (buscarCreditoPrendario(numeroSolicitud) != null) {
+          CreditoPrendario credito = buscarCreditoPrendario(numeroSolicitud);
+          info = credito.toString();
+        }
+        if (buscarCreditoHipotecario(numeroSolicitud) != null) {
+          CreditoHipotecario credito = buscarCreditoHipotecario(numeroSolicitud);
+          info = credito.toString();
+        }
+        if (buscarCreditoFiduciario(numeroSolicitud) != null) {
+          CreditoFiduciario credito = buscarCreditoFiduciario(numeroSolicitud);
+          info = credito.toString();
+        }
         try {
-          email.enviarEmail(destinatario, asunto, mensaje);
+          email.enviarEmail(destinatario, asunto,info);
+          JOptionPane.showMessageDialog(null, "Correo enviado");
           setBounds(350, 0, 700, 850);
           panel2.setVisible(false);
           panel.setVisible(true);
