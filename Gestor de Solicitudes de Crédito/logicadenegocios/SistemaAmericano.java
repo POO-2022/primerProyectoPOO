@@ -18,6 +18,10 @@ public class SistemaAmericano extends SistemaAmortizacion {
 
   public SistemaAmericano(double pPrestamoOtorgado, int pPlazoEnAnios, double pTasaInteresAnual) {
     super(pPrestamoOtorgado, pPlazoEnAnios, pTasaInteresAnual);
+    cuotasAmortizacion = new ArrayList<Double>();
+    deudas = new ArrayList<Double>();
+    cuotas = new ArrayList<Double>();
+    cuotasInteres = 0;
     calcularInteres();
     calculoAmortizacion();
     calculoCuotas();

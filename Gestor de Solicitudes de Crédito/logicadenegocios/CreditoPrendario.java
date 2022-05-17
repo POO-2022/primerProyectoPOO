@@ -25,6 +25,17 @@ public class CreditoPrendario extends Credito {
     amortizacion = new SistemaAmericano(pMontoSolicitado, pPlazoEnMeses, pTasaInteres);
     // super.setAmortizacion()
   }
+  public SistemaAmericano getAmortizacion() {
+    return amortizacion;
+  }
+
+  public String getNumSolicitud() {
+    return super.getNumSolicitud();
+  }
+  
+  public String getCedulaDeudor() {
+    return super.getCliente().getCedula();
+  } 
 
   public BienMueble getPrenda() {
     return prenda;

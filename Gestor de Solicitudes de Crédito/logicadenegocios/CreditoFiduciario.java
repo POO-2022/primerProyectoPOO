@@ -1,5 +1,6 @@
 package logicadenegocios;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -26,8 +27,16 @@ public class CreditoFiduciario extends Credito {
     amortizacion = new SistemaFrances(calcularMontoFinalASolicitar(), pPlazoEnMeses, pTasaInteres);
   }
 
+  public void setCodigoCredito(String pCodigoCredito) {
+    super.setNumSolicitud(pCodigoCredito);
+  }
+
   public String getCedulaDeudor() {
     return super.getCliente().getCedula();
+  }
+
+  public void setFechaSolicitud(LocalDate pFechaSolicitud) {
+    super.setFechaSolicitud(pFechaSolicitud);
   }
 
   public SistemaFrances getAmortizacion() {
@@ -46,6 +55,7 @@ public class CreditoFiduciario extends Credito {
     double result = 0;
     result += super.getMontoSolicitado() * COSTO_FORMALIZACION;
     result += super.getMontoSolicitado();
+    super.setMontoFinal(result);
     return result;
   }
 

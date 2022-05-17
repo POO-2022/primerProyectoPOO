@@ -1,4 +1,6 @@
 #BlueJ class context
 comment0.target=TMoneda
 comment0.text=\r\n\ class\ TMoneda\r\n\ \r\n\ @author\ Andy\ Porras\r\n\ @version\ 1.0\r\n
-numComments=1
+comment1.params=string
+comment1.target=int\ compareTo(java.lang.String)
+numComments=2

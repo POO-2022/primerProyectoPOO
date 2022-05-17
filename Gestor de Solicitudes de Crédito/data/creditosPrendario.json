@@ -1,0 +1,15 @@
+{
+    "CRE0003": {
+        "Moneda del credito": "COLONES",
+        "tasa basica pasiva": 0.13,
+        "tasa de interes": 0.13,
+        "tipo costo legales": "TRASPASO",
+        "valor del bien": 2000000,
+        "plazo en meses": 20,
+        "fecha de la solicitud": "2022-05-17",
+        "comision": 20000,
+        "monto Solicitado": 2001000,
+        "cedula del deudor": "2021067834",
+        "nombre del bien": "automovil"
+    }
+}

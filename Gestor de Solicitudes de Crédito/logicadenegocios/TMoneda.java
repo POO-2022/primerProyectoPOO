@@ -14,5 +14,9 @@ public enum TMoneda {
   /**
    * Enumeration constant COLONES
    */
-  COLONES
+  COLONES;
+
+public int compareTo(String string) {
+    return 0;
+}
 }

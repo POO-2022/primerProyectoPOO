@@ -12,6 +12,7 @@ import org.json.*;
 import logicadenegocios.Credito;
 import logicadenegocios.CreditoFiduciario;
 import logicadenegocios.CreditoPersonal;
+import logicadenegocios.CreditoPrendario;
 import logicadenegocios.Deudor;
 import logicadenegocios.Fiador;
 
@@ -59,9 +60,40 @@ public class JsonManager {
       e.printStackTrace();
     }
     if (contenido.equals("")) {
-      return "";
+      return "{}";
     } else {
       return contenido;
+    }
+  }
+  public boolean agregarCreditoPrendario(CreditoPrendario pCredito) {
+    JSONObject creditos = new JSONObject(leerJson("creditosPrendario"));
+    JSONObject credito = new JSONObject();
+    String contenido = creditos.toString();
+    try{
+      creditos.get(pCredito.getNumSolicitud());
+      JOptionPane.showMessageDialog(null, "El crédito ya existe");
+      return false;
+    }catch(Exception e){
+      credito.put("monto Solicitado", pCredito.getMontoSolicitado());
+      credito.put("plazo en meses", pCredito.getPlazoEnMeses());
+      credito.put("Moneda del credito", pCredito.getMoneda());
+      credito.put("fecha de la solicitud", pCredito.getFechaSolicitud());
+      credito.put("tasa de interes", pCredito.getTasaIntereses());
+      credito.put("tasa basica pasiva", pCredito.getTasaBasicaPasiva());
+      credito.put("comision", pCredito.getComision());
+      credito.put("tipo costo legales", pCredito.getTipoCostosLegales());
+      credito.put("cedula del deudor", pCredito.getCliente().getCedula());
+      credito.put("valor del bien", pCredito.getPrenda().getValor());
+      credito.put("nombre del bien", pCredito.getPrenda().getNombre());
+      contenido = contenido.substring(0, contenido.length() - 1);
+      creditos.put(pCredito.getNumSolicitud(),credito.toString());
+      if (contenido.length() > 2) {
+        contenido += ",";
+      }
+      contenido += "\"" + pCredito.getNumSolicitud() + "\":" + creditos.get(pCredito.getNumSolicitud()).toString().replace("\\", "") + "}";
+      actualizarJson("creditosPrendario", contenido);
+      JOptionPane.showMessageDialog(null, "Crédito prendario a sido agregado correctamente a la base de datos");
+      return true;
     }
   }
 
