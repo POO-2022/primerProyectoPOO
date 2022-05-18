@@ -483,8 +483,8 @@ public class ventana extends JFrame {
     });
     crearPDF.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent evt) {
-        // menuCrearPDF();
-        // panel.setVisible(false);
+        menuCrearPDF();
+        panel.setVisible(false);
       }
     });
     salir.addActionListener(new ActionListener() {
@@ -1858,7 +1858,7 @@ public class ventana extends JFrame {
 
   private String getFechaActual() {
     Date fecha = new Date();
-    SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
     return formato.format(fecha);
   }
 
@@ -3104,10 +3104,10 @@ public class ventana extends JFrame {
     JPanel panel2 = new JPanel();
     JLabel titulo = new JLabel("Crear PDF");
     JLabel labelNombre = new JLabel("Nombre del archivo: ");
-    JLabel labelCredito = new JLabel("Credito: ");
+    JLabel labelCredito = new JLabel("Selecciones un credito: ");
 
     JTextField nombreText = new JTextField();
-    JTextField creditoText = new JTextField();
+    JComboBox<String> comboBox = new JComboBox<String>();
 
     JButton crear = new JButton("Crear");
     JButton regresar = new JButton("Regresar");
@@ -3116,39 +3116,57 @@ public class ventana extends JFrame {
     panel2.setBackground(new Color(0, 153, 153));
     panel2.setBounds(0, 0, 800, 700);
     this.add(panel2);
+    setBounds(350, 0, 700, 600);
+
+    for (CreditoPersonal credito : creditosPersonales) {
+      String numero = credito.getNumSolicitud();
+      comboBox.addItem(numero);
+    }
+    for (CreditoPrendario credito : creditosPrendarios) {
+      String numero = credito.getNumSolicitud();
+      comboBox.addItem(numero);
+    }
+    for (CreditoHipotecario credito : creditosHipotecarios) {
+      String numero = credito.getNumSolicitud();
+      comboBox.addItem(numero);
+    }
+    for (CreditoFiduciario credito : creditosFiduciarios) {
+      String numero = credito.getNumSolicitud();
+      comboBox.addItem(numero);
+    }
 
     titulo.setBounds(50, 50, 500, 40);
     titulo.setBackground(new Color(0, 153, 153));
-    titulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
+    titulo.setFont(new Font("Times new Roman", Font.BOLD, 22));
     panel2.add(titulo);
 
-    labelNombre.setBounds(50, 100, 200, 20);
+    labelNombre.setBounds(50, 100, 500, 40);
     labelNombre.setBackground(new Color(0, 153, 153));
-    labelNombre.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    labelNombre.setFont(new Font("Times new Roman", Font.BOLD, 18));
     panel2.add(labelNombre);
 
-    labelCredito.setBounds(50, 150, 200, 20);
-    labelCredito.setBackground(new Color(0, 153, 153));
-    labelCredito.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(labelCredito);
-
-    nombreText.setBounds(50, 130, 200, 20);
-    nombreText.setBackground(new Color(255, 255, 255));
-    nombreText.setFont(new Font("Times new Roman", Font.BOLD, 12));
+    nombreText.setBounds(50, 150, 500, 40);
+    nombreText.setBackground(new Color(0, 153, 153));
+    nombreText.setFont(new Font("Times new Roman", Font.BOLD, 18));
     panel2.add(nombreText);
 
-    creditoText.setBounds(50, 170, 200, 20);
-    creditoText.setBackground(new Color(255, 255, 255));
-    creditoText.setFont(new Font("Times new Roman", Font.BOLD, 12));
-    panel2.add(creditoText);
+    labelCredito.setBounds(50, 200, 500, 40);
+    labelCredito.setBackground(new Color(0, 153, 153));
+    labelCredito.setFont(new Font("Times new Roman", Font.BOLD, 18)); 
+    panel2.add(labelCredito);
 
-    crear.setBounds(50, 620, 200, 30);
+    comboBox.setBounds(50, 250, 500, 40);
+    comboBox.setBackground(new Color(0, 153, 153));
+    comboBox.setFont(new Font("Times new Roman", Font.BOLD, 18));
+    panel2.add(comboBox);
+
+    crear.setBounds(50, 300, 200, 40);
     crear.setBackground(new Color(135, 206, 250));
     crear.setFont(new Font("Times new Roman", Font.BOLD, 16));
     crear.setForeground(new Color(0, 0, 0));
     panel2.add(crear);
 
-    regresar.setBounds(50, 720, 150, 40);
+    regresar.setBounds(50, 400, 200, 40);
     regresar.setBackground(new Color(135, 206, 250));
     regresar.setFont(new Font("Times new Roman", Font.BOLD, 16));
     regresar.setForeground(new Color(0, 0, 0));
@@ -3156,12 +3174,49 @@ public class ventana extends JFrame {
 
     crear.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String nombre = nombreText.getText();
-        String credito = creditoText.getText();
-        // pdf.crearPDF(nombre, credito);
+        if (comboBox.getSelectedItem() != null || comboBox.getSelectedItem() != "") {
+          String numeroSolicitud = comboBox.getSelectedItem().toString();
+          String info = "";
+          String nombreArchivo ="";
+          if (buscarCreditoPersonal(numeroSolicitud) != null) {
+            CreditoPersonal credito = buscarCreditoPersonal(numeroSolicitud);
+            info = credito.toString();
+            nombreArchivo = credito.getCedulaDeudor()+"+"+getFechaActual();
+            nombreText.setText(nombreArchivo);
+          } 
+          if (buscarCreditoPrendario(numeroSolicitud) != null) {
+            CreditoPrendario credito = buscarCreditoPrendario(numeroSolicitud);
+            info = credito.toString();
+            nombreArchivo = credito.getCedulaDeudor()+"+"+getFechaActual();
+            nombreText.setText(nombreArchivo);
+          }
+          if (buscarCreditoHipotecario(numeroSolicitud) != null) {
+            CreditoHipotecario credito = buscarCreditoHipotecario(numeroSolicitud);
+            info = credito.toString();
+            nombreArchivo = credito.getCliente().getCedula()+"+"+getFechaActual();
+            nombreText.setText(nombreArchivo);
+          }
+          if (buscarCreditoFiduciario(numeroSolicitud) != null) {
+            CreditoFiduciario credito = buscarCreditoFiduciario(numeroSolicitud);
+            info = credito.toString();
+            nombreArchivo = credito.getCedulaDeudor()+"+"+getFechaActual();
+            nombreText.setText(nombreArchivo);
+          }
+          pdf.crearPDF(info, nombreArchivo);
+          setBounds(350, 0, 700, 850);
+          panel2.setVisible(false);
+          panel.setVisible(true);
+        }else {
+          JOptionPane.showMessageDialog(null, "Seleccione un credito");
+        }
+      }
+    });
+
+    regresar.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
         setBounds(350, 0, 700, 850);
-        panel2.setVisible(false);
         panel.setVisible(true);
+        panel2.setVisible(false);
       }
     });
 

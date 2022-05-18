@@ -231,8 +231,8 @@ public class Credito {
    */
   public String toString() {
     String msg = "";
-    msg += "N� Solicitud: " + numSolicitud + "\n";
-    msg += "Cliente: " + cliente + "\n";
+    msg += "Nu. Solicitud: " + numSolicitud + "\n";
+    msg += "Datos del solicitante\n" + cliente.toString() + "\n";
     msg += "Monto solicitado: " + montoSolicitado + "\n";
     msg += "Plazo (en meses): " + plazoEnMeses + "\n";
     msg += "Divisa: " + moneda + "\n";

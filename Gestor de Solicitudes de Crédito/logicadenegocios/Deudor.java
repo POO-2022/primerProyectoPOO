@@ -148,13 +148,14 @@ public class Deudor {
    * @return cadena de caracteres
    */
   public String toString() {
-    String msg = "Fiador: \n";
-    msg += "C?dula: " + cedula + "\n";
+    //String msg = "Fiador: \n";
+    String msg = "";
+    msg += "Cedula: " + cedula + "\n";
     msg += "Nombre: " + primerNombre + " " + segundoNombre + " " + primerApellido + " " + segundoApellido + "\n";
     msg += "Telefono: " + telefono + "\n";
     msg += "Salario Bruto: " + salarioBruto + "\n";
-    msg += "Salario l?quido: " + salarioLiquido + "\n";
-    msg += "Fiador(es): \n" + getFiadoresV2() + "\n";
+    msg += "Salario liquido: " + salarioLiquido + "\n";
+    //msg += "Fiador(es): \n" + getFiadoresV2() + "\n";
 
     return msg;
   }

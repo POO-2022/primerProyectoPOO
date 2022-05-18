@@ -1,5 +1,7 @@
 package utilies;
 
+import javax.swing.JOptionPane;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -60,7 +62,9 @@ public class PDF {
       contenido.close();
 
       doc.save(pNombreArchivo + ".pdf");
+      JOptionPane.showMessageDialog(null, "PDF creado");
     } catch (Exception e) {
+      JOptionPane.showMessageDialog(null, "Error al crear el pdf");
       System.err.println(e.getMessage());
     }
   }
