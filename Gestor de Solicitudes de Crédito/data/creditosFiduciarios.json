@@ -1,5 +1,5 @@
 {
-    "CRE0002": {
+    "CRE0004": {
         "Moneda del credito": "COLONES",
         "tasa basica pasiva": 0.02,
         "tasa de interes": 0.15,
@@ -11,5 +11,18 @@
         "fiador 1": "703010148",
         "monto Solicitado": 200000,
         "cedula del deudor": "2021067834"
+    },
+    "CRE0003": {
+        "Moneda del credito": "COLONES",
+        "tasa basica pasiva": 0.2,
+        "tasa de interes": 0.2,
+        "tipo costo legales": "TRASPASO",
+        "plazo en meses": 20,
+        "fecha de la solicitud": "2022-05-17",
+        "comision": 12212,
+        "fiador 2": "",
+        "fiador 1": "703010148",
+        "monto Solicitado": 200000,
+        "cedula del deudor": "7030101470"
     }
 }

@@ -28,7 +28,8 @@ public class BienMueble extends Bien {
   }
 
   public String toString() {
-    String msg = "Valor: \n" + valor;
+    String msg = super.toString();
+    msg += "Valor: " + valor + "\n";
     return msg;
   }
 }

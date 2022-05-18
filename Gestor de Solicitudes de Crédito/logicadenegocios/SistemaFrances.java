@@ -116,4 +116,22 @@ public class SistemaFrances extends SistemaAmortizacion {
     return (c / Math.pow((1 + i), (n + 1 - k)));
   }
 
+  public String toString() {
+    String result = "";
+    result += "numero de cuota \t" + "monto de cuota \t"  + "interes \t"+ "amortizacion: \t"+ "deuda\n";
+    int monto = 0;
+    int interes = 0;
+    int amortizacion2 = 0;
+    monto = (int) getPrestamoOtorgado();
+    for (int i = 0; i < super.getPlazoEnAnos(); i++) {
+      result += i + 1 + "\t" + montoCuotas.get(i) + "\t" + cuotasInteres.get(i) + "\t" + amortizacion.get(i) + "\t"
+          +monto+ "\n";
+      monto = (int) (monto - amortizacion.get(i));
+      interes = (int) (interes + cuotasInteres.get(i));
+      amortizacion2 = (int) (amortizacion2 + amortizacion.get(i));
+    }
+    result += "total\t\t" + interes + "\t" + amortizacion2 + "\t" + monto;
+    return result;
+  }
+
 }

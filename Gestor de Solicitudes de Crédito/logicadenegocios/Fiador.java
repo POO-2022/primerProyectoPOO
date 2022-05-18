@@ -74,7 +74,7 @@ public class Fiador {
    */
   public String toString() {
     String msg = "Fiador: \n";
-    msg += "C?dula: " + cedula + "\n";
+    msg += "Cedula: " + cedula + "\n";
     msg += "Nombre: " + nombre + "\n";
     msg += "Telefono: " + telefono + "\n";
     msg += "Salario Bruto: " + salarioBruto + "\n";

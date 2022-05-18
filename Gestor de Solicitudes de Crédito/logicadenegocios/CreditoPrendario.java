@@ -62,4 +62,11 @@ public class CreditoPrendario extends Credito {
     result = super.getMontoSolicitado() + getGastoFormalizacion();
     return result;
   }
+  public String toString() {
+    String result = "credito prendario\n";
+    result += super.toString();
+    result += "prenda: " + getPrenda().toString() + "\n";
+    result += "tabla de amortizacion: " + getAmortizacion().toString() + "\n";
+    return result;    
+  }
 }

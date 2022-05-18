@@ -180,6 +180,7 @@ public class Credito {
     return montoFinal;
   }
 
+
   public void setMontoFinal(double montoFinal) {
     this.montoFinal = montoFinal;
   }
@@ -232,8 +233,9 @@ public class Credito {
   public String toString() {
     String msg = "";
     msg += "Nu. Solicitud: " + numSolicitud + "\n";
-    msg += "Datos del solicitante\n" + cliente.toString() + "\n";
-    msg += "Monto solicitado: " + montoSolicitado + "\n";
+    msg += "Datos del solicitante\n"; 
+    msg += cliente+"\n";
+    msg += "Monto solicitado: "+ montoSolicitado + "\n";
     msg += "Plazo (en meses): " + plazoEnMeses + "\n";
     msg += "Divisa: " + moneda + "\n";
     msg += "fechaSolicitud: " + fechaSolicitud + "\n";

@@ -11,6 +11,7 @@ import org.json.*;
 
 import logicadenegocios.Credito;
 import logicadenegocios.CreditoFiduciario;
+import logicadenegocios.CreditoHipotecario;
 import logicadenegocios.CreditoPersonal;
 import logicadenegocios.CreditoPrendario;
 import logicadenegocios.Deudor;
@@ -65,6 +66,44 @@ public class JsonManager {
       return contenido;
     }
   }
+  public boolean agregarCreditoHipotecario(CreditoHipotecario pCreditoHipotecario) {
+    JSONObject creditos = new JSONObject(leerJson("creditoHipotecario"));
+    JSONObject credito = new JSONObject();
+    String contenido = creditos.toString();
+    try {
+      creditos.get(pCreditoHipotecario.getNumSolicitud());
+      JOptionPane.showMessageDialog(null, "El credito ya existe");
+      return false;
+    }catch (Exception e) {
+      credito.put("monto Solicitado", pCreditoHipotecario.getMontoSolicitado());
+      credito.put("plazo en meses", pCreditoHipotecario.getPlazoEnMeses());
+      credito.put("Moneda del credito", pCreditoHipotecario.getMoneda());
+      credito.put("fecha de la solicitud", pCreditoHipotecario.getFechaSolicitud());
+      credito.put("tasa de interes", pCreditoHipotecario.getTasaIntereses());
+      credito.put("tasa basica pasiva", pCreditoHipotecario.getTasaBasicaPasiva());
+      credito.put("comision", pCreditoHipotecario.getComision());
+      credito.put("tipo costo legales", pCreditoHipotecario.getTipoCostosLegales());
+      credito.put("cedula del deudor", pCreditoHipotecario.getCliente().getCedula());
+      credito.put("nombre del bien",pCreditoHipotecario.getHipoteca().getNombre());
+      credito.put("area del terreno del bien",pCreditoHipotecario.getHipoteca().getAreaTerreno());
+      credito.put("valor del bien",pCreditoHipotecario.getHipoteca().getMontoAvaluo());
+      credito.put("Numero del plano",pCreditoHipotecario.getHipoteca().getNumPlano());
+      credito.put("provincia",pCreditoHipotecario.getHipoteca().getDireccion().getProvincia());
+      credito.put("canton",pCreditoHipotecario.getHipoteca().getDireccion().getCanton());
+      credito.put("distrito",pCreditoHipotecario.getHipoteca().getDireccion().getDistrito());
+      credito.put("senas",pCreditoHipotecario.getHipoteca().getDireccion().getSenas());
+      contenido = contenido.substring(0,contenido.length()-1);
+      creditos.put(pCreditoHipotecario.getNumSolicitud(), credito);
+      if (contenido.length() > 2) {
+        contenido += ",";
+      }
+      contenido += "\""+pCreditoHipotecario.getNumSolicitud()+"\":"+credito.get(pCreditoHipotecario.getNumSolicitud()).toString().replace("\\", "") + "}";
+      actualizarJson("creditoHipotecario", contenido);
+      JOptionPane.showMessageDialog(null, "El crédito se ha agregado correctamente");        
+      return true;
+    }
+  }
+
   public boolean agregarCreditoPrendario(CreditoPrendario pCredito) {
     JSONObject creditos = new JSONObject(leerJson("creditosPrendario"));
     JSONObject credito = new JSONObject();

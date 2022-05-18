@@ -1,16 +1,30 @@
 {
-    "2021067834": {
+    "7030101470": {
         "distrito": "sixaola",
         "segundoNombre": "Andrey",
-        "salario Bruto": 120000,
+        "salario Bruto": 2000000,
         "primerNombre": "Andy",
         "primerApellido": "Porras",
-        "salario Liquido": 120000,
-        "correo": "andyporras@gmail",
+        "salario Liquido": 1800000,
+        "correo": "andyporras@gmail.com",
         "segundoApellido": "Romero",
         "canton": "talamanca",
-        "senas": "frente al...",
+        "senas": "frente..",
         "provincia": "Limon",
-        "telefono": "123456789"
+        "telefono": "89357284"
+    },
+    "123456789": {
+        "distrito": "sixaola",
+        "segundoNombre": "eddy",
+        "salario Bruto": 3000000,
+        "primerNombre": "elia",
+        "primerApellido": "porras",
+        "salario Liquido": 2600000,
+        "correo": "eddyporras@gmail.com",
+        "segundoApellido": "romero",
+        "canton": "Talamanca",
+        "senas": "frente",
+        "provincia": "Limon",
+        "telefono": "89347284"
     }
 }

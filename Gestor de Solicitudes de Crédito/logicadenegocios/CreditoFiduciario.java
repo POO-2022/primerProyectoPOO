@@ -66,4 +66,15 @@ public class CreditoFiduciario extends Credito {
   public void agregarFiador(Fiador pFiador) {
     fiadores.add(pFiador);
   }
+  public String toString() {
+    String resul = "CreditoFiduciario:\n"; 
+    resul += super.toString() + "\n";
+    int i = 1;
+    for (Fiador fiador : fiadores) {
+      resul +="fiador "+i +"\n"+ fiador.toString() + "\n";
+      i++;
+    }
+    resul += "tabla de amortizacion\n" + amortizacion.toString();
+    return resul;
+  }
 }

@@ -71,4 +71,13 @@ public class CreditoPersonal extends Credito {
     result += super.getMontoSolicitado();
     return result;
   }
+  public String toString() {
+    String resul  = "";
+    resul += "Credito Personal\n";
+    resul += super.toString();
+    resul += "Motivo de Uso: " + motivoUso + "\n";
+    resul += "tabla de amortizacion: \n";
+    resul += amortizacion.toString();
+    return resul; 
+  }
 }

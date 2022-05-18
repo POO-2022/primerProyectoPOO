@@ -19,4 +19,6 @@ comment7.target=void\ setGastoFormalizacion(double)
 comment8.params=
 comment8.target=double\ calcularMontoFinalASolicitar()
 comment8.text=\r\n\ @Override\r\n\ \ \ \ \ \ \ \ \ \ \ Sobreescritura\ del\ metodo\ toString\ de\ la\ superClase\ Credito\r\n\ @return\ cadena\ de\ caracteres\ con\ el\ estado\ del\ objeto\r\n
-numComments=9
+comment9.params=
+comment9.target=java.lang.String\ toString()
+numComments=10

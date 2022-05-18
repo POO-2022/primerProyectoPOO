@@ -77,6 +77,19 @@ public class SistemaAleman extends SistemaAmortizacion {
 
   public String toString() {
     String result = "";
+    result += "numero de cuuota \t" + "monto de cuota \t"  + "interes \t"+ "amortizacion: \t"+ "deuda\n";
+    int monto = 0;
+    int interes = 0;
+    int amortizacion = 0;
+    monto = (int) calcularMontoFinalASolicitar();
+    for (int i = 0; i < super.getPlazoEnAnos(); i++) {
+      result += i + 1 + "\t" + montoCuotas.get(i) + "\t" + cuotasInteres.get(i) + "\t" + amortazacion.get(i) + "\t"
+          +monto+ "\n";
+      monto = (int) (monto - amortazacion.get(i));
+      interes = (int) (interes + cuotasInteres.get(i));
+      amortizacion = (int) (amortizacion + amortazacion.get(i));
+    }
+    result += "total \t\t" + interes + "\t" + amortizacion + "\t" + monto;
     return result;
   }
 }

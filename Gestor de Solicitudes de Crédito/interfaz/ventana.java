@@ -146,6 +146,7 @@ public class ventana extends JFrame {
       }
     }
   }
+  
   public void subirFiadores() {
     String datos = jsonManager.leerJson("fiadores");
     if (datos != null) {
@@ -677,7 +678,7 @@ public class ventana extends JFrame {
             && !pSegundoApellido.equals("") && !pCedula.equals("") && !pTelefono.equals("") && !pCorreo.equals("")
             && !pProvincia.equals("") && !pCanton.equals("") && !pDistrito.equals("") && !pSenas.equals("")
             && !pSalarioBruto.equals("") && !pSalarioLiquido.equals("")) {
-          if (pCedula.length() == 10) {
+          if (pCedula.length() == 9) {
             double pSalarioBrutoI = Double.parseDouble(pSalarioBruto);
             double pSalarioLiquidoI = Double.parseDouble(pSalarioLiquido);
             Direccion direccion = new Direccion(pProvincia, pCanton, pDistrito, pSenas);
@@ -690,7 +691,7 @@ public class ventana extends JFrame {
             panel2.setVisible(false);
             panel.setVisible(true);
           } else {
-            JOptionPane.showMessageDialog(null, "La cedula debe tener 10 digitos");
+            JOptionPane.showMessageDialog(null, "La cedula debe tener 9 digitos");
           }
         } else {
           JOptionPane.showMessageDialog(null, "Por favor llene todos los campos");
@@ -1441,7 +1442,14 @@ public class ventana extends JFrame {
     panel3.setBackground(new Color(135, 206, 250));
     panel3.setBounds(0, 0, 600, 700);
     this.add(panel3);
-    setBounds(350, 0, 600, 800);
+    setBounds(350, 0, 600, 850);
+
+    if (pMoneda.equals("Dolares")) {
+      tasaInteresText.setText("0.015");
+    }
+    if (pMoneda.equals("Colones")) {
+      tasaInteresText.setText("0.025");
+    }
 
     etiquetaTitulo.setBounds(200, 50, 300, 30);
     etiquetaTitulo.setFont(new Font("Times new Roman", Font.BOLD, 20));
@@ -1584,19 +1592,19 @@ public class ventana extends JFrame {
     salir.setForeground(new Color(0, 0, 0));
     panel3.add(salir);
 
-    registrarCredito.setBounds(250, 750, 200, 30);
+    registrarCredito.setBounds(270, 750, 200, 30);
     registrarCredito.setFont(new Font("Times new Roman", Font.BOLD, 15));
     registrarCredito.setForeground(new Color(0, 0, 0));
     panel3.add(registrarCredito);
 
     salir.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        setBounds(350, 0, 700, 850);
         panel3.setVisible(false);
         panel.setVisible(true);
       }
     });
     registrarCredito.addActionListener(new ActionListener() {
-      @Override
       public void actionPerformed(ActionEvent e) {
         String plazo = plazoText.getText();
         String monto = montoText.getText();
@@ -1633,17 +1641,27 @@ public class ventana extends JFrame {
                 if (pCostoLegales.equals("Traspaso")) { // Traspaso
                   CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.DOLARES,
                       tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.TRASPASO, cuota, bien);
-                  creditosHipotecarios.add(credito);
-                  JOptionPane.showMessageDialog(null, "Credito registrado");
-                  panel3.setVisible(false);
-                  panel.setVisible(true);
+                  //if (jsonManager.agregarCreditoHipotecario(credito)) {
+                    creditosHipotecarios.add(credito);
+                    JOptionPane.showMessageDialog(null, "Credito registrado");
+                    setBounds(350, 0, 700, 850);
+                    panel3.setVisible(false);
+                    panel.setVisible(true);
+                  // } else {
+                  //   JOptionPane.showMessageDialog(null, "Error al registrar el credito");
+                  // }
                 } else { // No traspaso
                   CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.DOLARES,
                       tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.INSCRIPCION_BIEN, cuota, bien);
-                  creditosHipotecarios.add(credito);
-                  JOptionPane.showMessageDialog(null, "Credito registrado");
-                  panel3.setVisible(false);
-                  panel.setVisible(true);
+                  //if (jsonManager.agregarCreditoHipotecario(credito)) {       
+                    creditosHipotecarios.add(credito);
+                    JOptionPane.showMessageDialog(null, "Credito registrado");
+                    setBounds(350, 0, 700, 850);
+                    panel3.setVisible(false);
+                    panel.setVisible(true);
+                  // } else {
+                  //   JOptionPane.showMessageDialog(null, "Error al registrar el credito");
+                  // }
                 }
               } else {
                 JOptionPane.showMessageDialog(null, "El monto debe ser menor a $230,000 y el plazo menor a 361 meses");
@@ -1653,17 +1671,27 @@ public class ventana extends JFrame {
                 if (pCostoLegales.equals("Traspaso")) { // Traspaso
                   CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.COLONES,
                       tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.TRASPASO, cuota, bien);
-                  creditosHipotecarios.add(credito);
-                  JOptionPane.showMessageDialog(null, "Credito registrado");
-                  panel3.setVisible(false);
-                  panel.setVisible(true);
+                  //if (jsonManager.agregarCreditoHipotecario(credito)) {
+                    creditosHipotecarios.add(credito);
+                    JOptionPane.showMessageDialog(null, "Credito registrado");
+                    setBounds(350, 0, 700, 850);
+                    panel3.setVisible(false);
+                    panel.setVisible(true);
+                  // } else {
+                  //   JOptionPane.showMessageDialog(null, "Error al registrar el credito");
+                  // }
                 } else { // No traspaso
                   CreditoHipotecario credito = new CreditoHipotecario(pDeudor, montoInt, plazoInt, TMoneda.COLONES,
                       tasaInteresDouble, tasaPasiva, comisionInt, TCostosLegales.INSCRIPCION_BIEN, cuota, bien);
-                  creditosHipotecarios.add(credito);
-                  JOptionPane.showMessageDialog(null, "Credito registrado");
-                  panel3.setVisible(false);
-                  panel.setVisible(true);
+                  //if (jsonManager.agregarCreditoHipotecario(credito)) {
+                    creditosHipotecarios.add(credito);
+                    JOptionPane.showMessageDialog(null, "Credito registrado");
+                    setBounds(350, 0, 700, 850);
+                    panel3.setVisible(false);
+                    panel.setVisible(true);   
+                  // }else {
+                  //   JOptionPane.showMessageDialog(null, "Error al registrar el credito");
+                  // }
                 }
               } else {
                 JOptionPane.showMessageDialog(null,
@@ -1699,6 +1727,13 @@ public class ventana extends JFrame {
     panel2.setBounds(0, 0, 600, 700);
     this.add(panel2);
     setBounds(350, 0, 600, 700);
+
+    if (pMoneda.equals("Dolares")) {
+      tasaInteresText.setText("0.18");
+    } 
+    if (pMoneda.equals("Colones")) {
+      tasaInteresText.setText("0.16");
+    }
 
     etiquetaCreditoPersonal.setBounds(200, 50, 200, 30);
     etiquetaCreditoPersonal.setBackground(new Color(0, 153, 153));
@@ -1784,12 +1819,15 @@ public class ventana extends JFrame {
                 CuotaMensual cuota = null;
                 CreditoPersonal creditoPersonal = new CreditoPersonal(pDeudor, montoD, plazoI, TMoneda.COLONES, tasa,
                     tasaBasicaPasiva, comision, TCostosLegales.TRASPASO, cuota, motivo);
+                if (jsonManager.agregarCreditoPersonal(creditoPersonal)) {
                 creditosPersonales.add(creditoPersonal);
                 JOptionPane.showMessageDialog(null, "Credito Personal Registrado");
-                jsonManager.agregarCreditoPersonal(creditoPersonal);
                 setBounds(350, 0, 700, 850);
                 panel2.setVisible(false);
                 panel.setVisible(true);
+                } else {
+                  JOptionPane.showMessageDialog(null, "Error al registrar el credito personal");
+                }
               } else {
                 JOptionPane.showMessageDialog(null, "El monto debe ser menor a 3000000 y el plazo menor a 60 meses");
               }
@@ -1799,12 +1837,15 @@ public class ventana extends JFrame {
                 CreditoPersonal creditoPersonal = new CreditoPersonal(pDeudor, montoD, plazoI, TMoneda.COLONES, tasa,
                     tasaBasicaPasiva,
                     comision, TCostosLegales.INSCRIPCION_BIEN, cuota, motivo);
-                creditosPersonales.add(creditoPersonal);
-                JOptionPane.showMessageDialog(null, "El credito ha sido registrado");
-                jsonManager.agregarCreditoPersonal(creditoPersonal);
-                setBounds(350, 0, 700, 850);
-                panel2.setVisible(false);
-                panel.setVisible(true);
+                if (jsonManager.agregarCreditoPersonal(creditoPersonal)) {
+                  creditosPersonales.add(creditoPersonal);
+                  JOptionPane.showMessageDialog(null, "El credito ha sido registrado");
+                  setBounds(350, 0, 700, 850);
+                  panel2.setVisible(false);
+                  panel.setVisible(true);
+                }else {
+                  JOptionPane.showMessageDialog(null, "Error al registrar el credito personal");
+                }
               } else {
                 JOptionPane.showMessageDialog(null, "El monto debe ser menor a 3000000 y el plazo menor a 60 meses");
               }
@@ -1815,12 +1856,16 @@ public class ventana extends JFrame {
                 CuotaMensual cuota = null;
                 CreditoPersonal creditoPersonal = new CreditoPersonal(pDeudor, montoD, plazoI, TMoneda.DOLARES, tasa,
                     tasaBasicaPasiva, comision, TCostosLegales.TRASPASO, cuota, motivo);
-                creditosPersonales.add(creditoPersonal);
-                setBounds(350, 0, 700, 850);
-                JOptionPane.showMessageDialog(null, "Credito registrado");
-                jsonManager.agregarCreditoPersonal(creditoPersonal);
-                panel2.setVisible(false);
-                panel.setVisible(true);
+                if (jsonManager.agregarCreditoPersonal(creditoPersonal)) {
+                  creditosPersonales.add(creditoPersonal);
+                  setBounds(350, 0, 700, 850);
+                  JOptionPane.showMessageDialog(null, "Credito registrado");
+                  jsonManager.agregarCreditoPersonal(creditoPersonal);
+                  panel2.setVisible(false);
+                  panel.setVisible(true);
+                } else {
+                  JOptionPane.showMessageDialog(null, "Error al registrar el credito personal");
+                }
               } else {
                 JOptionPane.showMessageDialog(null, "El monto debe ser menor a 5000 y el plazo menor a 60 meses");
               }
@@ -1829,12 +1874,16 @@ public class ventana extends JFrame {
                 CuotaMensual cuota = null;
                 CreditoPersonal creditoPersonal = new CreditoPersonal(pDeudor, montoD, plazoI, TMoneda.DOLARES, tasa,
                     tasaBasicaPasiva, comision, TCostosLegales.INSCRIPCION_BIEN, cuota, motivo);
-                creditosPersonales.add(creditoPersonal);
-                setBounds(350, 0, 700, 850);
-                JOptionPane.showMessageDialog(null, "Credito registrado");
-                jsonManager.agregarCreditoPersonal(creditoPersonal);
-                panel2.setVisible(false);
-                panel.setVisible(true);
+                if (jsonManager.agregarCreditoPersonal(creditoPersonal)) {
+                  creditosPersonales.add(creditoPersonal);
+                  setBounds(350, 0, 700, 850);
+                  JOptionPane.showMessageDialog(null, "Credito registrado");
+                  jsonManager.agregarCreditoPersonal(creditoPersonal);
+                  panel2.setVisible(false);
+                  panel.setVisible(true);
+                } else {
+                  JOptionPane.showMessageDialog(null, "Error al registrar el credito personal");
+                }
               } else {
                 JOptionPane.showMessageDialog(null, "El monto debe ser menor a 5000 y el plazo menor a 60 meses");
               }
@@ -1900,10 +1949,6 @@ public class ventana extends JFrame {
       String numero = credito.getNumSolicitud();
       creditoPersonal.addItem(numero);
     }
-
-    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
-    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
-
     // creamos el arreglo de objetos que contendra el
     // contenido de las columnas
     Object[] data = new Object[5]; // = new Object[5];
@@ -1949,26 +1994,50 @@ public class ventana extends JFrame {
           ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
           ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
           ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
-          double monto = credito.getMontoFinal();
-          double interes = 0.0;
-          double amortizacion1 = 0.0;
-          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
-            Object[] data = new Object[5];
-            data[0] = i + 1;
-            data[1] = cuotas.get(i);
-            data[2] = intereses.get(i);
-            data[3] = amortizacion.get(i);
+          if (credito.getMoneda().compareTo(TMoneda.COLONES) == 0) {
+            double monto = credito.calcularMontoFinalASolicitar();
+            double interes = 0.0;
+            double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i);
+              data[2] = intereses.get(i);
+              data[3] = amortizacion.get(i);
+              data[4] = monto;
+              monto = monto - amortizacion.get(i);
+              interes = interes + intereses.get(i);
+              amortizacion1 = amortizacion1 + amortizacion.get(i);
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
             data[4] = monto;
-            monto = monto - amortizacion.get(i);
-            interes = interes + intereses.get(i);
-            amortizacion1 = amortizacion1 + amortizacion.get(i);
-            dtm.addRow(data);
+          }else {
+            double monto = credito.calcularMontoFinalASolicitar()/650;
+            double interes = 0.0;
+            double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i)/650;
+              data[2] = intereses.get(i)/650;
+              data[3] = amortizacion.get(i)/650;
+              data[4] = monto;
+              monto = monto - amortizacion.get(i)/650;
+              interes = interes + intereses.get(i)/650;
+              amortizacion1 = amortizacion1 + amortizacion.get(i)/650;
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
+            data[4] = monto;
           }
-          data[0] = "Total";
-          data[1] = "";
-          data[2] = interes;
-          data[3] = amortizacion1;
-          data[4] = monto;
+          
         }
       }
     });
@@ -2001,12 +2070,9 @@ public class ventana extends JFrame {
     JLabel titulo = new JLabel("Calcular credito hipotecario en dolares");
     codigo.setFont(new Font("Times new Roman", Font.BOLD, 20));
     codigo.setBackground(new Color(0, 153, 153));
-    JComboBox<String> creditoPersonal = new JComboBox<String>();
+    JComboBox<String> numCreditoHipotecario = new JComboBox<String>();
 
-    // frame.setSize(500, 500);
-    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    // frame.setVisible(true);
-    creditoPersonal.addItem("Seleccione");
+    numCreditoHipotecario.addItem("Seleccione");
 
     // frame.add(panel2);
     panel2.setLayout(null);
@@ -2026,18 +2092,16 @@ public class ventana extends JFrame {
     codigo.setFont(new Font("Times new Roman", Font.BOLD, 18));
     panel2.add(codigo);
 
-    creditoPersonal.setFont(new Font("Times new Roman", Font.BOLD, 15));
-    creditoPersonal.setBackground(new Color(255, 255, 255));
-    creditoPersonal.setBounds(50, 150, 200, 30);
-    panel2.add(creditoPersonal);
+    numCreditoHipotecario.setFont(new Font("Times new Roman", Font.BOLD, 15));
+    numCreditoHipotecario.setBackground(new Color(255, 255, 255));
+    numCreditoHipotecario.setBounds(50, 150, 200, 30);
+    panel2.add(numCreditoHipotecario);
 
     for (CreditoHipotecario credito : creditosHipotecarios) {
       String numero = credito.getNumSolicitud();
-      creditoPersonal.addItem(numero);
+      numCreditoHipotecario.addItem(numero);
     }
 
-    // creamos el arreglo de objetos que contendra el
-    // contenido de las columnas
     Object[] data = new Object[5];
 
     // creamos el modelo de Tabla
@@ -2072,34 +2136,61 @@ public class ventana extends JFrame {
     // frame.getContentPane().add(calcular);
     calcular.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        String solicitud = creditoPersonal.getSelectedItem().toString();
+        String solicitud = numCreditoHipotecario.getSelectedItem().toString();
         if (solicitud.equals("Seleccione")) {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
           CreditoHipotecario credito = buscarCreditoHipotecario(solicitud);
-          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
-          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
-          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
-          double monto = credito.getMontoFinal();
-          double interes = 0.0;
-          double amortizacion1 = 0.0;
-          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
-            Object[] data = new Object[5];
-            data[0] = i + 1;
-            data[1] = cuotas.get(i);
-            data[2] = intereses.get(i);
-            data[3] = amortizacion.get(i);
+          if (credito.getMoneda().compareTo(TMoneda.DOLARES) == 0) {
+            ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+            ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+            ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+            double monto = credito.calcularMontoFinalASolicitar();
+            double interes = 0.0;
+            double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i);
+              data[2] = intereses.get(i);
+              data[3] = amortizacion.get(i);
+              data[4] = monto;
+              monto = monto - amortizacion.get(i);
+              interes += intereses.get(i);
+              amortizacion1 += amortizacion.get(i);
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
             data[4] = monto;
-            monto = monto - amortizacion.get(i);
-            interes += intereses.get(i);
-            amortizacion1 += amortizacion.get(i);
-            dtm.addRow(data);
+          } else {
+            JOptionPane.showMessageDialog(null, "El credito no es en dolares");
+            ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+            ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+            ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+            double monto = credito.calcularMontoFinalASolicitar()*650;
+            double interes = 0.0;
+            double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i)*650;
+              data[2] = intereses.get(i)*650;
+              data[3] = amortizacion.get(i)*650;
+              data[4] = monto;
+              monto = monto - amortizacion.get(i)*650;
+              interes += intereses.get(i)*650;
+              amortizacion1 += amortizacion.get(i)*650;
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
+            data[4] = monto;
           }
-          data[0] = "Total";
-          data[1] = "";
-          data[2] = interes;
-          data[3] = amortizacion1;
-          data[4] = monto;
         }
       }
     });
@@ -2142,9 +2233,6 @@ public class ventana extends JFrame {
     codigo.setBackground(new Color(0, 153, 153));
     JComboBox<String> creditoPersonal = new JComboBox<String>();
 
-    // frame.setSize(500, 500);
-    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    // frame.setVisible(true);
     creditoPersonal.addItem("Seleccione");
 
     // frame.add(panel2);
@@ -2213,32 +2301,60 @@ public class ventana extends JFrame {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
           CreditoFiduciario credito = buscarCreditoFiduciario(solicitud);
-          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
-          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
-          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
-          // double monto = credito.;
-          double monto = credito.calcularMontoFinalASolicitar();
-          Double interes = 0.0;
-          Double amortizacion1 = 0.0;
-          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
-            Object[] data = new Object[5];
-            data[0] = i + 1;
-            data[1] = cuotas.get(i);
-            data[2] = intereses.get(i);
-            data[3] = amortizacion.get(i);
+          if (credito.getMoneda().compareTo(TMoneda.COLONES) == 0) {
+            ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+            ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+            ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+            // double monto = credito.;
+            double monto = credito.calcularMontoFinalASolicitar();
+            Double interes = 0.0;
+            Double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i);
+              data[2] = intereses.get(i);
+              data[3] = amortizacion.get(i);
+              data[4] = monto;
+              monto = monto - amortizacion.get(i);
+              interes += intereses.get(i);
+              amortizacion1 += amortizacion.get(i);
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
             data[4] = monto;
-            monto = monto - amortizacion.get(i);
-            interes += intereses.get(i);
-            amortizacion1 += amortizacion.get(i);
+            dtm.addRow(data);
+        } else {
+          JOptionPane.showMessageDialog(null, "El credito no esta en colones");
+          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+            ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+            ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+            // double monto = credito.;
+            double monto = credito.calcularMontoFinalASolicitar()/650;
+            Double interes = 0.0;
+            Double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i)/650;
+              data[2] = intereses.get(i)/650;
+              data[3] = amortizacion.get(i)/650;
+              data[4] = monto;
+              monto = monto - amortizacion.get(i)/650;
+              interes += intereses.get(i)/650;
+              amortizacion1 += amortizacion.get(i)/650;
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
+            data[4] = monto;
             dtm.addRow(data);
           }
-          data[0] = "Total";
-          data[1] = "";
-          data[2] = interes;
-          data[3] = amortizacion1;
-          data[4] = monto;
-          dtm.addRow(data);
-
         }
       }
     });
@@ -2351,29 +2467,58 @@ public class ventana extends JFrame {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
           CreditoFiduciario credito = buscarCreditoFiduciario(solicitud);
-          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
-          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
-          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
-          double monto = credito.calcularMontoFinalASolicitar();
-          double interes = 0;
-          double amortizacion1 = 0;
-          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
-            Object[] data = new Object[5];
-            data[0] = i + 1;
-            data[1] = cuotas.get(i);
-            data[2] = intereses.get(i);
-            data[3] = amortizacion.get(i);
+          if (credito.getMoneda().compareTo(TMoneda.DOLARES) == 0) {
+            ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+            ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+            ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+            double monto = credito.calcularMontoFinalASolicitar();
+            double interes = 0;
+            double amortizacion1 = 0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i);
+              data[2] = intereses.get(i);
+              data[3] = amortizacion.get(i);
+              data[4] = monto;
+              monto = monto - amortizacion.get(i);
+              interes += intereses.get(i);
+              amortizacion1 += amortizacion.get(i);
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
             data[4] = monto;
-            monto = monto - amortizacion.get(i);
-            interes += intereses.get(i);
-            amortizacion1 += amortizacion.get(i);
+            dtm.addRow(data);
+          } else {
+            JOptionPane.showMessageDialog(null, "El credito no es en dolares");
+            ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+            ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+            ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+            double monto = credito.calcularMontoFinalASolicitar()/650;
+            double interes = 0;
+            double amortizacion1 = 0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i)/650;
+              data[2] = intereses.get(i)/650;
+              data[3] = amortizacion.get(i)/650;
+              data[4] = monto;
+              monto = monto - amortizacion.get(i)/650;
+              interes += intereses.get(i)/650;
+              amortizacion1 += amortizacion.get(i)/650;
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
+            data[4] = monto;
             dtm.addRow(data);
           }
-          data[0] = "Total";
-          data[1] = "";
-          data[2] = interes;
-          data[3] = amortizacion1;
-          data[4] = monto;
         }
       }
     });
@@ -2479,31 +2624,60 @@ public class ventana extends JFrame {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
           CreditoPrendario credito = buscarCreditoPrendario(solicitud);
-          SistemaAmericano sistemaAmericano = credito.getAmortizacion();
-          ArrayList<Double> cuotas = sistemaAmericano.getCuotas();
-          Double intereses = sistemaAmericano.getCuotasInteres();
-          ArrayList<Double> amortizacion = sistemaAmericano.getCuotasAmortizacion();
-          double monto = credito.calcularMontoFinalASolicitar();
-          double interes = 0.0;
-          double amortizacion1 = 0.0;
-          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
-            Object[] data = new Object[5];
-            data[0] = i + 1;
-            data[1] = cuotas.get(i);
-            data[2] = intereses;
-            data[3] = amortizacion.get(i);
+          if (credito.getMoneda().compareTo(TMoneda.COLONES) == 0) {
+            SistemaAmericano sistemaAmericano = credito.getAmortizacion();
+            ArrayList<Double> cuotas = sistemaAmericano.getCuotas();
+            Double intereses = sistemaAmericano.getCuotasInteres();
+            ArrayList<Double> amortizacion = sistemaAmericano.getCuotasAmortizacion();
+            double monto = credito.calcularMontoFinalASolicitar();
+            double interes = 0.0;
+            double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i);
+              data[2] = intereses;
+              data[3] = amortizacion.get(i);
+              data[4] = monto;
+              monto = monto - amortizacion.get(i);
+              interes += intereses;
+              amortizacion1 += amortizacion.get(i);
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
             data[4] = monto;
-            monto = monto - amortizacion.get(i);
-            interes += intereses;
-            amortizacion1 += amortizacion.get(i);
+            dtm.addRow(data);
+          } else {
+            JOptionPane.showMessageDialog(null, "El credito no es en colones");
+            SistemaAmericano sistemaAmericano = credito.getAmortizacion();
+            ArrayList<Double> cuotas = sistemaAmericano.getCuotas();
+            Double intereses = sistemaAmericano.getCuotasInteres();
+            ArrayList<Double> amortizacion = sistemaAmericano.getCuotasAmortizacion();
+            double monto = credito.calcularMontoFinalASolicitar()*650;
+            double interes = 0.0;
+            double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i)*650;
+              data[2] = intereses*650;
+              data[3] = amortizacion.get(i)*650;
+              data[4] = monto;
+              monto = monto - amortizacion.get(i)*650;
+              interes += intereses*650;
+              amortizacion1 += amortizacion.get(i)*650;
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
+            data[4] = monto;
             dtm.addRow(data);
           }
-          data[0] = "Total";
-          data[1] = "";
-          data[2] = interes;
-          data[3] = amortizacion1;
-          data[4] = monto;
-          dtm.addRow(data);
         }
       }
     });
@@ -2574,10 +2748,6 @@ public class ventana extends JFrame {
       String numero = credito.getNumSolicitud();
       creditoPersonal.addItem(numero);
     }
-
-    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
-    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
-
     // creamos el arreglo de objetos que contendra el
     // contenido de las columnas
     Object[] data = new Object[5]; // = new Object[5];
@@ -2605,16 +2775,6 @@ public class ventana extends JFrame {
     scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(scrollPane);
 
-    // Agregamos el JScrollPane al contenedor
-    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-    // manejamos la salida
-
-    // frame.addWindowListener(new WindowAdapter() {
-    // public void windowClosing(WindowEvent e) {
-    // System.exit(0);
-    // }
-    // });
     JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
@@ -2629,31 +2789,60 @@ public class ventana extends JFrame {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
           CreditoPrendario credito = buscarCreditoPrendario(solicitud);
-          SistemaAmericano sistemaAmericano = credito.getAmortizacion();
-          ArrayList<Double> cuotas = sistemaAmericano.getCuotas();
-          Double intereses = sistemaAmericano.getCuotasInteres();
-          ArrayList<Double> amortizacion = sistemaAmericano.getCuotasAmortizacion();;
-          double monto = credito.calcularMontoFinalASolicitar();
-          double interes = 0.0;
-          double amortizacion1 = 0.0;
-          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
-            Object[] data = new Object[5];
-            data[0] = i + 1;
-            data[1] = cuotas.get(i);
-            data[2] = intereses;
-            data[3] = amortizacion.get(i);
+          if (credito.getMoneda().compareTo(TMoneda.DOLARES) == 0) {
+            SistemaAmericano sistemaAmericano = credito.getAmortizacion();
+            ArrayList<Double> cuotas = sistemaAmericano.getCuotas();
+            Double intereses = sistemaAmericano.getCuotasInteres();
+            ArrayList<Double> amortizacion = sistemaAmericano.getCuotasAmortizacion();;
+            double monto = credito.calcularMontoFinalASolicitar();
+            double interes = 0.0;
+            double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i);
+              data[2] = intereses;
+              data[3] = amortizacion.get(i);
+              data[4] = monto;
+              monto = monto - amortizacion.get(i);
+              interes += intereses;
+              amortizacion1 += amortizacion.get(i);
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
             data[4] = monto;
-            monto = monto - amortizacion.get(i);
-            interes += intereses;
-            amortizacion1 += amortizacion.get(i);
+            dtm.addRow(data);
+          } else {
+            JOptionPane.showMessageDialog(null, "El credito no es en dolares");
+            SistemaAmericano sistemaAmericano = credito.getAmortizacion();
+            ArrayList<Double> cuotas = sistemaAmericano.getCuotas();
+            Double intereses = sistemaAmericano.getCuotasInteres();
+            ArrayList<Double> amortizacion = sistemaAmericano.getCuotasAmortizacion();;
+            double monto = credito.calcularMontoFinalASolicitar()/650;
+            double interes = 0.0;
+            double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i)/650 ;
+              data[2] = intereses/650;
+              data[3] = amortizacion.get(i)/650;
+              data[4] = monto;
+              monto = monto - amortizacion.get(i)/650;
+              interes += intereses/650;
+              amortizacion1 += amortizacion.get(i)/650;
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
+            data[4] = monto;
             dtm.addRow(data);
           }
-          data[0] = "Total";
-          data[1] = "";
-          data[2] = interes;
-          data[3] = amortizacion1;
-          data[4] = monto;
-          dtm.addRow(data);
         }
       }
     });
@@ -2719,9 +2908,6 @@ public class ventana extends JFrame {
       creditoPersonal.addItem(numero);
     }
 
-    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
-    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
-
     // creamos el arreglo de objetos que contendra el
     // contenido de las columnas
     Object[] data = new Object[5]; // = new Object[5];
@@ -2739,14 +2925,6 @@ public class ventana extends JFrame {
     dtm.addColumn("Amortizacion ");
     dtm.addColumn("Deuda ");
 
-    // insertamos el contenido de las columnas
-    // for (int row = 0; row < 20; row++) {
-    // for (int column = 0; column < 5; column++) {
-    // data[column] = "Celda " + row + "," + column;
-    // }
-    // dtm.addRow(data);
-    // }
-
     // se define el tama�o
     table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
@@ -2757,16 +2935,6 @@ public class ventana extends JFrame {
     scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(scrollPane);
 
-    // Agregamos el JScrollPane al contenedor
-    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-    // manejamos la salida
-
-    // frame.addWindowListener(new WindowAdapter() {
-    // public void windowClosing(WindowEvent e) {
-    // System.exit(0);
-    // }
-    // });
     JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
@@ -2781,32 +2949,60 @@ public class ventana extends JFrame {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
           CreditoPersonal credito = buscarCreditoPersonal(solicitud);
-          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
-          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
-          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
-          double monto = credito.getAmortizacion().calcularMontoFinalASolicitar();
-          Double interes = 0.0;
-          Double amortizacion1 = 0.0;
-          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
-            // Object[] data = new Object[5];
-            data[0] = i + 1;
-            data[1] = cuotas.get(i);
-            data[2] = intereses.get(i);
-            data[3] = amortizacion.get(i);
+          if (credito.getMoneda().compareTo(TMoneda.COLONES) == 0) {
+            ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+            ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+            ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+            double monto = credito.getAmortizacion().calcularMontoFinalASolicitar();
+            Double interes = 0.0;
+            Double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              // Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i);
+              data[2] = intereses.get(i);
+              data[3] = amortizacion.get(i);
+              data[4] = monto;
+              monto -= amortizacion.get(i);
+              interes += intereses.get(i);
+              amortizacion1 += amortizacion.get(i);
+              dtm.addRow(data);
+              // System.out.println(data[0] + " " + data[1] + " " + data[2] + " " + data[3] +
+              // " " + data[4]);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
             data[4] = monto;
-            monto -= amortizacion.get(i);
-            interes += intereses.get(i);
-            amortizacion1 += amortizacion.get(i);
             dtm.addRow(data);
-            // System.out.println(data[0] + " " + data[1] + " " + data[2] + " " + data[3] +
-            // " " + data[4]);
+          } else {
+            JOptionPane.showMessageDialog(null, "El credito no es en colones");
+            ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+            ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+            ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+            double monto = credito.getAmortizacion().calcularMontoFinalASolicitar()*650;
+            Double interes = 0.0;
+            Double amortizacion1 = 0.0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              // Object[] data = new Object[5];
+              data[0] = i + 1;
+              data[1] = cuotas.get(i)*650;
+              data[2] = intereses.get(i)*650;
+              data[3] = amortizacion.get(i)*650;
+              data[4] = monto*650;
+              monto -= amortizacion.get(i)*650;
+              interes += intereses.get(i)*650;
+              amortizacion1 += amortizacion.get(i)*650;
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
+            data[4] = monto;
+            dtm.addRow(data);
           }
-          data[0] = "Total";
-          data[1] = "";
-          data[2] = interes;
-          data[3] = amortizacion1;
-          data[4] = monto;
-          dtm.addRow(data);
         }
       }
     });
@@ -2872,9 +3068,6 @@ public class ventana extends JFrame {
       creditoPersonal.addItem(numero);
     }
 
-    // frame.getContentPane().add(creditoPersonal, BorderLayout.NORTH);
-    // frame.getContentPane().add(codigo, BorderLayout.SOUTH);
-
     // creamos el arreglo de objetos que contendra el
     // contenido de las columnas
     Object[] data = new Object[5]; // = new Object[5];
@@ -2902,16 +3095,6 @@ public class ventana extends JFrame {
     scrollPane.setFont(new Font("Times new Roman", Font.BOLD, 15));
     panel2.add(scrollPane);
 
-    // Agregamos el JScrollPane al contenedor
-    // frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
-
-    // manejamos la salida
-
-    // frame.addWindowListener(new WindowAdapter() {
-    // public void windowClosing(WindowEvent e) {
-    // System.exit(0);
-    // }
-    // });
     JButton calcular = new JButton("Calcular");
     calcular.setBounds(50, 620, 200, 30);
     calcular.setBackground(new Color(135, 206, 250));
@@ -2926,17 +3109,50 @@ public class ventana extends JFrame {
           JOptionPane.showMessageDialog(null, "Seleccione una solicitud");
         } else {
           CreditoPersonal credito = buscarCreditoPersonal(solicitud);
-          ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
-          ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
-          ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
-          double monto = credito.getAmortizacion().calcularMontoFinalASolicitar();
-          for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
-            data[0] = i + 1;
-            data[1] = cuotas.get(i);
-            data[2] = intereses.get(i);
-            data[3] = amortizacion.get(i);
+          if (credito.getMoneda().compareTo(TMoneda.DOLARES) == 0) {
+            ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+            ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+            ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+            double monto = credito.getAmortizacion().calcularMontoFinalASolicitar();
+            double interes = 0;
+            double amortizacion1 = 0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              data[0] = i + 1;
+              data[1] = cuotas.get(i);
+              data[2] = intereses.get(i);
+              data[3] = amortizacion.get(i);
+              data[4] = monto;
+              monto -= amortizacion.get(i);
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
             data[4] = monto;
-            monto -= amortizacion.get(i);
+            dtm.addRow(data);
+          } else {
+            JOptionPane.showMessageDialog(null, "El credito no es en dolares");
+            ArrayList<Double> cuotas = credito.getAmortizacion().getMontoCuotas();
+            ArrayList<Double> intereses = credito.getAmortizacion().getCuotasInteres();
+            ArrayList<Double> amortizacion = credito.getAmortizacion().getAmortizacion();
+            double monto = credito.getAmortizacion().calcularMontoFinalASolicitar()/650;
+            double interes = 0;
+            double amortizacion1 = 0;
+            for (int i = 0; i < credito.getAmortizacion().getPlazoEnAnos(); i++) {
+              data[0] = i + 1;
+              data[1] = cuotas.get(i)/650;
+              data[2] = intereses.get(i)/650;
+              data[3] = amortizacion.get(i)/650;
+              data[4] = monto/650;
+              monto -= amortizacion.get(i)/650;
+              dtm.addRow(data);
+            }
+            data[0] = "Total";
+            data[1] = "";
+            data[2] = interes;
+            data[3] = amortizacion1;
+            data[4] = monto;
             dtm.addRow(data);
           }
         }
@@ -2949,16 +3165,13 @@ public class ventana extends JFrame {
     button.setForeground(new Color(0, 0, 0));
     panel2.add(button);
     button.addActionListener(new ActionListener() {
-
       public void actionPerformed(ActionEvent e) {
-        // frame.setVisible(false);
         setBounds(350, 0, 700, 850);
         panel2.setVisible(false);
         panel.setVisible(true);
       }
 
     });
-    // frame.getContentPane().add(button, BorderLayout.SOUTH);
   }
 
   private CreditoPersonal buscarCreditoPersonal(String pNumeroSolicitud) {

@@ -75,4 +75,21 @@ public class SistemaAmericano extends SistemaAmortizacion {
       cuotas.add(getCuotasAmortizacion().get(i) + getCuotasInteres());
     }
   }
+  public String toString () {
+    String result = "";
+    result += "numero de cuuota \t" + "monto de cuota \t"  + "interes \t"+ "amortizacion: \t"+ "deuda\n";
+    int monto = 0;
+    int interes = 0;
+    int amortizacion = 0;
+    monto = (int) getPrestamoOtorgado();
+    for (int i = 0; i < super.getPlazoEnAnos(); i++) {
+      result += i + 1 + "\t" +cuotas.get(i) + "\t" + cuotasInteres + "\t" + cuotasAmortizacion.get(i) + "\t" + deudas.get(i) + "\n";
+      interes += (int) cuotasInteres;
+      amortizacion = (int) (amortizacion +cuotasAmortizacion.get(i));
+      monto = (int) (monto -deudas.get(i));
+
+    }
+    result += "total\t\t" + interes + "\t" + amortizacion + "\t" + monto;
+    return result;
+  }
 }

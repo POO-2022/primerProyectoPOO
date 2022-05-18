@@ -10,5 +10,29 @@
         "motivo de uso": "compra de prenda",
         "monto Solicitado": 1000000,
         "cedula del deudor": "2021067834"
+    },
+    "CRE0002": {
+        "Moneda del credito": "COLONES",
+        "tasa basica pasiva": 0.12,
+        "tasa de interes": 0.15,
+        "tipo costo legales": "TRASPASO",
+        "plazo en meses": 20,
+        "fecha de la solicitud": "2022-05-17",
+        "comision": 12000,
+        "motivo de uso": "compra de un auto",
+        "monto Solicitado": 2000000,
+        "cedula del deudor": "7030101470"
+    },
+    "CRE0004": {
+        "Moneda del credito": "DOLARES",
+        "tasa basica pasiva": 0.2,
+        "tasa de interes": 0.15,
+        "tipo costo legales": "INSCRIPCION_BIEN",
+        "plazo en meses": 30,
+        "fecha de la solicitud": "2022-05-17",
+        "comision": 12000,
+        "motivo de uso": "compra de un auto",
+        "monto Solicitado": 4000,
+        "cedula del deudor": "123456789"
     }
 }

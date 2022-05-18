@@ -52,6 +52,10 @@ public class CreditoHipotecario extends Credito {
     return gastoFormalizacion;
   }
 
+  public String getNumSolicitud() {
+    return super.getNumSolicitud();
+  }
+
   public void setGastoFormalizacion() {
     this.gastoFormalizacion = super.getMontoSolicitado() * COSTO_FORMALIZACION;
   }
@@ -94,6 +98,16 @@ public class CreditoHipotecario extends Credito {
     result += super.getMontoSolicitado() * 0.065;
     result += super.getMontoSolicitado() * 0.75;
     result += super.getMontoSolicitado();
+    super.setMontoFinal(result);
+    return result;
+  }
+  public String toString() {
+    String result = "Credito Hipotecario\n";
+    result += super.toString();
+    result += "Hipoteca: " + hipoteca.toString() + "\n";
+    result += "Honorario: " + honorario + "\n";
+    result += "Gasto de formalizacion: " + gastoFormalizacion + "\n";
+    result += "Amortizacion: \n" + amortizacion.toString() + "\n";
     return result;
   }
 }
